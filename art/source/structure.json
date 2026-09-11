@@ -1,0 +1,130 @@
+{
+  "frames": [
+    {
+      "name": "ground-top",
+      "rows": [
+        "CCCCCCCCCCCCCCCC",
+        "DDDDDDDDDDDDDDDD",
+        "DD000000000000DD",
+        "DD0CCCCCCCCCC0DD",
+        "DD0DDDDDDDDDD0DD",
+        "DD0DDDDDDDDDD0DD",
+        "DD0DDDDDDDDDD0DD",
+        "DD0DDDDDDDDDD0DD",
+        "DD0DDDDDDDDDD0DD",
+        "DD0DDDDDDDDDD0DD",
+        "DD0DDDDDDDDDD0DD",
+        "DD0DDDDDDDDDD0DD",
+        "DD022222222220DD",
+        "DD000000000000DD",
+        "2222222222222222",
+        "0000000000000000"
+      ]
+    },
+    {
+      "name": "ground-fill",
+      "rows": [
+        "2222222222222222",
+        "2DDDDDDDDDDDDD02",
+        "2DDDDDDDDDDDDD02",
+        "2DD000000000DD02",
+        "2DD022222220DD02",
+        "2DD02DDDDDD0DD02",
+        "2DD02DDDDDD0DD02",
+        "2DD02DDDDDD0DD02",
+        "2DD02DDDDDD0DD02",
+        "2DD02DDDDDD0DD02",
+        "2DD02DDDDDD0DD02",
+        "2DD022222220DD02",
+        "2DD000000000DD02",
+        "2DDDDDDDDDDDDD02",
+        "2000000000000002",
+        "0000000000000000"
+      ]
+    },
+    {
+      "name": "platform-left",
+      "rows": [
+        ".CCCCCCCCCCCCCCC",
+        "CDDDDDDDDDDDDDDD",
+        "CDDDDDDDDDDDDDDD",
+        "CDDDDDDDDDDDDDDD",
+        "CD00000000000000",
+        "CD0DDDDDDDDDDDDD",
+        "CD02222222222222",
+        "CD00000000000000",
+        "C222222222222222",
+        ".000000000000000",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................"
+      ]
+    },
+    {
+      "name": "platform-right",
+      "rows": [
+        "CCCCCCCCCCCCCCC.",
+        "DDDDDDDDDDDDDDC0",
+        "DDDDDDDDDDDDDDC0",
+        "DDDDDDDDDDDDDDC0",
+        "0000000000000DC0",
+        "DDDDDDDDDDDD0DC0",
+        "2222222222220DC0",
+        "0000000000000DC0",
+        "2222222222222220",
+        "000000000000000.",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................"
+      ]
+    },
+    {
+      "name": "wall",
+      "rows": [
+        "C222222222222220",
+        "CDDDDDDDDDDDDD20",
+        "CD0000000000DD20",
+        "CD0DDDDDDDD0DD20",
+        "CD0DDDDDDDD0DD20",
+        "CD0DDDDDDDD0DD20",
+        "CD0DDDDDDDD0DD20",
+        "CD0DDDDDDDD0DD20",
+        "CD0DDDDDDDD0DD20",
+        "CD0DDDDDDDD0DD20",
+        "CD0DDDDDDDD0DD20",
+        "CD0DDDDDDDD0DD20",
+        "CD0222222220DD20",
+        "CD0000000000DD20",
+        "CDDDDDDDDDDDDD20",
+        "C000000000000000"
+      ]
+    },
+    {
+      "name": "inset-background",
+      "rows": [
+        "2222222222222222",
+        "2111111111111112",
+        "2122222222222212",
+        "2121111111111212",
+        "2121111222211212",
+        "2121111222211212",
+        "2121111222211212",
+        "2121111222211212",
+        "2122222111111212",
+        "2122222111111212",
+        "2122222111111212",
+        "2122222111111212",
+        "2121111111111212",
+        "2122222222222212",
+        "2111111111111112",
+        "2222222222222222"
+      ]
+    }
+  ]
+}

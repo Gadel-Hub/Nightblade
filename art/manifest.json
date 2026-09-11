@@ -1,4 +1,50 @@
 [
-  {"source":"courier.json","output":"player/courier.png","width":216,"height":32,"frameWidth":24,"frameHeight":32},
-  {"source":"guard.json","output":"enemies/guard/guard.png","width":192,"height":32,"frameWidth":32,"frameHeight":32}
+  {
+    "source": "courier.json",
+    "output": "player/courier.png",
+    "width": 216,
+    "height": 32,
+    "frameWidth": 24,
+    "frameHeight": 32
+  },
+  {
+    "source": "guard.json",
+    "output": "enemies/guard/guard.png",
+    "width": 192,
+    "height": 32,
+    "frameWidth": 32,
+    "frameHeight": 32
+  },
+  {
+    "source": "structure.json",
+    "output": "environment/visual-design/structure.png",
+    "width": 96,
+    "height": 16,
+    "frameWidth": 16,
+    "frameHeight": 16
+  },
+  {
+    "source": "swatch.json",
+    "output": "environment/visual-design/swatch.png",
+    "width": 16,
+    "height": 32,
+    "frameWidth": 16,
+    "frameHeight": 32
+  },
+  {
+    "source": "cutting-comb.json",
+    "output": "environment/visual-design/cutting-comb.png",
+    "width": 32,
+    "height": 16,
+    "frameWidth": 16,
+    "frameHeight": 16
+  },
+  {
+    "source": "health.json",
+    "output": "ui/health.png",
+    "width": 40,
+    "height": 8,
+    "frameWidth": 8,
+    "frameHeight": 8
+  }
 ]
