@@ -6,8 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "assets:export": "node scripts/pixel-assets.mjs export",
+    "assets:validate": "node scripts/pixel-assets.mjs validate",
+    "test:assets": "node --test scripts/pixel-assets.test.mjs"
   },
-  "dependencies": { "phaser": "^3.90.0" },
-  "devDependencies": { "typescript": "~5.9.3", "vite": "^7.3.0" }
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "pngjs": "^7.0.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.0"
+  }
 }
