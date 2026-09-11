@@ -53,8 +53,7 @@ playable native-art showcase (V, or `/#art`) using the same player controllers
 and Guard. Its scale-1 visual layers are separate from unchanged physics bodies.
 It preloads six PNG anchors from `public/assets`; `art/source` holds editable
 palette grids. `scripts/pixel-assets.mjs` exports/validates them during development,
-never at runtime. See `ART_SHOWCASE.md`. There are no production levels, backend,
-persistence or menus.
+never at runtime. See `ART_SHOWCASE.md`. There is no backend or persistence.
 
 `src/enemies/EnemyBody.ts` shares body/hurtbox bookkeeping, attack rectangle
 geometry and death cleanup. `Guard.ts`, `RangedAttacker.ts`, `Pursuer.ts` and
@@ -66,3 +65,13 @@ and cleared when it dies or resets.
 damage integration and reset. Enemies collide with terrain but not each other
 or the player; only active attack rectangles/projectiles damage the player. No navigation
 or generalized decision system exists. See `ENEMY_TUNING.md`.
+
+
+`Level1Scene.ts` is the first production stage (`/#level1`, or L in the lab).
+It reuses the accepted controllers and explicit enemy classes, with its own
+scene orchestration and provisional art layer. `src/levels/visualDesign.ts`
+contains its hand-authored layout. `Checkpoint.ts` tracks a run-local respawn
+position, and `artFrames.ts` names runtime frame roles. Death rebuilds relevant
+encounters and clears projectiles. A latched exit pauses physics and presents
+restart/return controls. The level is stopped on return, while the laboratory
+can resume its sleeping scene. See `LEVEL_1.md` for the route and browser checks.

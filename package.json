@@ -9,12 +9,14 @@
     "preview": "vite preview",
     "assets:export": "node scripts/pixel-assets.mjs export",
     "assets:validate": "node scripts/pixel-assets.mjs validate",
-    "test:assets": "node --test scripts/pixel-assets.test.mjs"
+    "test:assets": "node --test scripts/pixel-assets.test.mjs",
+    "test:level": "node scripts/level-browser.cjs && node scripts/level-traversal.cjs"
   },
   "dependencies": {
     "phaser": "^3.90.0"
   },
   "devDependencies": {
+    "playwright": "^1.63.0",
     "pngjs": "^7.0.0",
     "typescript": "~5.9.3",
     "vite": "^7.3.0"

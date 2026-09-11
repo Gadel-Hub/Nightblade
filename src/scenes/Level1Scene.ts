@@ -119,7 +119,7 @@ export class Level1Scene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     const seconds = delta / 1000;
-    if (Phaser.Input.Keyboard.JustDown(this.keys.lab)) { this.scene.start('development'); return; }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.lab)) { this.scene.run('development'); this.scene.stop(); return; }
     if (Phaser.Input.Keyboard.JustDown(this.keys.reset)) { this.scene.restart(); return; }
     if (this.completed) return;
     this.damage.update(seconds);
