@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
+import { PlayerController } from '../player/PlayerController';
 
-// Temporary foundation controls; the full controller belongs to Milestone 2.
-const PLACEHOLDER = { speed: 100, jumpVelocity: -260, spawnX: 48, spawnY: 280 };
+const SPAWN = { x: 48, y: 280 };
 const WORLD = { width: 1920, height: 540 };
 
 export class DevelopmentScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Image;
+  private controller!: PlayerController;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private keys!: Record<'left' | 'right' | 'jump' | 'reset' | 'debug', Phaser.Input.Keyboard.Key>;
   private debugText!: Phaser.GameObjects.Text;
@@ -54,9 +55,10 @@ export class DevelopmentScene extends Phaser.Scene {
     this.add.rectangle(1664, 408, 416, 80).setStrokeStyle(1, 0x809070);
     label(1496, 380, 'RESERVED COMBAT AREA');
 
-    this.player = this.physics.add.image(PLACEHOLDER.spawnX, PLACEHOLDER.spawnY, 'block');
+    this.player = this.physics.add.image(SPAWN.x, SPAWN.y, 'block');
     this.player.setDisplaySize(12, 20).setTint(0xe6c66a);
     this.player.setCollideWorldBounds(true);
+    this.controller = new PlayerController(this.player);
     this.physics.add.collider(this.player, terrain);
     this.cameras.main.setBounds(0, 0, WORLD.width, WORLD.height);
     this.cameras.main.startFollow(this.player, true);
@@ -76,12 +78,9 @@ export class DevelopmentScene extends Phaser.Scene {
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     const direction = Number(this.cursors.right.isDown || this.keys.right.isDown)
       - Number(this.cursors.left.isDown || this.keys.left.isDown);
-    this.player.setVelocityX(direction * PLACEHOLDER.speed);
-    if (Phaser.Input.Keyboard.JustDown(this.keys.jump) && body.blocked.down) {
-      this.player.setVelocityY(PLACEHOLDER.jumpVelocity);
-    }
+    this.controller.update(direction, Phaser.Input.Keyboard.JustDown(this.keys.jump));
     if (Phaser.Input.Keyboard.JustDown(this.keys.reset)) {
-      body.reset(PLACEHOLDER.spawnX, PLACEHOLDER.spawnY);
+      this.controller.reset(SPAWN.x, SPAWN.y);
     }
     if (Phaser.Input.Keyboard.JustDown(this.keys.debug)) {
       this.debugVisible = !this.debugVisible;
@@ -91,11 +90,11 @@ export class DevelopmentScene extends Phaser.Scene {
     }
     if (this.debugVisible) {
       this.debugText.setText([
-        'DEVELOPMENT / PLACEHOLDER',
+        'DEVELOPMENT / MOVEMENT',
         `X ${body.x.toFixed(1)} Y ${body.y.toFixed(1)}`,
         `VX ${body.velocity.x.toFixed(1)} VY ${body.velocity.y.toFixed(1)}`,
         `Ground ${body.blocked.down} L ${body.blocked.left} R ${body.blocked.right}`,
-        `State ${body.blocked.down ? (direction ? 'run' : 'idle') : 'air'}`,
+        `State ${this.controller.state}`,
       ]);
     }
   }

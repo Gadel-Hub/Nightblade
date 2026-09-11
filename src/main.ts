@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { DevelopmentScene } from './scenes/DevelopmentScene';
+import { MOVEMENT } from './player/tuning';
 import './style.css';
 
 function displayZoom(): number {
@@ -16,7 +17,7 @@ const game = new Phaser.Game({
   antialias: false,
   roundPixels: true,
   scale: { mode: Phaser.Scale.NONE, zoom: displayZoom() },
-  physics: { default: 'arcade', arcade: { gravity: { x: 0, y: 600 } } },
+  physics: { default: 'arcade', arcade: { gravity: { x: 0, y: MOVEMENT.gravity } } },
   scene: [DevelopmentScene],
 });
 
