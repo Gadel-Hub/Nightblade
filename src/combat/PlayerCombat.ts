@@ -54,9 +54,14 @@ export class PlayerCombat {
   }
 
   reset(): void {
+    this.interruptAttack();
+    this.facing = 1;
+  }
+
+  // Forced interruption by damage/death, never a player-controlled cancel.
+  interruptAttack(): void {
     this.phase = 'idle';
     this.elapsed = 0;
-    this.facing = 1;
     this.hitTargets.clear();
     this.attackHitbox = null;
   }

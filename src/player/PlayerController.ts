@@ -62,6 +62,12 @@ export class PlayerController {
   reset(x: number, y: number): void {
     this.body.reset(x, y);
     this.lastJumpWall = 0;
+    this.interrupt();
+  }
+
+  // Damage owns velocity temporarily; an old wall push must not resume afterward.
+  // Preserve lastJumpWall so taking a hit cannot grant another same-wall jump.
+  interrupt(): void {
     this.pushRemaining = 0;
     this.pushDirection = 0;
     this.sliding = false;

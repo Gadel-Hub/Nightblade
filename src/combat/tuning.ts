@@ -9,4 +9,11 @@ export const COMBAT = {
   attackDamage: 1,
   targetHealth: 3,
   durableTargetHealth: 10,
+  playerHealth: 3,
+  hazardDamage: 1,
+  receivedKnockbackHorizontal: 150,
+  receivedKnockbackVertical: -160,
+  hitReactionDuration: 0.18,
+  postHitInvulnerability: 0.45,
+  respawnDelay: 0.8,
 } as const;

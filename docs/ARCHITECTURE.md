@@ -34,6 +34,13 @@ rectangles. The scene owns two stationary non-solid test targets and applies
 overlap hits. `src/combat/tuning.ts` holds combat values. J attacks; C resets
 into the combat laboratory. No attack code modifies movement tuning.
 
+`src/combat/PlayerDamage.ts` owns health, hit/death states, received knockback
+and invulnerability/death timers. The scene gates controls during hit/death,
+interrupts attacks on accepted damage, and respawns at the combat start.
+The red test pad emits one damage event per overlap entry. Damage overlap is
+processed before target hits. The player controller's interruption method
+clears a pending wall push without changing accepted movement tuning.
+
 F1 toggles fixed-camera debug text and Arcade Physics body outlines and
 velocity indicators. The text reports position, velocity, blocked floor/wall
 contacts and the current movement state. Combat hitboxes and
