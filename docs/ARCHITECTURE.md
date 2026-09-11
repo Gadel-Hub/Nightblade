@@ -27,12 +27,18 @@ constants live in `src/player/tuning.ts`, including the gravity used by the
 Phaser configuration. R resets position and velocity. See `PLAYER_TUNING.md`
 for the fixed-height jump baseline and wall-slide/jump rules. The controller
 tracks the last wall-jump side and remaining outward push duration; movement
-labels are derived from those and physics contacts. There is no combat system.
+labels are derived from those and physics contacts.
+
+`src/combat/PlayerCombat.ts` owns the slash lifecycle and separate combat
+rectangles. The scene owns two stationary non-solid test targets and applies
+overlap hits. `src/combat/tuning.ts` holds combat values. J attacks; C resets
+into the combat laboratory. No attack code modifies movement tuning.
 
 F1 toggles fixed-camera debug text and Arcade Physics body outlines and
 velocity indicators. The text reports position, velocity, blocked floor/wall
 contacts and the current movement state. Combat hitboxes and
-hurtboxes do not exist yet.
+hurtboxes are separate from Arcade terrain bodies and are drawn by the scene
+in F1 mode. See `COMBAT_TUNING.md` for timing and test controls.
 
 All visuals are programmer art. There are no production levels, backend,
 persistence, final assets or menus.

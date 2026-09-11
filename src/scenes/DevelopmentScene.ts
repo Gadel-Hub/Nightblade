@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { PlayerController } from '../player/PlayerController';
+import { PlayerCombat } from '../combat/PlayerCombat';
+import { COMBAT } from '../combat/tuning';
 
 const SPAWN = { x: 48, y: 280 };
 const WORLD = { width: 1920, height: 540 };
@@ -7,8 +9,13 @@ const WORLD = { width: 1920, height: 540 };
 export class DevelopmentScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Image;
   private controller!: PlayerController;
+  private combat!: PlayerCombat;
+  private targets: { health: number; maxHealth: number; hurtbox: Phaser.Geom.Rectangle;
+    view: Phaser.GameObjects.Rectangle; label: Phaser.GameObjects.Text }[] = [];
+  private combatDebug!: Phaser.GameObjects.Graphics;
+  private slash!: Phaser.GameObjects.Rectangle;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-  private keys!: Record<'left' | 'right' | 'jump' | 'reset' | 'debug', Phaser.Input.Keyboard.Key>;
+  private keys!: Record<'left' | 'right' | 'jump' | 'reset' | 'debug' | 'attack' | 'combatTest', Phaser.Input.Keyboard.Key>;
   private debugText!: Phaser.GameObjects.Text;
   private debugVisible = false;
 
@@ -63,19 +70,29 @@ export class DevelopmentScene extends Phaser.Scene {
     label(464, 350, 'OPEN SHAFT');
     label(1304, 266, 'SINGLE WALL');
     this.add.rectangle(1664, 408, 416, 80).setStrokeStyle(1, 0x809070);
-    label(1496, 380, 'RESERVED COMBAT AREA');
+    label(1496, 360, 'COMBAT TEST / C TO RESET HERE');
+    for (const [x, health] of [[1552, COMBAT.targetHealth], [1664, COMBAT.durableTargetHealth]]) {
+      this.targets.push({ health, maxHealth: health,
+        hurtbox: new Phaser.Geom.Rectangle(x - 8, 420, 16, 28),
+        view: this.add.rectangle(x, 434, 16, 28, 0x92a6b0),
+        label: this.add.text(x - 12, 406, `${health}`, { fontFamily: 'monospace', fontSize: '8px' }),
+      });
+    }
 
     this.player = this.physics.add.image(SPAWN.x, SPAWN.y, 'block');
     this.player.setDisplaySize(12, 20).setTint(0xe6c66a);
     this.player.setCollideWorldBounds(true);
     this.controller = new PlayerController(this.player);
+    this.combat = new PlayerCombat(this.player);
+    this.slash = this.add.rectangle(0, 0, 1, 1, 0xf3e8b4).setOrigin(0).setVisible(false);
+    this.combatDebug = this.add.graphics().setDepth(99).setVisible(false);
     this.physics.add.collider(this.player, terrain);
     this.cameras.main.setBounds(0, 0, WORLD.width, WORLD.height);
     this.cameras.main.startFollow(this.player, true);
 
     const keyboard = this.input.keyboard!;
     this.cursors = keyboard.createCursorKeys();
-    this.keys = keyboard.addKeys({ left: 'A', right: 'D', jump: 'SPACE', reset: 'R', debug: 'F1' }) as typeof this.keys;
+    this.keys = keyboard.addKeys({ left: 'A', right: 'D', jump: 'SPACE', reset: 'R', debug: 'F1', attack: 'J', combatTest: 'C' }) as typeof this.keys;
     this.physics.world.createDebugGraphic();
     this.physics.world.drawDebug = false;
     this.physics.world.debugGraphic.setVisible(false);
@@ -89,16 +106,33 @@ export class DevelopmentScene extends Phaser.Scene {
     const direction = Number(this.cursors.right.isDown || this.keys.right.isDown)
       - Number(this.cursors.left.isDown || this.keys.left.isDown);
     this.controller.update(direction, Phaser.Input.Keyboard.JustDown(this.keys.jump), delta / 1000);
+    this.combat.update(delta / 1000);
+    if (direction !== 0) this.combat.facing = direction < 0 ? -1 : 1;
+    if (Phaser.Input.Keyboard.JustDown(this.keys.attack)) this.combat.startAttack();
     if (Phaser.Input.Keyboard.JustDown(this.keys.reset)) {
-      this.controller.reset(SPAWN.x, SPAWN.y);
+      this.resetPlayer(SPAWN.x, SPAWN.y);
     }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.combatTest)) this.resetPlayer(1480, 438);
+    for (const target of this.targets) {
+      this.combat.hitTarget(target);
+      target.view.setVisible(target.health > 0);
+      target.label.setText(`${target.health}/${target.maxHealth}`);
+    }
+    const hitbox = this.combat.attackHitbox;
+    this.slash.setVisible(hitbox !== null);
+    if (hitbox) this.slash.setPosition(hitbox.x, hitbox.y).setSize(hitbox.width, hitbox.height);
     if (Phaser.Input.Keyboard.JustDown(this.keys.debug)) {
       this.debugVisible = !this.debugVisible;
       this.debugText.setVisible(this.debugVisible);
+      this.combatDebug.setVisible(this.debugVisible);
       this.physics.world.drawDebug = this.debugVisible;
       this.physics.world.debugGraphic.clear().setVisible(this.debugVisible);
     }
     if (this.debugVisible) {
+      this.combatDebug.clear().lineStyle(1, 0x55ffff).strokeRectShape(this.combat.hurtbox);
+      if (hitbox) this.combatDebug.lineStyle(1, 0xffff55).strokeRectShape(hitbox);
+      this.combatDebug.lineStyle(1, 0xff9955);
+      for (const target of this.targets) if (target.health > 0) this.combatDebug.strokeRectShape(target.hurtbox);
       this.debugText.setText([
         'DEVELOPMENT / MOVEMENT',
         `X ${this.player.x.toFixed(1)} Y ${this.player.y.toFixed(1)}`,
@@ -106,7 +140,16 @@ export class DevelopmentScene extends Phaser.Scene {
         `Ground ${this.controller.grounded}`,
         `Wall L ${this.controller.touchingLeftWall} R ${this.controller.touchingRightWall}`,
         `State ${this.controller.state}`,
+        `Attack ${this.combat.phase} Box ${hitbox !== null}`,
+        `Hits ${this.combat.hitTargets.size}`,
       ]);
     }
+  }
+
+  private resetPlayer(x: number, y: number): void {
+    this.controller.reset(x, y);
+    this.combat.reset();
+    this.combat.update(0);
+    for (const target of this.targets) target.health = target.maxHealth;
   }
 }
