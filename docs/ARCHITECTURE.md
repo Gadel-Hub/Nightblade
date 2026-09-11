@@ -17,19 +17,21 @@ world. This scene remains the mechanics test area as development proceeds.
 
 The sandbox has a long floor, platforms at several heights, a low corridor,
 boundary walls, ceilings, a narrow wall-test shaft, a drop to a lower safety
-floor and an outlined area reserved for combat tests. The shaft is geometry
-for future wall-jump testing; wall jumping is not implemented yet.
+floor and an outlined area reserved for combat tests. A lower gap lane,
+single wall and two open shafts exercise wall jumps and edge collisions.
 
 A/D or left/right arrows set basic horizontal velocity. Space jumps when
 grounded. `src/player/PlayerController.ts` owns player movement and reset;
 the scene translates keyboard input and owns collision geometry. Movement
 constants live in `src/player/tuning.ts`, including the gravity used by the
 Phaser configuration. R resets position and velocity. See `PLAYER_TUNING.md`
-for the fixed-height jump baseline. There is no combat system.
+for the fixed-height jump baseline and wall-slide/jump rules. The controller
+tracks the last wall-jump side and remaining outward push duration; movement
+labels are derived from those and physics contacts. There is no combat system.
 
 F1 toggles fixed-camera debug text and Arcade Physics body outlines and
 velocity indicators. The text reports position, velocity, blocked floor/wall
-contacts and a derived placeholder movement state. Combat hitboxes and
+contacts and the current movement state. Combat hitboxes and
 hurtboxes do not exist yet.
 
 All visuals are programmer art. There are no production levels, backend,

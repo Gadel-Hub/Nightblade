@@ -38,11 +38,18 @@ export class DevelopmentScene extends Phaser.Scene {
     block(560, 272, 176, 16); // Low ceiling: 32-pixel corridor.
     block(800, 160, 16, 112); // Wall-jump shaft, entered underneath.
     block(848, 128, 16, 144);
-    block(784, 112, 96, 16); // Shaft ceiling.
+    block(848, 112, 32, 16); // Partial ceiling; the left side remains an exit.
     block(928, 256, 64, 16);
     block(1040, 208, 80, 16);
     block(1168, 272, 64, 16);
     block(1440, 448, 464, 16); // Reserved combat floor, after drop.
+    block(1360, 288, 16, 192); // Single wall accessible from either side.
+    // Lower jump lane: 32-pixel gap, then 104-pixel near-maximum gap.
+    block(32, 448, 80, 16);
+    block(144, 448, 80, 16);
+    block(328, 448, 80, 16);
+    block(480, 400, 16, 124); // Wider shaft for alternating wall jumps.
+    block(544, 368, 16, 156);
 
     const label = (x: number, y: number, text: string): void => {
       this.add.text(x, y, text, { fontFamily: 'monospace', fontSize: '8px', color: '#aebcd0' });
@@ -52,6 +59,9 @@ export class DevelopmentScene extends Phaser.Scene {
     label(560, 250, 'CORRIDOR');
     label(776, 92, 'WALL TEST');
     label(1248, 294, 'DROP >');
+    label(32, 426, '32 GAP / 104 GAP');
+    label(464, 350, 'OPEN SHAFT');
+    label(1304, 266, 'SINGLE WALL');
     this.add.rectangle(1664, 408, 416, 80).setStrokeStyle(1, 0x809070);
     label(1496, 380, 'RESERVED COMBAT AREA');
 
@@ -74,11 +84,11 @@ export class DevelopmentScene extends Phaser.Scene {
     }).setScrollFactor(0).setDepth(100).setVisible(false);
   }
 
-  update(): void {
+  update(_time: number, delta: number): void {
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     const direction = Number(this.cursors.right.isDown || this.keys.right.isDown)
       - Number(this.cursors.left.isDown || this.keys.left.isDown);
-    this.controller.update(direction, Phaser.Input.Keyboard.JustDown(this.keys.jump));
+    this.controller.update(direction, Phaser.Input.Keyboard.JustDown(this.keys.jump), delta / 1000);
     if (Phaser.Input.Keyboard.JustDown(this.keys.reset)) {
       this.controller.reset(SPAWN.x, SPAWN.y);
     }
@@ -91,9 +101,10 @@ export class DevelopmentScene extends Phaser.Scene {
     if (this.debugVisible) {
       this.debugText.setText([
         'DEVELOPMENT / MOVEMENT',
-        `X ${body.x.toFixed(1)} Y ${body.y.toFixed(1)}`,
+        `X ${this.player.x.toFixed(1)} Y ${this.player.y.toFixed(1)}`,
         `VX ${body.velocity.x.toFixed(1)} VY ${body.velocity.y.toFixed(1)}`,
-        `Ground ${body.blocked.down} L ${body.blocked.left} R ${body.blocked.right}`,
+        `Ground ${this.controller.grounded}`,
+        `Wall L ${this.controller.touchingLeftWall} R ${this.controller.touchingRightWall}`,
         `State ${this.controller.state}`,
       ]);
     }
