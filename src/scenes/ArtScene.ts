@@ -36,6 +36,7 @@ export class ArtScene extends Phaser.Scene {
   constructor() { super('art'); }
 
   preload(): void {
+    this.load.setBaseURL(import.meta.env.BASE_URL);
     this.load.spritesheet('courier-art', 'assets/player/courier.png', { frameWidth: 24, frameHeight: 32 });
     this.load.spritesheet('guard-art', 'assets/enemies/guard/guard.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('structure-art', 'assets/environment/visual-design/structure.png', { frameWidth: 16, frameHeight: 16 });

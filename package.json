@@ -10,7 +10,8 @@
     "assets:export": "node scripts/pixel-assets.mjs export",
     "assets:validate": "node scripts/pixel-assets.mjs validate",
     "test:assets": "node --test scripts/pixel-assets.test.mjs",
-    "test:level": "node scripts/level-browser.cjs && node scripts/level-traversal.cjs"
+    "test:level": "node scripts/level-browser.cjs && node scripts/level-traversal.cjs",
+    "test:pages": "node scripts/pages-browser.mjs"
   },
   "dependencies": {
     "phaser": "^3.90.0"
