@@ -3,16 +3,19 @@ import { PlayerController } from '../player/PlayerController';
 import { PlayerCombat } from '../combat/PlayerCombat';
 import { COMBAT } from '../combat/tuning';
 import { PlayerDamage } from '../combat/PlayerDamage';
+import { EnemyLab } from '../enemies/EnemyLab';
 
 const SPAWN = { x: 48, y: 280 };
 const COMBAT_SPAWN = { x: 1480, y: 438 };
-const WORLD = { width: 1920, height: 540 };
+const WORLD = { width: 2464, height: 540 };
 
 export class DevelopmentScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Image;
   private controller!: PlayerController;
   private combat!: PlayerCombat;
   private damage!: PlayerDamage;
+  private enemyLab!: EnemyLab;
+  private enemyKeys: Phaser.Input.Keyboard.Key[] = [];
   private hazard = new Phaser.Geom.Rectangle(1776, 432, 32, 16);
   private hazardContact = false;
   private statusText!: Phaser.GameObjects.Text;
@@ -63,6 +66,7 @@ export class DevelopmentScene extends Phaser.Scene {
     block(328, 448, 80, 16);
     block(480, 400, 16, 124); // Wider shaft for alternating wall jumps.
     block(544, 368, 16, 156);
+    this.enemyLab = new EnemyLab(this, terrain);
 
     const label = (x: number, y: number, text: string): void => {
       this.add.text(x, y, text, { fontFamily: 'monospace', fontSize: '8px', color: '#aebcd0' });
@@ -102,6 +106,7 @@ export class DevelopmentScene extends Phaser.Scene {
     const keyboard = this.input.keyboard!;
     this.cursors = keyboard.createCursorKeys();
     this.keys = keyboard.addKeys({ left: 'A', right: 'D', jump: 'SPACE', reset: 'R', debug: 'F1', attack: 'J', combatTest: 'C' }) as typeof this.keys;
+    this.enemyKeys = [keyboard.addKey('ONE')];
     this.physics.world.createDebugGraphic();
     this.physics.world.drawDebug = false;
     this.physics.world.debugGraphic.setDepth(98).setVisible(false);
@@ -118,7 +123,10 @@ export class DevelopmentScene extends Phaser.Scene {
     const direction = Number(this.cursors.right.isDown || this.keys.right.isDown)
       - Number(this.cursors.left.isDown || this.keys.left.isDown);
     this.damage.update(delta / 1000);
-    if (this.damage.readyToRespawn) this.resetPlayer(COMBAT_SPAWN.x, COMBAT_SPAWN.y);
+    if (this.damage.readyToRespawn) {
+      const spawn = this.enemyLab.spawn ?? COMBAT_SPAWN;
+      this.resetPlayer(spawn.x, spawn.y);
+    }
     const jumpPressed = Phaser.Input.Keyboard.JustDown(this.keys.jump);
     const attackPressed = Phaser.Input.Keyboard.JustDown(this.keys.attack);
     if (this.damage.state === 'normal') {
@@ -128,9 +136,20 @@ export class DevelopmentScene extends Phaser.Scene {
     this.combat.update(delta / 1000);
     if (attackPressed && this.damage.state === 'normal') this.combat.startAttack();
     if (Phaser.Input.Keyboard.JustDown(this.keys.reset)) {
+      this.enemyLab.clear();
       this.resetPlayer(SPAWN.x, SPAWN.y);
     }
-    if (Phaser.Input.Keyboard.JustDown(this.keys.combatTest)) this.resetPlayer(COMBAT_SPAWN.x, COMBAT_SPAWN.y);
+    if (Phaser.Input.Keyboard.JustDown(this.keys.combatTest)) {
+      this.enemyLab.clear();
+      this.resetPlayer(COMBAT_SPAWN.x, COMBAT_SPAWN.y);
+    }
+    this.enemyKeys.forEach((key, index) => {
+      if (Phaser.Input.Keyboard.JustDown(key)) {
+        this.enemyLab.selected = index;
+        const spawn = this.enemyLab.spawn!;
+        this.resetPlayer(spawn.x, spawn.y);
+      }
+    });
     const touchingHazard = this.damage.state !== 'dead'
       && Phaser.Geom.Intersects.RectangleToRectangle(this.combat.hurtbox, this.hazard);
     // One event per entry, including entries rejected during invulnerability.
@@ -141,6 +160,8 @@ export class DevelopmentScene extends Phaser.Scene {
       target.view.setVisible(target.health > 0);
       target.label.setText(`${target.health}/${target.maxHealth}`);
     }
+    this.enemyLab.update(delta / 1000, this.combat, this.damage.state !== 'dead',
+      (amount, sourceX) => this.receiveDamage(amount, sourceX));
     const hitbox = this.combat.attackHitbox;
     this.slash.setVisible(hitbox !== null);
     if (hitbox) this.slash.setPosition(hitbox.x, hitbox.y).setSize(hitbox.width, hitbox.height);
@@ -171,6 +192,7 @@ export class DevelopmentScene extends Phaser.Scene {
         `Invuln ${this.damage.invulnerabilityRemaining.toFixed(2)}`,
       ]);
     }
+    this.enemyLab.drawDebug(this.combatDebug, this.debugVisible);
   }
 
   private resetPlayer(x: number, y: number): void {
@@ -180,6 +202,7 @@ export class DevelopmentScene extends Phaser.Scene {
     this.combat.update(0);
     for (const target of this.targets) target.health = target.maxHealth;
     this.hazardContact = false;
+    this.enemyLab.reset();
   }
 
   private receiveDamage(amount: number, sourceX: number): boolean {

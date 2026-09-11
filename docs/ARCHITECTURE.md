@@ -13,7 +13,8 @@ smaller than the internal canvas retain 1× scale and may scroll.
 It generates one white texture for a rectangular placeholder player and
 uses static Arcade Physics rectangles for solid terrain. No asset loading
 or boot scene is needed. The camera follows the player within a 1920×540
-world. This scene remains the mechanics test area as development proceeds.
+original laboratory; isolated enemy bays extend the world to its right. This
+scene remains the mechanics test area as development proceeds.
 
 The sandbox has a long floor, platforms at several heights, a low corridor,
 boundary walls, ceilings, a narrow wall-test shaft, a drop to a lower safety
@@ -49,3 +50,10 @@ in F1 mode. See `COMBAT_TUNING.md` for timing and test controls.
 
 All visuals are programmer art. There are no production levels, backend,
 persistence, final assets or menus.
+
+`src/enemies/EnemyBody.ts` shares body/hurtbox bookkeeping, attack rectangle
+geometry and death cleanup. `Guard.ts` owns its own explicit decisions.
+`EnemyLab.ts` owns isolated test geometry, explicit encounter placement,
+damage integration and reset. Enemies collide with terrain but not each other
+or the player; only active attack rectangles damage the player. No navigation
+or generalized decision system exists. See `ENEMY_TUNING.md`.
