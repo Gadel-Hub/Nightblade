@@ -52,11 +52,12 @@ All visuals are programmer art. There are no production levels, backend,
 persistence, final assets or menus.
 
 `src/enemies/EnemyBody.ts` shares body/hurtbox bookkeeping, attack rectangle
-geometry and death cleanup. `Guard.ts` and `RangedAttacker.ts` own their own
+geometry and death cleanup. `Guard.ts`, `RangedAttacker.ts`, `Pursuer.ts` and
+`Heavy.ts` own their own
 explicit decisions. `Projectile.ts` owns one horizontal shot's physics body,
 terrain collider, lifetime and cleanup. Shots are owned by the ranged attacker
 and cleared when it dies or resets.
 `EnemyLab.ts` owns isolated test geometry, explicit encounter placement,
 damage integration and reset. Enemies collide with terrain but not each other
-or the player; only active attack rectangles damage the player. No navigation
+or the player; only active attack rectangles/projectiles damage the player. No navigation
 or generalized decision system exists. See `ENEMY_TUNING.md`.

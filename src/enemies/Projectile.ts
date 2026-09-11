@@ -13,11 +13,15 @@ export class Projectile {
     this.view = scene.physics.add.image(x, y, 'block').setDisplaySize(6, 4).setTint(0xf0cf70);
     (this.view.body as Phaser.Physics.Arcade.Body).allowGravity = false;
     this.view.setVelocityX(direction * ENEMY.ranged.projectileSpeed);
+    (this.view.body as Phaser.Physics.Arcade.Body).updateFromGameObject();
     this.collider = scene.physics.add.collider(this.view, terrain, () => this.destroy());
     this.syncBounds();
   }
 
-  private syncBounds(): void { this.bounds.setTo(this.view.x - 3, this.view.y - 2, 6, 4); }
+  private syncBounds(): void {
+    const body = this.view.body as Phaser.Physics.Arcade.Body;
+    this.bounds.setTo(body.x, body.y, body.width, body.height);
+  }
 
   update(delta: number, player: Phaser.Geom.Rectangle | null,
     receiveDamage: (amount: number, sourceX: number) => boolean): void {

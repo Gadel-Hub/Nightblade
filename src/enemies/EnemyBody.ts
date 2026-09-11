@@ -7,6 +7,7 @@ export abstract class EnemyBody {
   readonly hurtbox = new Phaser.Geom.Rectangle();
   readonly debugLabel: Phaser.GameObjects.Text;
   readonly attackView: Phaser.GameObjects.Rectangle;
+  private readonly facingMark: Phaser.GameObjects.Rectangle;
   attackHitbox: Phaser.Geom.Rectangle | null = null;
   attackSpent = false;
   facing: -1 | 1 = -1;
@@ -23,6 +24,8 @@ export abstract class EnemyBody {
     this.debugLabel = scene.add.text(x, y - height, '', { fontFamily: 'monospace', fontSize: '8px', backgroundColor: '#11151f' })
       .setDepth(100).setVisible(false);
     this.attackView = scene.add.rectangle(0, 0, 1, 1, 0xce6678).setOrigin(0).setVisible(false);
+    this.facingMark = scene.add.rectangle(x, y, 3, 3, 0xe9e6ce);
+    this.body.updateFromGameObject();
     this.syncHurtbox();
   }
 
@@ -32,9 +35,8 @@ export abstract class EnemyBody {
 
   syncHurtbox(): void {
     if (this.removed) return;
-    this.body.updateBounds();
-    this.hurtbox.setTo(this.view.x - this.body.width / 2, this.view.y - this.body.height / 2,
-      this.body.width, this.body.height);
+    this.hurtbox.setTo(this.body.x, this.body.y, this.body.width, this.body.height);
+    this.facingMark.setPosition(this.view.x + this.facing * (this.body.width / 2 - 2), this.view.y - 4);
   }
 
   afterHit(): void {
@@ -44,6 +46,7 @@ export abstract class EnemyBody {
     this.body.enable = false;
     this.clearAttack();
     this.view.setTint(0x424b58);
+    this.facingMark.setVisible(false);
   }
 
   protected alive(delta: number): boolean {
@@ -81,6 +84,7 @@ export abstract class EnemyBody {
     this.collider.destroy();
     this.view.destroy();
     this.attackView.destroy();
+    this.facingMark.destroy();
     this.debugLabel.destroy();
   }
 }

@@ -7,7 +7,7 @@ import { EnemyLab } from '../enemies/EnemyLab';
 
 const SPAWN = { x: 48, y: 280 };
 const COMBAT_SPAWN = { x: 1480, y: 438 };
-const WORLD = { width: 2944, height: 540 };
+const WORLD = { width: 5344, height: 540 };
 
 export class DevelopmentScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Image;
@@ -106,7 +106,7 @@ export class DevelopmentScene extends Phaser.Scene {
     const keyboard = this.input.keyboard!;
     this.cursors = keyboard.createCursorKeys();
     this.keys = keyboard.addKeys({ left: 'A', right: 'D', jump: 'SPACE', reset: 'R', debug: 'F1', attack: 'J', combatTest: 'C' }) as typeof this.keys;
-    this.enemyKeys = ['ONE', 'TWO'].map(key => keyboard.addKey(key));
+    this.enemyKeys = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN'].map(key => keyboard.addKey(key));
     this.physics.world.createDebugGraphic();
     this.physics.world.drawDebug = false;
     this.physics.world.debugGraphic.setDepth(98).setVisible(false);
