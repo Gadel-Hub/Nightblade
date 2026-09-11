@@ -1,0 +1,5 @@
+html, body { margin: 0; min-width: 320px; min-height: 220px; background: #11151f; color: #c4ccd8; }
+body { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: auto; }
+#game { flex: none; }
+canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+p { font: 12px monospace; text-align: center; margin: 8px 0; }
