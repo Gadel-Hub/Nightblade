@@ -9,7 +9,8 @@ disables antialiasing and rounds camera pixels. Resize handling chooses a
 whole-number display scale with CSS nearest-neighbor rendering. Viewports
 smaller than the internal canvas retain 1× scale and may scroll.
 
-`src/scenes/DevelopmentScene.ts` starts directly by default.
+`src/scenes/ArtScene.ts` starts by default and at `/#art`.
+`src/scenes/DevelopmentScene.ts` starts at `/#dev` or via V from the showcase.
 It generates one white texture for a rectangular placeholder player and
 uses static Arcade Physics rectangles for solid terrain. No asset loading
 or boot scene is needed. The camera follows the player within a 1920×540

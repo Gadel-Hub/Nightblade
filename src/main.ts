@@ -20,8 +20,8 @@ const game = new Phaser.Game({
   roundPixels: true,
   scale: { mode: Phaser.Scale.NONE, zoom: displayZoom() },
   physics: { default: 'arcade', arcade: { gravity: { x: 0, y: MOVEMENT.gravity } } },
-  scene: window.location.hash === '#art' ? [ArtScene, DevelopmentScene, Level1Scene]
-    : window.location.hash === '#level1' ? [Level1Scene, DevelopmentScene, ArtScene] : [DevelopmentScene, ArtScene, Level1Scene],
+  scene: window.location.hash === '#dev' ? [DevelopmentScene, ArtScene, Level1Scene]
+    : window.location.hash === '#level1' ? [Level1Scene, DevelopmentScene, ArtScene] : [ArtScene, DevelopmentScene, Level1Scene],
 });
 
 // Whole-number CSS scaling keeps every internal pixel the same size.

@@ -39,7 +39,7 @@ try {
   assert.ok(html.includes(`href="${base}assets/`), 'stylesheet URL respects base');
   browser = await chromium.launch();
   const origin = `http://127.0.0.1:${server.address().port}`;
-  for (const [hash, scene] of [['', 'development'], ['#art', 'art'], ['#level1', 'level1']]) {
+  for (const [hash, scene] of [['', 'art'], ['#art', 'art'], ['#dev', 'development'], ['#level1', 'level1']]) {
     const page = await browser.newPage();
     const failures = [], loaded = new Set();
     page.on('pageerror', error => failures.push(error.message));

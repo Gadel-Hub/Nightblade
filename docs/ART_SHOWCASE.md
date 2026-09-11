@@ -1,7 +1,7 @@
 # Native visual anchor review
 
 Run `npm run dev`, then press **V** to switch between the mechanics laboratory
-and art showcase. `/#art` starts directly in the showcase. **R** resets the
+and art showcase. Both `/` and `/#art` start in the showcase; `/#dev` starts in the mechanics lab. **R** resets the
 player and Guard; A/D/arrows, Space, J and F1 retain their existing meanings.
 
 The showcase has two platform heights, a tall wall, an open Guard encounter,

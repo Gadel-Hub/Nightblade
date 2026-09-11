@@ -26,7 +26,7 @@ or GitHub settings were changed as part of the local setup.
 Phaser's two asset-loading scenes use `import.meta.env.BASE_URL` as their loader
 base. The six PNG URLs remain otherwise unchanged. Vite rewrites JS/CSS URLs.
 For a project site, use `/repository/#art` and `/repository/#level1`; the default
-route opens the mechanics laboratory. Hashes do not require static-host rewrites.
+route opens the art showcase. `/repository/#dev` opens the mechanics laboratory. Hashes do not require static-host rewrites.
 Custom domains are outside this automatic repository-path configuration.
 
 ## Local verification
@@ -46,7 +46,7 @@ npm run test:pages
 `npx playwright install chromium` if needed). It serves the current `dist/` at a
 strict local mount, with no development-server fallback. It checks built HTML
 paths, JS/CSS/PNG responses, scene startup, player movement and F1 on the default,
-art and level routes. Test-only response instrumentation exposes the existing
+art, development and level routes. Test-only response instrumentation exposes the existing
 production game instance; no test global is emitted into the actual build.
 This verifies local deployment assumptions separately from the hosted Actions
 deployment.
