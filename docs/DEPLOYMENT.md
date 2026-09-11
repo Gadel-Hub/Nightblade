@@ -20,7 +20,7 @@ or GitHub settings were changed as part of the local setup.
 `GITHUB_PAGES=true`. It reads GitHub's `GITHUB_REPOSITORY=owner/repository`:
 
 - Project repository: `/repository/`, preserving repository-name case.
-- `owner.github.io` repository (case-insensitive): `/`.
+- Repository ending in `.github.io` (case-insensitive): `/`.
 - Normal builds and local development: `/`.
 
 Phaser's two asset-loading scenes use `import.meta.env.BASE_URL` as their loader
@@ -48,5 +48,13 @@ strict local mount, with no development-server fallback. It checks built HTML
 paths, JS/CSS/PNG responses, scene startup, player movement and F1 on the default,
 art and level routes. Test-only response instrumentation exposes the existing
 production game instance; no test global is emitted into the actual build.
-This verifies local deployment assumptions; the hosted Actions job still needs
-its first run on GitHub.
+This verifies local deployment assumptions separately from the hosted Actions
+deployment.
+
+A Pages build prints `GitHub Pages base: /repository/` (or `/` for a root site).
+Use that line and the generated HTML to identify the build configuration:
+ordinary local output uses `/assets/...`; project Pages output must use
+`/repository/assets/...`. Filenames and artifact directory listings alone do
+not establish which base was compiled. The existing workflow supplies the
+Pages flag; a root-based local `dist/` is not evidence that its Actions build
+used the same configuration.

@@ -28,7 +28,7 @@ try {
   process.env.GITHUB_PAGES = 'true';
   process.env.GITHUB_REPOSITORY = 'example/pages-smoke';
   assert.equal(config({ command: 'build' }).base, '/pages-smoke/');
-  process.env.GITHUB_REPOSITORY = 'example/EXAMPLE.github.io';
+  process.env.GITHUB_REPOSITORY = 'example/different-name.GITHUB.IO';
   assert.equal(config({ command: 'build' }).base, '/');
   assert.equal(config({ command: 'serve' }).base, '/');
   delete process.env.GITHUB_PAGES;
