@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "npm run assets:validate && tsc --noEmit && vite build",
     "preview": "vite preview",
     "assets:export": "node scripts/pixel-assets.mjs export",
     "assets:validate": "node scripts/pixel-assets.mjs validate",

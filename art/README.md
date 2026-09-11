@@ -11,6 +11,7 @@ is performed. Player feet register at (12,29); Guard at (16,29).
 - `npm run assets:export` writes the PNGs to `public/assets`, one cell per pixel.
 - `npm run assets:validate` checks all registered exports without modifying them.
 - `npm run test:assets` checks valid round trips and deliberate corruptions.
+- `npm run build` validates existing exports before compiling the game.
 
 The development-only PNG codec is `pngjs`; it is not imported by the game.
 The validator checks dimensions, CRC, exact palette membership, binary alpha,

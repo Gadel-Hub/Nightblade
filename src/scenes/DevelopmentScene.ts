@@ -16,6 +16,7 @@ export class DevelopmentScene extends Phaser.Scene {
   private damage!: PlayerDamage;
   private enemyLab!: EnemyLab;
   private enemyKeys: Phaser.Input.Keyboard.Key[] = [];
+  private artKey!: Phaser.Input.Keyboard.Key;
   private hazard = new Phaser.Geom.Rectangle(1776, 432, 32, 16);
   private hazardContact = false;
   private statusText!: Phaser.GameObjects.Text;
@@ -104,6 +105,8 @@ export class DevelopmentScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true);
 
     const keyboard = this.input.keyboard!;
+    this.artKey = keyboard.addKey('V');
+    this.events.on(Phaser.Scenes.Events.WAKE, () => keyboard.resetKeys());
     this.cursors = keyboard.createCursorKeys();
     this.keys = keyboard.addKeys({ left: 'A', right: 'D', jump: 'SPACE', reset: 'R', debug: 'F1', attack: 'J', combatTest: 'C' }) as typeof this.keys;
     this.enemyKeys = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN'].map(key => keyboard.addKey(key));
@@ -119,6 +122,7 @@ export class DevelopmentScene extends Phaser.Scene {
   }
 
   update(_time: number, delta: number): void {
+    if (Phaser.Input.Keyboard.JustDown(this.artKey)) { this.scene.switch('art'); return; }
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     const direction = Number(this.cursors.right.isDown || this.keys.right.isDown)
       - Number(this.cursors.left.isDown || this.keys.left.isDown);

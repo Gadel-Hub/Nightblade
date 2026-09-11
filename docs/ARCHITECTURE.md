@@ -9,7 +9,7 @@ disables antialiasing and rounds camera pixels. Resize handling chooses a
 whole-number display scale with CSS nearest-neighbor rendering. Viewports
 smaller than the internal canvas retain 1× scale and may scroll.
 
-`src/scenes/DevelopmentScene.ts` is the only scene and starts directly.
+`src/scenes/DevelopmentScene.ts` starts directly by default.
 It generates one white texture for a rectangular placeholder player and
 uses static Arcade Physics rectangles for solid terrain. No asset loading
 or boot scene is needed. The camera follows the player within a 1920×540
@@ -48,8 +48,13 @@ contacts and the current movement state. Combat hitboxes and
 hurtboxes are separate from Arcade terrain bodies and are drawn by the scene
 in F1 mode. See `COMBAT_TUNING.md` for timing and test controls.
 
-All visuals are programmer art. There are no production levels, backend,
-persistence, final assets or menus.
+The mechanics laboratory retains programmer art. `ArtScene.ts` is an optional
+playable native-art showcase (V, or `/#art`) using the same player controllers
+and Guard. Its scale-1 visual layers are separate from unchanged physics bodies.
+It preloads six PNG anchors from `public/assets`; `art/source` holds editable
+palette grids. `scripts/pixel-assets.mjs` exports/validates them during development,
+never at runtime. See `ART_SHOWCASE.md`. There are no production levels, backend,
+persistence or menus.
 
 `src/enemies/EnemyBody.ts` shares body/hurtbox bookkeeping, attack rectangle
 geometry and death cleanup. `Guard.ts`, `RangedAttacker.ts`, `Pursuer.ts` and

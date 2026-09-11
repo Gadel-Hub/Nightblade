@@ -33,6 +33,13 @@ export abstract class EnemyBody {
   abstract update(delta: number, player: Phaser.Geom.Rectangle | null): void;
   abstract get damage(): number;
 
+  // Visual-only replacement for the art laboratory; physics is unchanged.
+  setPlaceholderVisible(visible: boolean): void {
+    this.view.setAlpha(visible ? 1 : 0);
+    this.attackView.setAlpha(visible ? 1 : 0);
+    this.facingMark.setAlpha(visible ? 1 : 0);
+  }
+
   syncHurtbox(): void {
     if (this.removed) return;
     this.hurtbox.setTo(this.body.x, this.body.y, this.body.width, this.body.height);
