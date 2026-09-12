@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 28
+  productGUID: 8e65fd0215b94b7fa3ab4f60cca42eaf
+  companyName: Nightblade Team
+  productName: Nightblade
+  defaultScreenWidth: 960
+  defaultScreenHeight: 540
+  defaultScreenWidthWeb: 960
+  defaultScreenHeightWeb: 540
+  m_ActiveColorSpace: 0
+  runInBackground: 1
+  resizableWindow: 1
+  fullscreenMode: 3
+  bundleVersion: 0.1.0
+  scriptingBackend:
+    WebGL: 1
+  activeInputHandler: 1
+  webGLThreadsSupport: 0
+  webGLTemplate: APPLICATION:Default

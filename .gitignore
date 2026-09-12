@@ -1,0 +1,34 @@
+# Unity generated and local data
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+/[Bb]uild/
+/[Bb]uilds/
+/Assets/AssetStoreTools*
+# IDE-local/generated project files
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.opendb
+*.VC.db
+sysinfo.txt
+.DS_Store
+Thumbs.db
+# Leftover Phaser generated artifacts; preserve locally
+/node_modules/
+/dist/
+# Local tooling configuration
+/.agents/
+/.codex/
