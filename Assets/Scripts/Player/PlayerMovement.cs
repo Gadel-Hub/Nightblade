@@ -164,6 +164,21 @@ namespace Nightblade
             sliding = false;
         }
 
+        public void ResetMovement(Vector2 worldPosition)
+        {
+            body.simulated = true;
+            body.position = worldPosition;
+            body.linearVelocity = Vector2.zero;
+            Grounded = false;
+            LeftWall = false;
+            RightWall = false;
+            lastJumpWall = 0;
+            pushDirection = 0;
+            pushRemaining = 0f;
+            sliding = false;
+            controlEnabled = true;
+        }
+
         private void RefreshContacts()
         {
             Grounded = false;

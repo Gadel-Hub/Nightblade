@@ -78,6 +78,17 @@ namespace Nightblade
             return true;
         }
 
+        public void RespawnAt(Vector2 worldPosition)
+        {
+            health.RestoreFull();
+            State = DamageState.Normal;
+            stateRemaining = 0f;
+            InvulnerabilityRemaining = 0f;
+            visualRoot.SetActive(true);
+            movement.ResetMovement(worldPosition);
+            combat.ResetCombat();
+        }
+
         private void EnterDeadState()
         {
             State = DamageState.Dead;
