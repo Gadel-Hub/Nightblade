@@ -117,6 +117,10 @@ MonoBehaviour:
   recoveryDuration: 0.18
   attackHitbox: {fileID: 100022}
   hitboxOffset: {x: 0.5625, y: 0}
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  attackDamage: 1
 --- !u!1 &100010
 GameObject:
   m_ObjectHideFlags: 0
