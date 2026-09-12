@@ -37,6 +37,7 @@ namespace Nightblade
         private int pushDirection;
         private float pushRemaining;
         private bool sliding;
+        private bool controlEnabled = true;
 
         public bool Grounded { get; private set; }
         public bool LeftWall { get; private set; }
@@ -45,6 +46,7 @@ namespace Nightblade
         public Vector2 Velocity => body.linearVelocity;
         public float PushRemaining => pushRemaining;
         public int LastJumpWall => lastJumpWall;
+        public bool ControlEnabled => controlEnabled;
 
         public MovementState State
         {
@@ -87,14 +89,25 @@ namespace Nightblade
         private void FixedUpdate()
         {
             RefreshContacts();
+            if (!body.simulated) return;
+
+            float step = Time.fixedDeltaTime;
+            Vector2 velocity = body.linearVelocity;
+            if (!controlEnabled)
+            {
+                // Phaser gravity continues while hit reaction owns horizontal
+                // velocity, so only gravity is applied while controls are locked.
+                velocity.y -= gravity * step;
+                body.linearVelocity = velocity;
+                return;
+            }
+
             float input = moveAction.ReadValue<float>();
             int direction = input > 0f ? 1 : input < 0f ? -1 : 0;
             // Input is processed in fixed updates. The press belongs to this step
             // only: an ineligible press is discarded, never saved until landing.
             bool jumpPressed = jumpAction.WasPressedThisFrame();
             int wall = LeftWall ? -1 : RightWall ? 1 : 0;
-            float step = Time.fixedDeltaTime;
-            Vector2 velocity = body.linearVelocity;
 
             pushRemaining = Mathf.Max(0f, pushRemaining - step);
             if (Grounded)
@@ -137,6 +150,18 @@ namespace Nightblade
             velocity.y -= gravity * step;
             if (sliding) velocity.y = Mathf.Max(velocity.y, -wallSlideSpeed);
             body.linearVelocity = velocity;
+        }
+
+        public void SetControlEnabled(bool value)
+        {
+            controlEnabled = value;
+            if (value) return;
+
+            // Damage cancels transient wall motion without resetting the last
+            // wall, so a hit cannot grant another jump from that same wall.
+            pushRemaining = 0f;
+            pushDirection = 0;
+            sliding = false;
         }
 
         private void RefreshContacts()

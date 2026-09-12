@@ -33,6 +33,7 @@ namespace Nightblade
         private float phaseElapsed;
         private int facing = 1;
         private int swingFacing = 1;
+        private bool controlEnabled = true;
 
         public AttackPhase Phase { get; private set; } = AttackPhase.Idle;
         public bool IsAttacking => Phase != AttackPhase.Idle;
@@ -40,6 +41,7 @@ namespace Nightblade
         public int Facing => facing;
         public int SwingFacing => swingFacing;
         public int HitCount => hitTargets.Count;
+        public bool ControlEnabled => controlEnabled;
 
         private void Awake()
         {
@@ -74,11 +76,12 @@ namespace Nightblade
 
         private void Update()
         {
-            float direction = moveAction.ReadValue<float>();
-            if (direction != 0f) facing = direction < 0f ? -1 : 1;
-
             AdvanceAttack(Time.deltaTime);
             if (Phase == AttackPhase.Active) DamageOverlappingTargets();
+            if (!controlEnabled) return;
+
+            float direction = moveAction.ReadValue<float>();
+            if (direction != 0f) facing = direction < 0f ? -1 : 1;
             if (attackAction.WasPressedThisFrame()) TryStartAttack();
         }
 
@@ -105,9 +108,16 @@ namespace Nightblade
         public void ResetCombat()
         {
             InterruptAttack();
+            controlEnabled = true;
             facing = 1;
             swingFacing = 1;
             PlaceHitbox();
+        }
+
+        public void SetControlEnabled(bool value)
+        {
+            controlEnabled = value;
+            if (!value) InterruptAttack();
         }
 
         private void AdvanceAttack(float deltaTime)
