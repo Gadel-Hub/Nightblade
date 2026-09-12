@@ -1,12 +1,13 @@
 # Nightblade
 
 The canonical Unity foundation lives on `main`. Open this repository root with
-**Unity 6000.3.24f1 (6.3 LTS)**, then open `Assets/Scenes/BootstrapLab.unity`.
+**Unity 6000.3.24f1 (6.3 LTS)**, then open `Assets/Scenes/MovementLab.unity`
+for movement testing or `BootstrapLab.unity` for the static rendering baseline.
 Install that exact editor with **Web Build Support** through Unity Hub.
 
-This is a static technical bootstrap: no gameplay has been ported. The project
-files were authored without running Unity; Editor import, compilation, rendering,
-and Web target validation remain pending. On first import, Unity will populate
+Player movement is implemented with status **porting**. The project files were
+authored without running Unity; Editor import, compilation, rendering, movement
+feel, and Web target validation remain pending. On first import, Unity will populate
 remaining default settings and resolve packages. Review and commit normal settings
 and `Packages/packages-lock.json`; leave generated caches ignored.
 
@@ -15,8 +16,9 @@ and `Packages/packages-lock.json`; leave generated caches ignored.
 ```text
 Assets/
   Art/Placeholder/
-  Prefabs/
-  Scenes/BootstrapLab.unity
+  Input/
+  Prefabs/Player.prefab
+  Scenes/{BootstrapLab,MovementLab}.unity
   Scripts/{Player,Combat,Enemies,Levels,Debug}/
   Tests/
 Packages/
@@ -24,7 +26,8 @@ ProjectSettings/
 ```
 
 Empty development folders have `.gitkeep` files and stable folder `.meta` files.
-There are no custom C# scripts or frameworks in this bootstrap.
+`PlayerMovement` owns movement; optional diagnostics and a plain lab camera live
+under `Scripts/Debug`. No gameplay framework is involved.
 
 ## Technical baseline
 
@@ -39,8 +42,9 @@ There are no custom C# scripts or frameworks in this bootstrap.
   32×32 one-pixel stripe swatch verify placement, scale, and pixel presentation.
   The HUD is only a rendering marker, with no health or UI behavior.
 - Input System **1.20.0** is pinned; Active Input Handling is Input System only.
-  No action maps, bindings, `PlayerInput`, or gameplay controls are implemented.
-- `BootstrapLab` is the sole enabled build scene. Web uses IL2CPP with threading
+  `Player/Move` uses A/D or arrows; `Player/Jump` uses Space. Input and movement run
+  in fixed updates at 60 Hz. No combat actions are present.
+- Both labs are enabled build scenes; `BootstrapLab` remains first. Web uses IL2CPP with threading
   disabled and Unity's default Web template. No deployment pipeline or build
   output is included. Web target availability requires the matching editor module.
 
@@ -57,11 +61,12 @@ alpha, 32 PPU, and explicit center pivots. These are per-asset defaults, not a
 global importer that overrides future supplied specifications. Keep each asset's
 `.meta` file when replacing it.
 
-Player and enemy roots have separate `Visual` children. Replace the child's
+The static bootstrap roots and player prefab have separate `Visual` children. Replace the child's
 SpriteRenderer sprite and adjust its visual offset/pivot as required by the
-supplied asset. Future gameplay colliders and hitboxes belong to explicitly
-configured gameplay objects, independently of these visuals. No collider,
-rigidbody, damage area, or automatic sprite-derived physics shape exists here.
+supplied asset. The player prefab's root has an explicit 0.375×0.625 BoxCollider2D
+and dynamic Rigidbody2D; changing the visual does not resize that collider. Lab
+terrain also has separately authored collision geometry. `BootstrapLab` stays
+static. No damage areas or automatic sprite-derived physics shapes are used.
 Other native sprite sizes are welcome; do not resize artwork to fit a 32×32 box.
 Temporary dimensions and colors impose no production design requirements.
 
@@ -74,6 +79,15 @@ script GUID/serialized fields and pinned registry dependencies were checked
 against Unity's package data. All parity source paths exist at the audited ref;
 other branch/remote/tag refs remain unchanged. These checks do not establish that
 Unity imports or renders the scene.
+
+Movement static checks also passed: run `python3 scripts/validate_movement.py`
+(requires Python 3 and PyYAML). They compare serialized/C# tuning to the actual
+Phaser Git reference and check input, prefab, material, layer, timestep, lab, and
+asset-reference wiring. They do not compile C# or simulate physics.
+
+Follow [player tuning](docs/PLAYER_TUNING.md) and the
+[manual movement checklist](docs/MOVEMENT_VALIDATION.md). Movement must be manually
+accepted in the pinned editor before combat begins; no runtime acceptance is claimed.
 
 Pending in **6000.3.24f1**:
 
