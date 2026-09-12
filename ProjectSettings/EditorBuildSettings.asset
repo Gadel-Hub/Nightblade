@@ -8,4 +8,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BootstrapLab.unity
     guid: 0be8f184003b4b81abe71bb1bac24a51
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 7530bdc1044e4a07b0ea43baf6fd1f6c, type: 2}

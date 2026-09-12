@@ -1,0 +1,98 @@
+{
+  "name": "Movement",
+  "maps": [
+    {
+      "name": "Player",
+      "id": "2fd70fb6-46ba-4763-91ae-b9cb41ea9f07",
+      "actions": [
+        {
+          "name": "Move",
+          "type": "Value",
+          "id": "3987498c-bacb-4212-a1c2-9b18c25f0e8a",
+          "expectedControlType": "Axis",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": true
+        },
+        {
+          "name": "Jump",
+          "type": "Button",
+          "id": "474cf69b-655e-446e-9cd1-3bf2f636a437",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
+        }
+      ],
+      "bindings": [
+        {
+          "name": "Keyboard",
+          "id": "fe3c6770-bb41-40a2-96da-d9930b6c6162",
+          "path": "1DAxis(whichSideWins=0)",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": true,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "negative",
+          "id": "7466fffc-c2e8-449e-a229-18fbe4505bb3",
+          "path": "<Keyboard>/a",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "negative",
+          "id": "e130239b-371f-4b17-ab7c-533ab044f5b3",
+          "path": "<Keyboard>/leftArrow",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "positive",
+          "id": "d3b48375-f84b-4280-b9b9-c75d7195a9cd",
+          "path": "<Keyboard>/d",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "positive",
+          "id": "e6d1d936-22d0-48a4-8e25-f101ca0a41ef",
+          "path": "<Keyboard>/rightArrow",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Move",
+          "isComposite": false,
+          "isPartOfComposite": true
+        },
+        {
+          "name": "",
+          "id": "7fb8c33b-7bf1-4494-b9ef-d1ecbb4bdc55",
+          "path": "<Keyboard>/space",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Jump",
+          "isComposite": false,
+          "isPartOfComposite": false
+        }
+      ]
+    }
+  ],
+  "controlSchemes": []
+}
