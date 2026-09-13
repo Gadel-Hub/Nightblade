@@ -87,13 +87,6 @@ for that step. Damage interruption and respawn APIs remain outside this task.
 
 ## Checks and maintainer gate
 
-Run `python3 scripts/validate_movement.py` from the repository (Python 3 with
-PyYAML). This compares the actual Git reference against serialized tuning and C#
-defaults, and checks prefab components, input wiring, contact mask/layers, material,
-scene references, test geometry, and parity statuses. It does **not** compile C#,
-load Unity assets, simulate collisions, or establish feel. Mono alone is present
-without Unity reference assemblies; no Unity compilation path is available here.
-
 Use [the manual movement checklist](MOVEMENT_VALIDATION.md) in the pinned editor.
 The maintainer must accept movement before combat work begins. Only then change
 the relevant parity entries to `manually accepted`.

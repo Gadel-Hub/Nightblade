@@ -80,11 +80,6 @@ against Unity's package data. All parity source paths exist at the audited ref;
 other branch/remote/tag refs remain unchanged. These checks do not establish that
 Unity imports or renders the scene.
 
-Movement static checks also passed: run `python3 scripts/validate_movement.py`
-(requires Python 3 and PyYAML). They compare serialized/C# tuning to the actual
-Phaser Git reference and check input, prefab, material, layer, timestep, lab, and
-asset-reference wiring. They do not compile C# or simulate physics.
-
 Follow [player tuning](docs/PLAYER_TUNING.md) and the
 [manual movement checklist](docs/MOVEMENT_VALIDATION.md). Movement must be manually
 accepted in the pinned editor before combat begins; no runtime acceptance is claimed.
