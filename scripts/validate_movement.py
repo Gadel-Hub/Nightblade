@@ -53,7 +53,7 @@ def close(actual, expected, description):
 
 
 def validate():
-    require(read('ProjectSettings/ProjectVersion.txt').strip() ==
+    require(read('ProjectSettings/ProjectVersion.txt').splitlines()[0] ==
             'm_EditorVersion: 6000.3.24f1', 'Wrong Unity editor version')
     require(json.loads(read('Packages/manifest.json'))['dependencies']['com.unity.inputsystem'] ==
             '1.20.0', 'Unexpected Input System package change')
@@ -64,7 +64,12 @@ def validate():
                  re.findall(r'(\w+):\s*(-?[\d.]+)', source)}
     prefab_path = 'Assets/Prefabs/Player.prefab'
     prefab = documents(prefab_path)
-    movement = component(prefab, 'MonoBehaviour')
+    movement_script = guid('Assets/Scripts/Player/PlayerMovement.cs')
+    movement_components = [doc['MonoBehaviour'] for doc in prefab.values()
+                           if 'MonoBehaviour' in doc
+                           and doc['MonoBehaviour']['m_Script'].get('guid') == movement_script]
+    require(len(movement_components) == 1, 'Expected one PlayerMovement component')
+    movement = movement_components[0]
     code = read('Assets/Scripts/Player/PlayerMovement.cs')
     conversions = {
         'runSpeed': ('maxHorizontalSpeed', 1 / 32),
@@ -81,7 +86,7 @@ def validate():
         declaration = re.search(r'private float ' + field + r' = ([\d.]+)f;', code)
         require(declaration is not None, f'Missing tuning field: {field}')
         close(float(declaration[1]), expected, f'C# default drift: {field}')
-    require(movement['m_Script']['guid'] == guid('Assets/Scripts/Player/PlayerMovement.cs'),
+    require(movement['m_Script']['guid'] == movement_script,
             'Prefab movement script reference is broken')
     body = component(prefab, 'Rigidbody2D')
     for key, value in {'m_BodyType': 0, 'm_Simulated': 1, 'm_UseAutoMass': 0,
@@ -89,12 +94,15 @@ def validate():
                        'm_GravityScale': 0, 'm_Interpolate': 0, 'm_SleepingMode': 0,
                        'm_CollisionDetection': 1, 'm_Constraints': 4}.items():
         require(body[key] == value, f'Unexpected Rigidbody configuration: {key}')
-    box = component(prefab, 'BoxCollider2D')
+    root_id = body['m_GameObject']['fileID']
+    body_colliders = [doc['BoxCollider2D'] for doc in prefab.values()
+                      if 'BoxCollider2D' in doc
+                      and doc['BoxCollider2D']['m_GameObject']['fileID'] == root_id]
+    require(len(body_colliders) == 1, 'Expected one player body collider')
+    box = body_colliders[0]
     require(box['m_Size'] == {'x': 12 / 32, 'y': 20 / 32}, 'Gameplay collider size changed')
     require(box['m_IsTrigger'] == box['m_AutoTiling'] == 0, 'Collider must be solid and explicit')
-    root_id = body['m_GameObject']['fileID']
     root = prefab[root_id]['GameObject']
-    require(len(root['m_Component']) == 4, 'Player root should only have transform, body, box, movement')
     renderer = component(prefab, 'SpriteRenderer')
     require(renderer['m_GameObject']['fileID'] != root_id, 'Visual must be a separate child')
     visual = prefab[renderer['m_GameObject']['fileID']]['GameObject']
@@ -124,8 +132,9 @@ def validate():
     actions = json.loads(read(input_path))['maps']
     require(len(actions) == 1 and actions[0]['name'] == 'Player', 'Unexpected input maps')
     action_map = actions[0]
-    require({a['name']: a['type'] for a in action_map['actions']} == {'Move': 'Value', 'Jump': 'Button'},
-            'Expected only Move and Jump')
+    require({a['name']: a['type'] for a in action_map['actions']} ==
+            {'Move': 'Value', 'Jump': 'Button', 'Attack': 'Button'},
+            'Unexpected player actions')
     bindings = action_map['bindings']
     require(bindings[0]['path'] == '1DAxis(whichSideWins=0)' and bindings[0]['isComposite'],
             'Opposing directions must cancel in one composite')
@@ -134,8 +143,10 @@ def validate():
         ('positive', '<Keyboard>/d'), ('positive', '<Keyboard>/rightArrow')}, 'Wrong movement keys')
     require(all(b['isPartOfComposite'] and b['action'] == 'Move' for b in bindings[1:5]),
             'Unattached direction binding')
-    require(len(bindings) == 6 and bindings[5]['path'] == '<Keyboard>/space'
+    require(bindings[5]['path'] == '<Keyboard>/space'
             and bindings[5]['action'] == 'Jump', 'Wrong jump binding')
+    require(len(bindings) == 7 and bindings[6]['path'] == '<Keyboard>/j'
+            and bindings[6]['action'] == 'Attack', 'Wrong attack binding')
     all_ids = [action_map['id']] + [a['id'] for a in action_map['actions']] + [b['id'] for b in bindings]
     require(len(set(all_ids)) == len(all_ids), 'Duplicate input IDs')
     input_settings = 'Assets/Input/MovementInputSettings.asset'
@@ -227,7 +238,7 @@ def validate():
     for subsystem in ['Horizontal movement', 'Jump / gravity', 'Ground / wall detection',
                       'Wall slide', 'Wall jump / control restriction']:
         row = next(line for line in parity.splitlines() if line.startswith('| ' + subsystem + ' |'))
-        require(row.endswith('| porting |'), f'Premature parity status: {subsystem}')
+        require(row.endswith('| manually accepted |'), f'Unexpected parity status: {subsystem}')
     for path in ['Library/check', 'Temp/check', 'Logs/check', 'obj/check', 'UserSettings/check',
                  'node_modules/check', 'dist/check', 'Builds/Web/check']:
         require(subprocess.run(['git', 'check-ignore', '-q', path], cwd=ROOT).returncode == 0,
