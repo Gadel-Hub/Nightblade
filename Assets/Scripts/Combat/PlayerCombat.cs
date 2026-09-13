@@ -19,6 +19,7 @@ namespace Nightblade
 
         [Header("Gameplay geometry")]
         [SerializeField] private BoxCollider2D attackHitbox;
+        [SerializeField] private SpriteRenderer attackVisual;
         [SerializeField] private Vector2 hitboxOffset = new Vector2(0.5625f, 0f);
         [SerializeField] private LayerMask targetLayers;
         [SerializeField, Min(1)] private int attackDamage = 1;
@@ -46,14 +47,15 @@ namespace Nightblade
 
         private void Awake()
         {
-            if (inputActions == null || attackHitbox == null || targetLayers.value == 0)
+            if (inputActions == null || attackHitbox == null || attackVisual == null || targetLayers.value == 0)
             {
-                Debug.LogError("PlayerCombat needs player input actions, an attack hitbox, and target layers.", this);
+                Debug.LogError("PlayerCombat needs input actions, an attack hitbox, an attack visual, and target layers.", this);
                 enabled = false;
                 return;
             }
 
             attackHitbox.enabled = false;
+            attackVisual.enabled = false;
             targetFilter = new ContactFilter2D { useTriggers = true };
             targetFilter.SetLayerMask(targetLayers);
             runtimeActions = Instantiate(inputActions);
@@ -122,6 +124,7 @@ namespace Nightblade
             attackRequested = false;
             hitTargets.Clear();
             if (attackHitbox != null) attackHitbox.enabled = false;
+            if (attackVisual != null) attackVisual.enabled = false;
         }
 
         public void ResetCombat()
@@ -156,7 +159,9 @@ namespace Nightblade
         private void SetPhase(AttackPhase nextPhase)
         {
             Phase = nextPhase;
-            attackHitbox.enabled = nextPhase == AttackPhase.Active;
+            bool isActive = nextPhase == AttackPhase.Active;
+            attackHitbox.enabled = isActive;
+            attackVisual.enabled = isActive;
         }
 
         private void PlaceHitbox()

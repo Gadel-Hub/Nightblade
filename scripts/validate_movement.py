@@ -103,12 +103,40 @@ def validate():
     require(box['m_Size'] == {'x': 12 / 32, 'y': 20 / 32}, 'Gameplay collider size changed')
     require(box['m_IsTrigger'] == box['m_AutoTiling'] == 0, 'Collider must be solid and explicit')
     root = prefab[root_id]['GameObject']
-    renderer = component(prefab, 'SpriteRenderer')
+    renderers = [doc['SpriteRenderer'] for doc in prefab.values() if 'SpriteRenderer' in doc]
+    player_renderers = [renderer for renderer in renderers
+                        if prefab[renderer['m_GameObject']['fileID']]['GameObject']['m_Name'] == 'Visual']
+    require(len(player_renderers) == 1, 'Expected one player placeholder renderer')
+    renderer = player_renderers[0]
     require(renderer['m_GameObject']['fileID'] != root_id, 'Visual must be a separate child')
     visual = prefab[renderer['m_GameObject']['fileID']]['GameObject']
     visual_transform = prefab[visual['m_Component'][0]['component']['fileID']]['Transform']
     require(visual_transform['m_Father']['fileID'] == root['m_Component'][0]['component']['fileID'],
             'Visual is not a child of the gameplay root')
+    attack_renderers = [renderer for renderer in renderers
+                        if prefab[renderer['m_GameObject']['fileID']]['GameObject']['m_Name'] ==
+                        'TEMP_AttackVisual']
+    require(len(attack_renderers) == 1, 'Expected one attack placeholder renderer')
+    attack_renderer = attack_renderers[0]
+    attack_visual = prefab[attack_renderer['m_GameObject']['fileID']]['GameObject']
+    attack_visual_transform = prefab[attack_visual['m_Component'][0]['component']['fileID']]['Transform']
+    attack_colliders = [doc['BoxCollider2D'] for doc in prefab.values()
+                        if 'BoxCollider2D' in doc
+                        and doc['BoxCollider2D']['m_GameObject']['fileID'] != root_id]
+    require(len(attack_colliders) == 1, 'Expected one independent attack hitbox')
+    attack_hitbox = attack_colliders[0]
+    attack_hitbox_object = prefab[attack_hitbox['m_GameObject']['fileID']]['GameObject']
+    attack_hitbox_transform_id = attack_hitbox_object['m_Component'][0]['component']['fileID']
+    require(attack_visual_transform['m_Father']['fileID'] == attack_hitbox_transform_id,
+            'Attack placeholder must follow the gameplay hitbox')
+    require(attack_renderer['m_Enabled'] == 0 and attack_renderer['m_DrawMode'] == 1,
+            'Attack placeholder must start hidden and use explicit sizing')
+    require(attack_renderer['m_Size'] == attack_hitbox['m_Size'],
+            'Attack placeholder must align with the gameplay hitbox')
+    attack_visual_components = [entry['component']['fileID'] for entry in attack_visual['m_Component']]
+    require(all(not any(kind.endswith('Collider2D') for kind in prefab[file_id])
+                for file_id in attack_visual_components),
+            'Attack placeholder must not define collision')
     require(body['m_GameObject'] == box['m_GameObject'] == movement['m_GameObject'],
             'Gameplay components must share the root')
     for doc in prefab.values():
