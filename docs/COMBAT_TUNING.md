@@ -33,12 +33,12 @@ damage values are unchanged.
 ## Implementation decisions
 
 `PlayerCombat` uses the explicit `Idle`, `Startup`, `Active`, and `Recovery`
-phases. A J press is sampled with the Input System's fixed-update processing and
-consumed by the next rendered update. Starting a swing captures facing and clears
-a `HashSet<CombatTarget>`. During the active phase an `OverlapBox` queries only
-layer 10 (`Damageable`); successful targets enter the set, so physics callback
-frequency cannot produce repeated damage. The disabled attack collider is explicit
-gameplay geometry and never follows sprite dimensions.
+phases. The enabled `Player/Attack` action queues one request from its `performed`
+callback, and the next fixed gameplay step consumes it. Starting a swing captures
+facing and clears a `HashSet<CombatTarget>`. During the active phase an `OverlapBox`
+queries only layer 10 (`Damageable`); successful targets enter the set, so physics
+callback frequency cannot produce repeated damage. The disabled attack collider
+is explicit gameplay geometry and never follows sprite dimensions.
 
 `PlayerHealth` owns only maximum/current health. `PlayerDamage` rejects nonpositive,
 protected, or non-normal-state hits; interrupts movement and attacks; applies the
@@ -61,14 +61,15 @@ serialization errors. A temporary PlayMode validation assembly exercised phase
 timing, hitbox activation, both hitbox directions, per-swing hit tracking, attacks
 while movement control is active and while airborne, damage rejection during
 invulnerability, knockback, hit recovery, lethal damage, respawn, and target reset.
-The test passed. It also confirmed that the Attack action is enabled and resolves
-the J binding. The temporary assembly was kept outside the repository.
+The test passed. A focused Editor validation also opens `CombatLab`, confirms that
+the combat component clones the serialized action asset, resolves and enables its
+own `Player/Attack` action with the J binding, and consumes one request from the
+performed callback without repeating from that event.
 
-Unity batch mode did not drive `WasPressedThisFrame` from synthetic keyboard
-events, so physical J and F1 input were not claimed from automation. In Play mode,
-manually verify J startup/active/recovery, left/right reach, moving and airborne
-attacks, one hit per target per swing, damage-source re-entry, knockback direction,
-the 0.18-second control return, the remaining invulnerability window, death and
-respawn timing, and the F1 overlay/wireframes. Compare attack timing, reach,
-knockback, reaction, invulnerability, and respawn feel with the Phaser reference
-before marking combat `manually accepted`.
+Batch mode does not prove a physical keyboard press, so J and F1 remain manual
+checks. In Play mode, verify J startup/active/recovery, left/right reach, moving
+and airborne attacks, one hit per target per swing, damage-source re-entry,
+knockback direction, the 0.18-second control return, the remaining invulnerability
+window, death and respawn timing, and the F1 overlay/wireframes. Compare attack
+timing, reach, knockback, reaction, invulnerability, and respawn feel with the
+Phaser reference before marking combat `manually accepted`.

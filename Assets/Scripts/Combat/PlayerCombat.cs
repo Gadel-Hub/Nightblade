@@ -62,10 +62,16 @@ namespace Nightblade
             attackAction = playerActions.FindAction("Attack", true);
         }
 
-        private void OnEnable() => playerActions?.Enable();
+        private void OnEnable()
+        {
+            if (playerActions == null || attackAction == null) return;
+            attackAction.performed += OnAttackPerformed;
+            playerActions.Enable();
+        }
 
         private void OnDisable()
         {
+            if (attackAction != null) attackAction.performed -= OnAttackPerformed;
             playerActions?.Disable();
             InterruptAttack();
         }
@@ -79,10 +85,6 @@ namespace Nightblade
         {
             AdvanceAttack(Time.deltaTime);
             if (Phase == AttackPhase.Active) DamageOverlappingTargets();
-            if (!controlEnabled || !attackRequested) return;
-
-            attackRequested = false;
-            TryStartAttack();
         }
 
         private void FixedUpdate()
@@ -90,7 +92,15 @@ namespace Nightblade
             if (!controlEnabled) return;
             float direction = moveAction.ReadValue<float>();
             if (direction != 0f) facing = direction < 0f ? -1 : 1;
-            if (attackAction.WasPressedThisFrame()) attackRequested = true;
+            if (!attackRequested) return;
+
+            attackRequested = false;
+            TryStartAttack();
+        }
+
+        private void OnAttackPerformed(InputAction.CallbackContext _)
+        {
+            if (controlEnabled) attackRequested = true;
         }
 
         public bool TryStartAttack()
