@@ -1,9 +1,9 @@
 # Player movement tuning
 
-Status: **porting**. Source reviewed at `5a8f52038b15e32edd64d6c4a3f35b1e417359bd`:
+Status: **manually accepted**. Source reviewed at `5a8f52038b15e32edd64d6c4a3f35b1e417359bd`:
 `src/player/tuning.ts`, `src/player/PlayerController.ts`, `src/main.ts`, and
 `src/scenes/DevelopmentScene.ts` (body size, terrain, and input wiring).
-Unity **6000.3.24f1** is unavailable; no Unity compilation or runtime parity is claimed.
+Movement was tested and accepted in Unity **6000.3.24f1**.
 
 ## Reference conversion
 
@@ -47,12 +47,13 @@ Arcade's fixed 60 Hz default. That default and gravity-before-position integrati
 were also inspected in the locally installed Phaser 3.90.0 source, matching its
 locked version. Unity's Box2D solver, contact tolerances, CCD, and fixed input
 sampling differ from Arcade's scene-update ordering. In particular, the 0.12 s
-lock is quantized to physics steps (up to one extra 1/60 s step). These differences
-need runtime comparison; no compensating tuning changes have been guessed.
+lock is quantized to physics steps (up to one extra 1/60 s step). Manual runtime
+testing accepted these differences without compensating tuning changes.
 
-The ordinary Input System asset contains only `Player/Move` (one 1D Axis
-composite: A/Left Arrow negative, D/Right Arrow positive) and `Player/Jump`
-(Space, Button). Both directions cancel, including mixed A + Right Arrow.
+Movement uses `Player/Move` (one 1D Axis composite: A/Left Arrow negative,
+D/Right Arrow positive) and `Player/Jump` (Space, Button). The same map also
+contains `Player/Attack` (J) for combat. Both directions cancel, including mixed
+A + Right Arrow.
 Each player clones the asset and enables/disables its own map. Project input
 settings process events before FixedUpdate; `WasPressedThisFrame` is consumed
 for that step only. A held jump does not repeat; an ineligible press is discarded.
@@ -83,13 +84,11 @@ jumping from the other side does not grant another wall jump.
 State priority follows the POC: grounded Idle/Run, then WallJump while committed,
 then WallSlide, otherwise Jump/Fall by vertical direction. Debug grounded state is
 cleared immediately on a ground launch instead of displaying the previous contact
-for that step. Damage interruption and respawn APIs remain outside this task.
+for that step. Combat uses the movement component's explicit control and reset APIs.
 
-## Checks and maintainer gate
+## Regression reference
 
-Use [the manual movement checklist](MOVEMENT_VALIDATION.md) in the pinned editor.
-The maintainer must accept movement before combat work begins. Only then change
-the relevant parity entries to `manually accepted`.
+Use [the movement checklist](MOVEMENT_VALIDATION.md) when checking movement changes.
 
 API references used for wiring:
 [Rigidbody2D contacts](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Rigidbody2D.GetContacts.html),

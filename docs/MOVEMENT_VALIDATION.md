@@ -1,9 +1,8 @@
-# Movement validation handoff
+# Movement regression checklist
 
-**Pending:** open the project with Unity **6000.3.24f1**, resolve packages, and
-confirm no import/compile errors or missing references. Open `MovementLab` and
-enter Play mode. `BootstrapLab` remains the unchanged static rendering scene.
-No runtime checks below were performed in the implementation environment.
+Movement was manually accepted in Unity **6000.3.24f1**. Use this checklist for
+regression testing after changes to movement, input, or physics configuration.
+Open `MovementLab` and enter Play mode.
 
 A/D or arrows move; Space jumps. F1 toggles the development overlay. Its collider
 wireframe is visible with Gizmos enabled. F1 is read in fixed updates and tooling
@@ -68,6 +67,5 @@ on the one-unit grid; half/quarter-unit dimensions serve the ceiling and shaft t
 - [ ] Replace the prefab Visual's sprite with a differently sized sprite. The
   collider remains 0.375×0.625 and all movement behavior remains unchanged.
 
-Record editor version, platform, frame rate, observed differences, and acceptance
-in the review. Keep movement `porting` until the maintainer accepts it. Combat is
-blocked by this human gate; Web builds and deployment are not part of this check.
+Record the editor version, platform, frame rate, and observed regressions in the
+review. Current acceptance status is recorded in `PORT_PARITY.md`.

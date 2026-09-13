@@ -54,20 +54,10 @@ stationary targets, a trigger damage source, a spawn point, and development-only
 F1 diagnostics. Placeholders reuse the isolated temporary sprites; all combat
 colliders remain separately authored.
 
-## Validation and maintainer gate
+## Maintainer gate
 
-Unity **6000.3.24f1** imported and opened `CombatLab` without compile or scene
-serialization errors. A temporary PlayMode validation assembly exercised phase
-timing, hitbox activation, both hitbox directions, per-swing hit tracking, attacks
-while movement control is active and while airborne, damage rejection during
-invulnerability, knockback, hit recovery, lethal damage, respawn, and target reset.
-The test passed. A focused Editor validation also opens `CombatLab`, confirms that
-the combat component clones the serialized action asset, resolves and enables its
-own `Player/Attack` action with the J binding, and consumes one request from the
-performed callback without repeating from that event.
-
-Batch mode does not prove a physical keyboard press, so J and F1 remain manual
-checks. In Play mode, verify J startup/active/recovery, left/right reach, moving
+Unity **6000.3.24f1** imports and opens `CombatLab`, and physical J input has been
+confirmed. In Play mode, verify startup/active/recovery, left/right reach, moving
 and airborne attacks, one hit per target per swing, damage-source re-entry,
 knockback direction, the 0.18-second control return, the remaining invulnerability
 window, death and respawn timing, and the F1 overlay/wireframes. Compare attack

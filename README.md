@@ -1,15 +1,14 @@
 # Nightblade
 
 The canonical Unity foundation lives on `main`. Open this repository root with
-**Unity 6000.3.24f1 (6.3 LTS)**, then open `Assets/Scenes/MovementLab.unity`
-for movement testing or `BootstrapLab.unity` for the static rendering baseline.
-Install that exact editor with **Web Build Support** through Unity Hub.
+**Unity 6000.3.24f1 (6.3 LTS)**. `BootstrapLab` verifies rendering,
+`MovementLab` exercises accepted player movement, and `CombatLab` exercises the
+combat foundation. Install that exact editor with **Web Build Support** through
+Unity Hub.
 
-Player movement is implemented with status **porting**. The project files were
-authored without running Unity; Editor import, compilation, rendering, movement
-feel, and Web target validation remain pending. On first import, Unity will populate
-remaining default settings and resolve packages. Review and commit normal settings
-and `Packages/packages-lock.json`; leave generated caches ignored.
+Player movement is **manually accepted**. Combat remains **porting** pending its
+manual feel check. Unity has imported and compiled the project; generated caches
+remain ignored.
 
 ## Layout
 
@@ -18,9 +17,8 @@ Assets/
   Art/Placeholder/
   Input/
   Prefabs/Player.prefab
-  Scenes/{BootstrapLab,MovementLab}.unity
+  Scenes/{BootstrapLab,MovementLab,CombatLab}.unity
   Scripts/{Player,Combat,Enemies,Levels,Debug}/
-  Tests/
 Packages/
 ProjectSettings/
 ```
@@ -42,11 +40,11 @@ under `Scripts/Debug`. No gameplay framework is involved.
   32×32 one-pixel stripe swatch verify placement, scale, and pixel presentation.
   The HUD is only a rendering marker, with no health or UI behavior.
 - Input System **1.20.0** is pinned; Active Input Handling is Input System only.
-  `Player/Move` uses A/D or arrows; `Player/Jump` uses Space. Input and movement run
-  in fixed updates at 60 Hz. No combat actions are present.
-- Both labs are enabled build scenes; `BootstrapLab` remains first. Web uses IL2CPP with threading
-  disabled and Unity's default Web template. No deployment pipeline or build
-  output is included. Web target availability requires the matching editor module.
+  `Player/Move` uses A/D or arrows, `Player/Jump` uses Space, and `Player/Attack`
+  uses J. Input and movement run in fixed updates at 60 Hz.
+- All three labs are enabled build scenes; `BootstrapLab` remains first. Web uses
+  IL2CPP with threading disabled and Unity's default Web template. No deployment
+  pipeline or build output is included.
 
 Package choices follow Unity's documentation for
 [Pixel Perfect](https://docs.unity3d.com/Packages/com.unity.2d.pixel-perfect@5.1/manual/index.html),
@@ -66,39 +64,18 @@ SpriteRenderer sprite and adjust its visual offset/pivot as required by the
 supplied asset. The player prefab's root has an explicit 0.375×0.625 BoxCollider2D
 and dynamic Rigidbody2D; changing the visual does not resize that collider. Lab
 terrain also has separately authored collision geometry. `BootstrapLab` stays
-static. No damage areas or automatic sprite-derived physics shapes are used.
+static. Combat damage areas also use explicit colliders; no gameplay shape is
+derived from a sprite.
 Other native sprite sizes are welcome; do not resize artwork to fit a 32×32 box.
 Temporary dimensions and colors impose no production design requirements.
 
-## Verification handoff
+## Current validation
 
-Static validation passed on 2026-09-12: YAML/JSON parsing, unique asset GUIDs and
-scene references, PNG dimensions/checksums and import settings, viewport/grid
-arithmetic, build-scene registration, and Git exclusions. The Pixel Perfect
-script GUID/serialized fields and pinned registry dependencies were checked
-against Unity's package data. All parity source paths exist at the audited ref;
-other branch/remote/tag refs remain unchanged. These checks do not establish that
-Unity imports or renders the scene.
-
-Follow [player tuning](docs/PLAYER_TUNING.md) and the
-[manual movement checklist](docs/MOVEMENT_VALIDATION.md). Movement must be manually
-accepted in the pinned editor before combat begins; no runtime acceptance is claimed.
-
-Pending in **6000.3.24f1**:
-
-1. Import the root project, let packages resolve, and confirm no Console compile
-   or import errors and no missing scripts/materials/sprites.
-2. Open `BootstrapLab`, enter Play mode, and check its static camera, eight floor
-   cells, player/enemy rectangles, HUD marker, and stripe swatch.
-3. Check Game view at 320×180, 960×540, and 1000×700: native/integer pixels, no
-   blurred stripes, and letterboxing at the nonmatching aspect. Do not use a Game
-   view preview scale below 1× to judge crispness. Viewports smaller than the
-   reference are outside this baseline.
-4. Confirm a floor tile measures exactly 1×1 world units at transform scale 1.
-5. In Build Profiles, confirm Web is available with Web Build Support installed;
-   switch the local active target to Web and check package compilation. A local
-   smoke build may go to ignored `Builds/Web/`; publishing is a later task.
-6. Review Unity's serialized changes and package lock before committing them.
+Unity **6000.3.24f1** imports and compiles the project, and all three lab scenes
+open. Use [player tuning](docs/PLAYER_TUNING.md), the
+[movement regression checklist](docs/MOVEMENT_VALIDATION.md), and
+[combat tuning](docs/COMBAT_TUNING.md) when changing those systems. Web Build
+Support is installed; an actual Web build and deployment remain later work.
 
 The Phaser reference remains untouched on `proof-of-concept` (also tagged
 `phaser-prototype`). Its assets and Pages workflow were not copied or replaced.
