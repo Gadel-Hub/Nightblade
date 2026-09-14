@@ -197,7 +197,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &125167315
 SpriteRenderer:
   serializedVersion: 2
@@ -335,7 +335,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &193549446
 SpriteRenderer:
   serializedVersion: 2
@@ -423,7 +423,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f57d535031014352b7b83a47e3ce9308, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Nightblade.CombatDiagnostics
   movement: {fileID: 1752937251}
   combat: {fileID: 1752937250}
@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1595bd36c44147ad8c8ef73f931f2036, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Nightblade.CombatLabRespawn
   player: {fileID: 1752937248}
   spawnPoint: {fileID: 244589718}
@@ -546,7 +546,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &214712976
 SpriteRenderer:
   serializedVersion: 2
@@ -684,7 +684,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &235949983
 SpriteRenderer:
   serializedVersion: 2
@@ -853,7 +853,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &364031679
 SpriteRenderer:
   serializedVersion: 2
@@ -979,8 +979,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d67517694cd40b2988c750b110d18b5, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &405039197
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,7 +1059,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &405039200
 SpriteRenderer:
   serializedVersion: 2
@@ -1197,7 +1197,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &757110699
 SpriteRenderer:
   serializedVersion: 2
@@ -1335,7 +1335,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &776059972
 SpriteRenderer:
   serializedVersion: 2
@@ -1473,7 +1473,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &909290498
 SpriteRenderer:
   serializedVersion: 2
@@ -1611,7 +1611,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &926635843
 SpriteRenderer:
   serializedVersion: 2
@@ -1749,7 +1749,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &932295333
 SpriteRenderer:
   serializedVersion: 2
@@ -1887,7 +1887,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &986873357
 SpriteRenderer:
   serializedVersion: 2
@@ -2025,7 +2025,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &1037671604
 SpriteRenderer:
   serializedVersion: 2
@@ -2213,7 +2213,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &1125543280
 SpriteRenderer:
   serializedVersion: 2
@@ -2351,7 +2351,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &1221400469
 SpriteRenderer:
   serializedVersion: 2
@@ -2439,7 +2439,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.2D.PixelPerfect::UnityEngine.U2D.PixelPerfectCamera
   m_AssetsPPU: 32
   m_RefResolutionX: 320
@@ -2581,8 +2581,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d67517694cd40b2988c750b110d18b5, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1629521155
 GameObject:
   m_ObjectHideFlags: 0
@@ -2661,7 +2661,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &1629521158
 SpriteRenderer:
   serializedVersion: 2
@@ -2773,6 +2773,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 4ebfb031fb19443999d4386ba5f7f921, type: 3}
+      propertyPath: terrainLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 4ebfb031fb19443999d4386ba5f7f921, type: 3}
+      propertyPath: wallJumpPushDuration
+      value: 0.12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2797,8 +2805,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd3dc8f84e094a9b95fba81145786c21, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1752937249 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 100006, guid: 4ebfb031fb19443999d4386ba5f7f921, type: 3}
@@ -2808,8 +2816,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67989951c58942a1b519315c6d2c4dc4, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1752937250 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 100005, guid: 4ebfb031fb19443999d4386ba5f7f921, type: 3}
@@ -2819,8 +2827,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a35492b38831462c905318a9e02181ed, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1752937251 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 100004, guid: 4ebfb031fb19443999d4386ba5f7f921, type: 3}
@@ -2830,8 +2838,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 511984974bf94c6e8ef6d63d919f14d5, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1886554591
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2898,8 +2906,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7797150788ef493c84d9af0e3340afde, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1987960226
 GameObject:
   m_ObjectHideFlags: 0
@@ -2978,7 +2986,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &1987960229
 SpriteRenderer:
   serializedVersion: 2
@@ -3116,7 +3124,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &2012778570
 SpriteRenderer:
   serializedVersion: 2
@@ -3254,7 +3262,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.005
 --- !u!212 &2032714827
 SpriteRenderer:
   serializedVersion: 2
