@@ -34,12 +34,10 @@ public class TimeManager : MonoBehaviour
     }
     public void Resume()
     {
-        Time.timeScale = 1;
         pauseButton.SetActive(true);
         resumeButton.SetActive(false);
-        StateManager.Paused();
         StartCoroutine(CountdownResume());
-
+        
     }
 
     public void StopTimer()
@@ -98,7 +96,10 @@ public class TimeManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(.5f);
         countdownText.gameObject.SetActive(false);
+        Time.timeScale = 1;
         isRunning = true;
         StateManager.ResumeGame();
+        pauseButton.SetActive(true);
+        resumeButton.SetActive(false);
     }
 }
