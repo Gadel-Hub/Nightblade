@@ -48,8 +48,9 @@ public class TimeManager : MonoBehaviour
     {
         int minutes = Mathf.FloorToInt(timePassed / 60);
         int seconds = Mathf.FloorToInt(timePassed % 60);
+        int ms = Mathf.FloorToInt((timePassed*1000)%1000);
 
-        timerText.text =string.Format("Time: {0:00}:{1:00}", minutes, seconds);
+        timerText.text =string.Format("Time: {0:00}:{1:00}:{2:000}", minutes, seconds,ms);
     }
 
     public void ResetTime()
