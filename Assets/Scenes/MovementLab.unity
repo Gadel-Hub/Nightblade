@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2101}
   - component: {fileID: 2102}
+  - component: {fileID: 2103}
   m_Layer: 0
   m_Name: Movement Diagnostics (F1)
   m_TagString: Untagged
@@ -165,6 +166,19 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   player: {fileID: 1002}
   playerCollider: {fileID: 1003}
+--- !u!114 &2103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92b7e8a2d3a3492ebfbd63e65edcaa36, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Nightblade::CharacterSelectionDiagnostics
+  player: {fileID: 0}
 --- !u!1001 &1000
 PrefabInstance:
   m_ObjectHideFlags: 0

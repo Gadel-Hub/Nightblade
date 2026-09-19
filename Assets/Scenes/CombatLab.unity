@@ -406,6 +406,7 @@ GameObject:
   - component: {fileID: 212071359}
   - component: {fileID: 212071358}
   - component: {fileID: 212071357}
+  - component: {fileID: 212071360}
   m_Layer: 0
   m_Name: Combat Lab Systems
   m_TagString: Untagged
@@ -453,6 +454,19 @@ MonoBehaviour:
   resetTargets:
   - {fileID: 383047149}
   - {fileID: 1521157071}
+--- !u!114 &212071360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212071356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92b7e8a2d3a3492ebfbd63e65edcaa36, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Nightblade::CharacterSelectionDiagnostics
+  player: {fileID: 0}
 --- !u!4 &212071359
 Transform:
   m_ObjectHideFlags: 0
