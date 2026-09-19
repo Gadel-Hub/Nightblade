@@ -10,6 +10,7 @@ namespace Nightblade
     {
         [Header("Timing")]
         [SerializeField, Min(0f)] private float durationSeconds;
+        [SerializeField, Min(1)] private int damage = 2;
 
         [Header("Coverage")]
         [SerializeField] private float coverageStart;
@@ -23,6 +24,7 @@ namespace Nightblade
         [SerializeField, Min(0.01f)] private float flameFramesPerSecond = 12f;
 
         private readonly List<GameObject> activeFlames = new List<GameObject>();
+        private readonly HashSet<CombatTarget> damagedTargets = new HashSet<CombatTarget>();
         private PlayerMovement movement;
         private FireCharacterPresentation presentation;
         private Rigidbody2D body;
@@ -63,8 +65,15 @@ namespace Nightblade
             movement.SetControlEnabled(false);
             if (body != null) body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
             if (presentation != null) presentation.PlayUltimate();
+            damagedTargets.Clear();
             SpawnFlames();
-            yield return new WaitForSeconds(durationSeconds);
+            float elapsed = 0f;
+            while (elapsed < durationSeconds)
+            {
+                DamageTargetsInCoverage();
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
             FinishUltimate();
         }
 
@@ -91,6 +100,20 @@ namespace Nightblade
             for (int i = activeFlames.Count - 1; i >= 0; i--)
                 if (activeFlames[i] != null) Destroy(activeFlames[i]);
             activeFlames.Clear();
+            damagedTargets.Clear();
+        }
+
+        private void DamageTargetsInCoverage()
+        {
+            CombatTarget[] targets = FindObjectsByType<CombatTarget>(FindObjectsSortMode.None);
+            for (int i = 0; i < targets.Length; i++)
+            {
+                CombatTarget target = targets[i];
+                if (target == null || damagedTargets.Contains(target)) continue;
+                float x = target.transform.position.x;
+                if (x < coverageStart || x > coverageEnd) continue;
+                if (target.TakeDamage(damage)) damagedTargets.Add(target);
+            }
         }
 
         private void OnDisable() => FinishUltimate();

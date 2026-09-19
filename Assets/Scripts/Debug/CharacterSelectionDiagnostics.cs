@@ -8,13 +8,17 @@ namespace Nightblade
         [SerializeField] private PlayerCharacter player;
 
         private PlayerPresentation presentation;
+        private FireCharacterGameplay fireGameplay;
 
         private void Awake()
         {
             if (player == null)
                 player = FindFirstObjectByType<PlayerCharacter>();
             if (player != null)
+            {
                 presentation = player.GetComponent<PlayerPresentation>();
+                fireGameplay = player.GetComponent<FireCharacterGameplay>();
+            }
         }
 
         private void Update()
@@ -23,10 +27,27 @@ namespace Nightblade
 
             if (presentation != null && player.HasSelection)
             {
-                if (Keyboard.current.jKey.wasPressedThisFrame) presentation.PlayNormalAttack();
-                else if (Keyboard.current.kKey.wasPressedThisFrame) presentation.PlaySkill1();
-                else if (Keyboard.current.lKey.wasPressedThisFrame) presentation.PlayDefensiveSkill();
-                else if (Keyboard.current.uKey.wasPressedThisFrame) presentation.PlayUltimate();
+                bool fireSelected = player.SelectedIndex == 0 && fireGameplay != null;
+                if (Keyboard.current.jKey.wasPressedThisFrame)
+                {
+                    if (fireSelected) fireGameplay.TryMelee();
+                    else presentation.PlayNormalAttack();
+                }
+                else if (Keyboard.current.kKey.wasPressedThisFrame)
+                {
+                    if (fireSelected) player.TryUseSkill(PlayerSkillSlot.NormalSkill1);
+                    else presentation.PlaySkill1();
+                }
+                else if (Keyboard.current.lKey.wasPressedThisFrame)
+                {
+                    if (fireSelected) player.TryUseSkill(PlayerSkillSlot.DefensiveSkill);
+                    else presentation.PlayDefensiveSkill();
+                }
+                else if (Keyboard.current.uKey.wasPressedThisFrame)
+                {
+                    if (fireSelected) player.TryUseSkill(PlayerSkillSlot.Ultimate);
+                    else presentation.PlayUltimate();
+                }
             }
 
             if (!player.HasSelection)

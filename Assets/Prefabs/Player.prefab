@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 100041}
   - component: {fileID: 100042}
   - component: {fileID: 100043}
+  - component: {fileID: 100044}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -179,7 +180,19 @@ MonoBehaviour:
     normalSkill1:
       activate:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 100044}
+            m_TargetAssemblyTypeName: Nightblade.FireCharacterGameplay, Assembly-CSharp
+            m_MethodName: FireProjectile
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument:
+              m_BoolArgument: 0
+            m_CallState: 2
       cooldownSeconds: 0
     normalSkill2:
       activate:
@@ -189,8 +202,20 @@ MonoBehaviour:
     defensiveSkill:
       activate:
         m_PersistentCalls:
-          m_Calls: []
-      cooldownSeconds: 0
+          m_Calls:
+          - m_Target: {fileID: 100044}
+            m_TargetAssemblyTypeName: Nightblade.FireCharacterGameplay, Assembly-CSharp
+            m_MethodName: ActivateShield
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument:
+              m_BoolArgument: 0
+            m_CallState: 2
+      cooldownSeconds: 4
     ultimate:
       activate:
         m_PersistentCalls:
@@ -380,6 +405,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Nightblade::FireUltimate
   durationSeconds: 1
+  damage: 2
   coverageStart: -5
   coverageEnd: 5
   flameSpacing: 2
@@ -717,3 +743,34 @@ MonoBehaviour:
     frameHeight: 176
     frameCount: 12
     framesPerSecond: 10
+
+--- !u!114 &100044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec4ba61438f643b98ad6774c59f22a7c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Nightblade::FireCharacterGameplay
+  projectileLeftTexture: {fileID: 2800000, guid: 57a634c683a148c298c4f9f2603e7907, type: 3}
+  projectileRightTexture: {fileID: 2800000, guid: 2713100677b74f629a3fb6849a7ed50b, type: 3}
+  projectileFrameIndex: 3
+  projectileFrameWidth: 64
+  projectileCropWidth: 12
+  projectileCropHeight: 10
+  projectileLeftCropX: 0
+  projectileRightCropX: 52
+  projectileCropY: 10
+  projectileSpeed: 8
+  projectileLifetime: 2
+  projectileRange: 8
+  projectileDamage: 1
+  projectileTargetLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  projectileSpawnOffset: 0.75
+  shieldDuration: 1.25

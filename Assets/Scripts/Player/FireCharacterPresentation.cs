@@ -68,7 +68,7 @@ namespace Nightblade
                 return;
 
             if (combat != null && combat.IsAttacking && !actionPlaying)
-                BeginAction(PlayerPresentationState.NormalAttack);
+                BeginAction(PlayerPresentationState.Skill1, true);
 
             if (movement != null)
             {
@@ -88,6 +88,7 @@ namespace Nightblade
             ApplyLocomotion();
         }
 
+        public void PlayNormalAttack() => BeginAction(PlayerPresentationState.NormalAttack, true);
         public void PlayMeleeAttack() => BeginAction(PlayerPresentationState.Skill1, true);
         public void PlayUltimate() => BeginAction(PlayerPresentationState.Ultimate, true);
 

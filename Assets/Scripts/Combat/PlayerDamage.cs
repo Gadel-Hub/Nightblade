@@ -57,6 +57,7 @@ namespace Nightblade
 
         public bool ReceiveDamage(int amount, float sourceX)
         {
+            if (GetComponent<FireCharacterGameplay>()?.IsShieldActive == true) return false;
             if (State != DamageState.Normal || IsInvulnerable || amount <= 0) return false;
             if (!health.TakeDamage(amount)) return false;
 
