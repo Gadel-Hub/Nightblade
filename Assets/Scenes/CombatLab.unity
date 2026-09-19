@@ -3414,6 +3414,9 @@ MonoBehaviour:
   - enemies:
     - prefab: {fileID: 400000, guid: 7d4c2b1a9f8e6d5c3b2a1908f7e6d5c4, type: 3}
       count: 3
+  - enemies:
+    - prefab: {fileID: 500000, guid: 5e3c1a9f7b6d4e2c0a8f6d5b4c3e2a1f, type: 3}
+      count: 2
   finalBossPrefab: {fileID: 200000, guid: 6fc9d006bf8744b5af5eff53b5a01015, type: 3}
   finalBossSpawnPoint: {fileID: 399000004}
   onFinalBossPhaseStarted:
