@@ -31,6 +31,42 @@
           "processors": "",
           "interactions": "",
           "initialStateCheck": false
+        },
+        {
+          "name": "NormalSkill1",
+          "type": "Button",
+          "id": "97cf4a98-6988-4ee5-9f67-078088d023c1",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
+        },
+        {
+          "name": "NormalSkill2",
+          "type": "Button",
+          "id": "ed3811bc-0484-4b2d-b378-e6e558c5606b",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
+        },
+        {
+          "name": "DefensiveSkill",
+          "type": "Button",
+          "id": "dc5b8f40-a9d3-43d8-a3e4-176a7797a739",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
+        },
+        {
+          "name": "Ultimate",
+          "type": "Button",
+          "id": "daed3d90-81e6-4836-a24f-e0a4f9af4edc",
+          "expectedControlType": "Button",
+          "processors": "",
+          "interactions": "",
+          "initialStateCheck": false
         }
       ],
       "bindings": [

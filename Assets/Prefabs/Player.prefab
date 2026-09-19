@@ -15,6 +15,10 @@ GameObject:
   - component: {fileID: 100005}
   - component: {fileID: 100006}
   - component: {fileID: 100007}
+  - component: {fileID: 100008}
+  - component: {fileID: 100009}
+  - component: {fileID: 100040}
+  - component: {fileID: 100041}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -155,6 +159,232 @@ MonoBehaviour:
   invulnerabilityDuration: 0.45
   respawnDelay: 0.8
   visualRoot: {fileID: 100010}
+--- !u!114 &100008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbae4e16682d45c7ae8bb7a1c1c5024a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  inputActions: {fileID: -944628639613478452, guid: f86a1bbe2734497786b9a7a07f7c0a63, type: 3}
+  characters:
+  - displayName: Fire
+    normalSkill1:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+    normalSkill2:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+    defensiveSkill:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+    ultimate:
+      activate:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 100041}
+            m_TargetAssemblyTypeName: Nightblade.FireUltimate, Assembly-CSharp
+            m_MethodName: Activate
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument:
+              m_BoolArgument: 0
+            m_CallState: 2
+      cooldownSeconds: 0
+  - displayName: Character 2
+    normalSkill1:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+    normalSkill2:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+    defensiveSkill:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+    ultimate:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+  - displayName: Character 3
+    normalSkill1:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+    normalSkill2:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+    defensiveSkill:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+    ultimate:
+      activate:
+        m_PersistentCalls:
+          m_Calls: []
+      cooldownSeconds: 0
+  runStarted:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &100009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 698c2ea0f56b4d13bb117544bea3ca26, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Nightblade::PlayerPresentation
+  sharedVisualRoot: {fileID: 100010}
+  spriteRenderer: {fileID: 100012}
+  animator: {fileID: 0}
+  characters:
+  - sprite: {fileID: 0}
+    visualRoot: {fileID: 0}
+    animatorController: {fileID: 0}
+  - sprite: {fileID: 0}
+    visualRoot: {fileID: 0}
+    animatorController: {fileID: 0}
+  - sprite: {fileID: 0}
+    visualRoot: {fileID: 0}
+    animatorController: {fileID: 0}
+  locomotionParameter: Locomotion
+  normalAttackTrigger: NormalAttack
+  skill1Trigger: Skill1
+  skill2Trigger: Skill2
+  defensiveSkillTrigger: DefensiveSkill
+  ultimateTrigger: Ultimate
+  hurtTrigger: Hurt
+  deathTrigger: Death
+--- !u!114 &100040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33257701b8594396959d6820ee1768c3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Nightblade::FireCharacterPresentation
+  fireCharacterIndex: 0
+  presentation: {fileID: 100009}
+  spriteRenderer: {fileID: 100012}
+  idleLeft:
+    texture: {fileID: 2800000, guid: 3edbd7a86b6e4691b01ea7a64ec7d9fd, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 12
+    framesPerSecond: 8
+  idleRight:
+    texture: {fileID: 2800000, guid: 976b36aea1d546e8bd7dab2e251cdbeb, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 12
+    framesPerSecond: 8
+  movementRight:
+    texture: {fileID: 2800000, guid: 3426e1bd78ad44d4ba671a217959db4d, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 12
+    framesPerSecond: 10
+  normalAttackLeft:
+    texture: {fileID: 2800000, guid: 57a634c683a148c298c4f9f2603e7907, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 5
+    framesPerSecond: 10
+  normalAttackRight:
+    texture: {fileID: 2800000, guid: 2713100677b74f629a3fb6849a7ed50b, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 5
+    framesPerSecond: 10
+  meleeAttackLeft:
+    texture: {fileID: 2800000, guid: 7ce6298323ea4a1298a389d670f4ed9c, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 5
+    framesPerSecond: 10
+  meleeAttackRight:
+    texture: {fileID: 2800000, guid: 1036a81acac148bf800551b6755d365f, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 5
+    framesPerSecond: 10
+  shieldIdleLeft:
+    texture: {fileID: 2800000, guid: 8ebbfec25a204478828ca5705833caa1, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 12
+    framesPerSecond: 8
+  shieldIdleRight:
+    texture: {fileID: 2800000, guid: 7d8efe4fc77849c4917d5672bc40bd0f, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 12
+    framesPerSecond: 8
+  shieldMovingLeft:
+    texture: {fileID: 2800000, guid: 66cba415a9d9432cbe735308133fdcdc, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 12
+    framesPerSecond: 8
+  shieldMovingRight:
+    texture: {fileID: 2800000, guid: dedb1338155e460890fb04d028a390b9, type: 3}
+    frameWidth: 64
+    frameHeight: 64
+    frameCount: 12
+    framesPerSecond: 8
+--- !u!114 &100041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd880cb8c23a41a69559a62d3086f48e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Nightblade::FireUltimate
+  durationSeconds: 1
+  coverageStart: -5
+  coverageEnd: 5
+  flameSpacing: 2
+  flameY: -0.25
+  flameSheet: {fileID: 2800000, guid: 4463cb61cb9b4c3c8065db2c810bd78c, type: 3}
+  flameContainer: {fileID: 100001}
+  flameFramesPerSecond: 12
 --- !u!1 &100010
 GameObject:
   m_ObjectHideFlags: 0
