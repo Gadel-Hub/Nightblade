@@ -9,6 +9,7 @@ namespace Nightblade
 
         private PlayerPresentation presentation;
         private FireCharacterGameplay fireGameplay;
+        private WaterCharacterGameplay waterGameplay;
 
         private void Awake()
         {
@@ -18,6 +19,7 @@ namespace Nightblade
             {
                 presentation = player.GetComponent<PlayerPresentation>();
                 fireGameplay = player.GetComponent<FireCharacterGameplay>();
+                waterGameplay = player.GetComponent<WaterCharacterGameplay>();
             }
         }
 
@@ -28,24 +30,26 @@ namespace Nightblade
             if (presentation != null && player.HasSelection)
             {
                 bool fireSelected = player.SelectedIndex == 0 && fireGameplay != null;
+                bool waterSelected = player.SelectedIndex == 1 && waterGameplay != null;
                 if (Keyboard.current.jKey.wasPressedThisFrame)
                 {
                     if (fireSelected) fireGameplay.TryMelee();
+                    else if (waterSelected) waterGameplay.TryStrike();
                     else presentation.PlayNormalAttack();
                 }
                 else if (Keyboard.current.kKey.wasPressedThisFrame)
                 {
-                    if (fireSelected) player.TryUseSkill(PlayerSkillSlot.NormalSkill1);
+                    if (fireSelected || waterSelected) player.TryUseSkill(PlayerSkillSlot.NormalSkill1);
                     else presentation.PlaySkill1();
                 }
                 else if (Keyboard.current.lKey.wasPressedThisFrame)
                 {
-                    if (fireSelected) player.TryUseSkill(PlayerSkillSlot.DefensiveSkill);
+                    if (fireSelected || waterSelected) player.TryUseSkill(PlayerSkillSlot.DefensiveSkill);
                     else presentation.PlayDefensiveSkill();
                 }
                 else if (Keyboard.current.uKey.wasPressedThisFrame)
                 {
-                    if (fireSelected) player.TryUseSkill(PlayerSkillSlot.Ultimate);
+                    if (fireSelected || waterSelected) player.TryUseSkill(PlayerSkillSlot.Ultimate);
                     else presentation.PlayUltimate();
                 }
             }
