@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 100040}
   - component: {fileID: 100041}
   - component: {fileID: 100042}
+  - component: {fileID: 100043}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -228,7 +229,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       cooldownSeconds: 0
-  - displayName: Character 3
+  - displayName: Air
     normalSkill1:
       activate:
         m_PersistentCalls:
@@ -639,3 +640,80 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+
+--- !u!114 &100043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 760368fc81ba41de8325b681f8acafe6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Nightblade::AirCharacterPresentation
+  airCharacterIndex: 2
+  presentation: {fileID: 100009}
+  spriteRenderer: {fileID: 100012}
+  visualOffset: {x: 0, y: 0, z: 0}
+  idleLeft:
+    texture: {fileID: 2800000, guid: fef3f2be1be04b91b23c237da8950892, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
+  idleRight:
+    texture: {fileID: 2800000, guid: 1bf872e9c54d47d4abe3652c4b2138db, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
+  movementLeft:
+    texture: {fileID: 2800000, guid: 9f601fbf406b4cbab730d68a34805293, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
+  movementRight:
+    texture: {fileID: 2800000, guid: 33bba0b60d7e4a5ca06720814b10bcdd, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
+  normalAttackLeft:
+    texture: {fileID: 2800000, guid: a238d559fff342c6b1121da7acf2ab13, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
+  normalAttackRight:
+    texture: {fileID: 2800000, guid: 1824fabe33ec44e485b9497fce463064, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
+  shieldLeft:
+    texture: {fileID: 2800000, guid: 829c0690068044ad8cdffe70195de799, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
+  shieldRight:
+    texture: {fileID: 2800000, guid: 42c831fe0c6048f1ae5e64aa53ea44d1, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
+  ultimateLeft:
+    texture: {fileID: 2800000, guid: e5f2dee0536f4c32bc8136635e957cad, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
+  ultimateRight:
+    texture: {fileID: 2800000, guid: e0140aa1a8c34ee883578c9176c85ad5, type: 3}
+    frameWidth: 144
+    frameHeight: 176
+    frameCount: 12
+    framesPerSecond: 10
