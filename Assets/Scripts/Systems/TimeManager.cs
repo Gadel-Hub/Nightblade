@@ -1,106 +1,148 @@
-using UnityEngine;
-using TMPro;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+
 public class TimeManager : MonoBehaviour
 {
     public GameStateManager StateManager;
-    public float timePassed {  get; private set; }
-    [SerializeField]
-    private TextMeshProUGUI timerText;
-    [SerializeField] 
-    private TextMeshProUGUI countdownText;
+    public float timePassed { get; private set; }
+    public bool IsRunning => isRunning;
+    public bool HasFinishedRun { get; private set; }
+
+    [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI countdownText;
     public GameObject pauseButton;
     public GameObject resumeButton;
-    private bool isRunning = true;
-    void Start()
+
+    private bool isRunning;
+    private bool hasStartedRun;
+    private Coroutine countdown;
+
+    private void Start()
     {
         UpdateTimer();
+        SetCountdownVisible(false);
     }
-    void Update()
+
+    private void Update()
     {
-        if (isRunning)
-        {
-            timePassed += Time.deltaTime;   
-            UpdateTimer();
-        }
+        if (!isRunning) return;
+
+        timePassed += Time.deltaTime;
+        UpdateTimer();
     }
+
+    public void StartRun()
+    {
+        if (countdown != null) StopCoroutine(countdown);
+        Time.timeScale = 0f;
+        isRunning = false;
+        timePassed = 0f;
+        hasStartedRun = true;
+        HasFinishedRun = false;
+        UpdateTimer();
+        SetPauseControlsVisible(false);
+        SetGameState(GameState.Paused);
+        countdown = StartCoroutine(RunCountdown());
+    }
+
     public void Pause()
     {
-        Time.timeScale = 0;
-        pauseButton.SetActive(false);
-        resumeButton.SetActive(true);
+        if (!isRunning) return;
+
         isRunning = false;
-        StateManager.Paused();
+        Time.timeScale = 0f;
+        SetPauseControlsVisible(true);
+        SetGameState(GameState.Paused);
     }
+
     public void Resume()
     {
-        pauseButton.SetActive(true);
-        resumeButton.SetActive(false);
-        StartCoroutine(CountdownResume());
-        
+        if (isRunning || countdown != null || !hasStartedRun) return;
+
+        Time.timeScale = 0f;
+        SetPauseControlsVisible(false);
+        countdown = StartCoroutine(RunCountdown());
     }
 
-    public void StopTimer()
+    public void FinishRun()
     {
-        isRunning = false;
-    }
-    private void UpdateTimer()
-    {
-        int minutes = Mathf.FloorToInt(timePassed / 60);
-        int seconds = Mathf.FloorToInt(timePassed % 60);
-        int ms = Mathf.FloorToInt((timePassed*1000)%1000);
-
-        timerText.text =string.Format("Time: {0:00}:{1:00}:{2:000}", minutes, seconds,ms);
-    }
-
-    public void ResetTime()
-    {
-        Time.timeScale = 1;
-        timePassed = 0;
-        isRunning = false;
-        StartCoroutine(CountdownStart());
-        pauseButton.SetActive(true);
-        resumeButton.SetActive(false);
-    }
-
-    IEnumerator CountdownStart()
-    {
-        isRunning=false;
-        countdownText.gameObject.SetActive(true);
-
-        for (int i = 3;i>0; i--)
+        if (countdown != null)
         {
-            countdownText.text=i.ToString();
-            yield return new WaitForSecondsRealtime(1);
+            StopCoroutine(countdown);
+            countdown = null;
         }
-        countdownText.text = "Start!";
 
-        yield return new WaitForSecondsRealtime(.5f);
-        countdownText.gameObject.SetActive(false);
-        isRunning = true;
-        StateManager.StartGame();
-        
+        isRunning = false;
+        SetCountdownVisible(false);
+        SetPauseControlsVisible(false);
+        SetGameState(GameState.GameOver);
+        if (hasStartedRun)
+        {
+            HasFinishedRun = true;
+            hasStartedRun = false;
+        }
+        UpdateTimer();
     }
 
-    IEnumerator CountdownResume()
+    public void StopTimer() => FinishRun();
+
+    public void ResetTime() => StartRun();
+
+    public static string FormatTime(float seconds)
+    {
+        int totalMilliseconds = Mathf.Max(0, Mathf.FloorToInt(seconds * 1000f));
+        int minutes = totalMilliseconds / 60000;
+        int remainingMilliseconds = totalMilliseconds % 60000;
+        int wholeSeconds = remainingMilliseconds / 1000;
+        int milliseconds = remainingMilliseconds % 1000;
+        return string.Format("{0:00}:{1:00}.{2:000}", minutes, wholeSeconds, milliseconds);
+    }
+
+    private IEnumerator RunCountdown()
     {
         isRunning = false;
-        StateManager.Paused();
-        countdownText.gameObject.SetActive(true);
+        SetCountdownVisible(true);
 
         for (int i = 3; i > 0; i--)
         {
-            countdownText.text = i.ToString();
-            yield return new WaitForSecondsRealtime(1);
+            if (countdownText != null) countdownText.text = i.ToString();
+            yield return new WaitForSecondsRealtime(1f);
         }
-        countdownText.text = "GO!";
 
-        yield return new WaitForSecondsRealtime(.5f);
-        countdownText.gameObject.SetActive(false);
-        Time.timeScale = 1;
+        if (countdownText != null) countdownText.text = "GO!";
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        SetCountdownVisible(false);
+        Time.timeScale = 1f;
         isRunning = true;
-        StateManager.ResumeGame();
-        pauseButton.SetActive(true);
-        resumeButton.SetActive(false);
+        SetPauseControlsVisible(true);
+        SetGameState(GameState.Playing);
+        countdown = null;
+    }
+
+    private void UpdateTimer()
+    {
+        if (timerText != null) timerText.text = "Time: " + FormatTime(timePassed);
+    }
+
+    private void SetCountdownVisible(bool visible)
+    {
+        if (countdownText != null) countdownText.gameObject.SetActive(visible);
+    }
+
+    private void SetPauseControlsVisible(bool visible)
+    {
+        if (pauseButton != null) pauseButton.SetActive(visible && isRunning);
+        if (resumeButton != null) resumeButton.SetActive(visible && !isRunning);
+    }
+
+    private void SetGameState(GameState state)
+    {
+        if (StateManager == null) return;
+
+        if (state == GameState.Playing) StateManager.StartGame();
+        else if (state == GameState.Paused) StateManager.Paused();
+        else StateManager.GameOver();
     }
 }
