@@ -3409,7 +3409,7 @@ MonoBehaviour:
   - {fileID: 399000006}
   waves:
   - enemies:
-    - prefab: {fileID: 200000, guid: 6fc9d006bf8744b5af5eff53b5a01015, type: 3}
+    - prefab: {fileID: 300000, guid: 6b2a1d4f0e7c4b9f8a6d5e3c2b1a0987, type: 3}
       count: 2
   - enemies:
     - prefab: {fileID: 200000, guid: 6fc9d006bf8744b5af5eff53b5a01015, type: 3}

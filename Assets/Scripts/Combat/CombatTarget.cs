@@ -25,6 +25,12 @@ namespace Nightblade
             return true;
         }
 
+        public void SetMaxHealth(int value)
+        {
+            maxHealth = Mathf.Max(1, value);
+            ResetTarget();
+        }
+
         public void ResetTarget()
         {
             CurrentHealth = maxHealth;
