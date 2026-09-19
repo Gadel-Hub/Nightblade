@@ -7,15 +7,27 @@ namespace Nightblade
     {
         [SerializeField] private PlayerCharacter player;
 
+        private PlayerPresentation presentation;
+
         private void Awake()
         {
             if (player == null)
                 player = FindFirstObjectByType<PlayerCharacter>();
+            if (player != null)
+                presentation = player.GetComponent<PlayerPresentation>();
         }
 
         private void Update()
         {
             if (player == null || Keyboard.current == null) return;
+
+            if (presentation != null && player.HasSelection)
+            {
+                if (Keyboard.current.jKey.wasPressedThisFrame) presentation.PlayNormalAttack();
+                else if (Keyboard.current.kKey.wasPressedThisFrame) presentation.PlaySkill1();
+                else if (Keyboard.current.lKey.wasPressedThisFrame) presentation.PlayDefensiveSkill();
+                else if (Keyboard.current.uKey.wasPressedThisFrame) presentation.PlayUltimate();
+            }
 
             if (!player.HasSelection)
             {
@@ -40,9 +52,10 @@ namespace Nightblade
                 ? player.Characters[player.SelectedIndex].DisplayName
                 : "None";
             string status = player.RunInProgress ? "Running" : player.HasSelection ? "Ready" : "Choose a character";
-            GUI.Box(new Rect(8f, 8f, 280f, 86f), "Character Lab");
-            GUI.Label(new Rect(18f, 30f, 260f, 54f),
+            GUI.Box(new Rect(8f, 8f, 300f, 110f), "Character Lab");
+            GUI.Label(new Rect(18f, 30f, 280f, 80f),
                 "1/2/3: select    Enter/Space: confirm/start\n" +
+                "J/K/L/U: attack/moving/shield/ultimate\n" +
                 "Selected: " + selected + "\nStatus: " + status);
         }
     }

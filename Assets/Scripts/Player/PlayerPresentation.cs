@@ -63,6 +63,7 @@ namespace Nightblade
         public int SelectedProfileIndex { get; private set; } = -1;
         public PlayerPresentationState CurrentState { get; private set; } = PlayerPresentationState.Idle;
         public PlayerPresentationState LastRequestedAction { get; private set; } = PlayerPresentationState.Idle;
+        public int ActionRequestVersion { get; private set; }
 
         private void Awake()
         {
@@ -203,6 +204,7 @@ namespace Nightblade
         private void RequestAction(PlayerPresentationState state, string trigger)
         {
             LastRequestedAction = state;
+            ActionRequestVersion++;
             if (animator == null || animator.runtimeAnimatorController == null ||
                 !HasParameter(animator, trigger, AnimatorControllerParameterType.Trigger)) return;
 
