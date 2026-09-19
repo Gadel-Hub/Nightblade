@@ -51,6 +51,12 @@ namespace Nightblade
         private float animationTime;
         private bool actionPlaying;
         private bool facingLeft;
+        private bool shieldPresentation;
+
+        public void PlayGust() => BeginAction(PlayerPresentationState.NormalAttack);
+        public void PlayShield() => BeginAction(PlayerPresentationState.DefensiveSkill);
+        public void PlayTornado() => BeginAction(PlayerPresentationState.Ultimate);
+        public void SetShieldPresentation(bool active) => shieldPresentation = active;
 
         private void Awake()
         {
@@ -115,6 +121,13 @@ namespace Nightblade
         private void ApplyMovement()
         {
             bool isMoving = movement != null && Mathf.Abs(movement.Velocity.x) > 0.01f;
+            if (shieldPresentation)
+            {
+                activeSheet = facingLeft ? shieldLeft : shieldRight;
+                if (activeSheet != null && activeSheet.FrameCount > 0)
+                    SetFrame(activeSheet, Mathf.FloorToInt(Time.time * activeSheet.FramesPerSecond) % activeSheet.FrameCount);
+                return;
+            }
             activeSheet = isMoving
                 ? (facingLeft ? movementLeft : movementRight)
                 : (facingLeft ? idleLeft : idleRight);

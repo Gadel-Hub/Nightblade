@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 100043}
   - component: {fileID: 100044}
   - component: {fileID: 100045}
+  - component: {fileID: 100046}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -295,8 +296,20 @@ MonoBehaviour:
     normalSkill1:
       activate:
         m_PersistentCalls:
-          m_Calls: []
-      cooldownSeconds: 0
+          m_Calls:
+          - m_Target: {fileID: 100046}
+            m_TargetAssemblyTypeName: Nightblade.AirCharacterGameplay, Assembly-CSharp
+            m_MethodName: TryDash
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument:
+              m_BoolArgument: 0
+            m_CallState: 2
+      cooldownSeconds: 1.5
     normalSkill2:
       activate:
         m_PersistentCalls:
@@ -305,12 +318,36 @@ MonoBehaviour:
     defensiveSkill:
       activate:
         m_PersistentCalls:
-          m_Calls: []
-      cooldownSeconds: 0
+          m_Calls:
+          - m_Target: {fileID: 100046}
+            m_TargetAssemblyTypeName: Nightblade.AirCharacterGameplay, Assembly-CSharp
+            m_MethodName: ActivateShield
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument:
+              m_BoolArgument: 0
+            m_CallState: 2
+      cooldownSeconds: 4
     ultimate:
       activate:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 100046}
+            m_TargetAssemblyTypeName: Nightblade.AirCharacterGameplay, Assembly-CSharp
+            m_MethodName: ActivateUltimate
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument:
+              m_BoolArgument: 0
+            m_CallState: 2
       cooldownSeconds: 0
   runStarted:
     m_PersistentCalls:
@@ -848,3 +885,40 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   waveSpawnOffset: 0.75
+
+--- !u!114 &100046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7b4a9f7f5c4b0d9a5e5f4c0a6b7c8d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Nightblade::AirCharacterGameplay
+  gustDuration: 0.12
+  gustForwardOffset: 0.75
+  gustSize: {x: 1.25, y: 0.9}
+  gustDamage: 1
+  gustTargetLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  dashDuration: 0.15
+  dashSpeed: 10
+  shieldDuration: 1.25
+  tornadoLeftTexture: {fileID: 2800000, guid: e5f2dee0536f4c32bc8136635e957cad, type: 3}
+  tornadoRightTexture: {fileID: 2800000, guid: e0140aa1a8c34ee883578c9176c85ad5, type: 3}
+  tornadoFrameWidth: 144
+  tornadoFrameHeight: 176
+  tornadoSpeed: 7
+  tornadoLifetime: 2
+  tornadoRange: 12
+  tornadoGameplaySize: {x: 1.5, y: 2}
+  tornadoDamage: 2
+  tornadoTargetLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  tornadoVisualOffset: {x: 0, y: 0, z: 0}
+  tornadoVisualScale: 1
