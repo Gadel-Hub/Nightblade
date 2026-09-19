@@ -41,7 +41,8 @@ namespace Nightblade
 
             if (player.SelectedIndex < 0) return;
             if (!player.HasSelection) player.ConfirmSelection();
-            else if (!player.RunInProgress) player.BeginRun();
+            else if (!player.RunInProgress)
+                player.BeginRun();
         }
 
         private void OnGUI()

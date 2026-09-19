@@ -46,11 +46,19 @@ public sealed class ArenaRunManager : MonoBehaviour
     private int nextWaveIndex;
     private int nextSpawnPointIndex;
     private bool bossPrefabSpawned;
+    private PlayerCharacter player;
 
     private void Awake()
     {
         if (runTimer == null) runTimer = GetComponent<TimeManager>();
         if (runTimer != null) runTimer.StopTimer();
+        player = FindFirstObjectByType<PlayerCharacter>();
+        if (player != null) player.RunStarted += StartRun;
+    }
+
+    private void OnDestroy()
+    {
+        if (player != null) player.RunStarted -= StartRun;
     }
 
     private void Update()

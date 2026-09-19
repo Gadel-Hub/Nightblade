@@ -407,6 +407,11 @@ GameObject:
   - component: {fileID: 212071358}
   - component: {fileID: 212071357}
   - component: {fileID: 212071360}
+  - component: {fileID: 212071361}
+  - component: {fileID: 212071362}
+  - component: {fileID: 212071363}
+  - component: {fileID: 212071364}
+  - component: {fileID: 212071365}
   m_Layer: 0
   m_Name: Combat Lab Systems
   m_TagString: Untagged
@@ -479,7 +484,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 399000002}
+  - {fileID: 399000004}
+  - {fileID: 399000006}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &214712973
@@ -3336,6 +3344,188 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &212071361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212071356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a899acba097b2e3488b6f47cba204f0f, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TimeManager
+  StateManager: {fileID: 212071365}
+  timerText: {fileID: 0}
+  countdownText: {fileID: 0}
+  pauseButton: {fileID: 0}
+  resumeButton: {fileID: 0}
+--- !u!114 &212071362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212071356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39f139d7a4a7eb6489f2a005e5ff2ff7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Leaderboard
+  players: []
+--- !u!114 &212071363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212071356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757b59f4e5088254580a33b428f2a850, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::LeaderboardUI
+  inputName: {fileID: 0}
+  leaderboard: {fileID: 212071362}
+  timeManager: {fileID: 212071361}
+  leaderboardText: {fileID: 0}
+--- !u!114 &212071364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212071356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8034a09e4ce47e4a174a092eae723ad, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaRunManager
+  runTimer: {fileID: 212071361}
+  spawnPoints:
+  - {fileID: 399000002}
+  - {fileID: 399000004}
+  - {fileID: 399000006}
+  waves:
+  - enemies:
+    - prefab: {fileID: 200000, guid: 6fc9d006bf8744b5af5eff53b5a01015, type: 3}
+      count: 2
+  - enemies:
+    - prefab: {fileID: 200000, guid: 6fc9d006bf8744b5af5eff53b5a01015, type: 3}
+      count: 3
+  finalBossPrefab: {fileID: 200000, guid: 6fc9d006bf8744b5af5eff53b5a01015, type: 3}
+  finalBossSpawnPoint: {fileID: 399000004}
+  onFinalBossPhaseStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  onRunCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &212071365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212071356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331be648bd14eed42802536661b91da2, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
+  State: 0
+--- !u!1 &399000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 399000002}
+  m_Layer: 0
+  m_Name: Arena Spawn Point Left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &399000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4, y: -1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 212071359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &399000003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 399000004}
+  m_Layer: 0
+  m_Name: Arena Spawn Point Center
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &399000004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399000003}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 212071359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &399000005
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 399000006}
+  m_Layer: 0
+  m_Name: Arena Spawn Point Right
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &399000006
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399000005}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4, y: -1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 212071359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -83,6 +83,7 @@ namespace Nightblade
         public bool HasSelection => selectionConfirmed && selectedIndex >= 0;
         public bool RunInProgress => runInProgress;
         public IReadOnlyList<PlayerCharacterProfile> Characters => characters;
+        public event Action RunStarted;
 
         private void Awake()
         {
@@ -176,6 +177,7 @@ namespace Nightblade
             movement.SetControlEnabled(true);
             combat.SetControlEnabled(true);
             runStarted.Invoke();
+            RunStarted?.Invoke();
             return true;
         }
 
