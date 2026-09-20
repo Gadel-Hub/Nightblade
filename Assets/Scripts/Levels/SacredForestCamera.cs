@@ -27,8 +27,6 @@ namespace Nightblade
 
         private void Start()
         {
-            if (cameraComponent != null) cameraComponent.enabled = true;
-
             if (backgroundBoundsSource == null)
             {
                 Debug.LogError("SacredForestCamera needs the production background SpriteRenderer.", this);
@@ -43,7 +41,6 @@ namespace Nightblade
             SetBoundaryPosition(leftBoundary, worldMinX);
             SetBoundaryPosition(rightBoundary, worldMaxX);
             Physics2D.SyncTransforms();
-            LateUpdate();
         }
 
         private void LateUpdate()
