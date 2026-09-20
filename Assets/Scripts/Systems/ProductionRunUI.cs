@@ -104,6 +104,12 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     private void Start()
     {
+        FindFirstObjectByType<SacredForestPresentation>()?.ShowNormalForest();
+        arena?.ResetRun();
+        player?.ReturnToSelection(startPosition);
+        defeatShowing = false;
+        HideBossHealthBar();
+
         if (player != null && player.SelectedIndex < 0)
             player.SelectCharacter(0);
 

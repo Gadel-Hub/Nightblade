@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/CombatLab.unity
     guid: 3870d211fedf3fc548668c42df621a3c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MovementLab.unity
     guid: 90f1001265b14c289a3fdc0432462d05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/BootstrapLab.unity
     guid: 0be8f184003b4b81abe71bb1bac24a51
   - enabled: 1
