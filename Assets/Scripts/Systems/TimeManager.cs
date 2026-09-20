@@ -46,6 +46,21 @@ public class TimeManager : MonoBehaviour
         countdown = StartCoroutine(RunCountdown());
     }
 
+    public void StartRunImmediately()
+    {
+        if (countdown != null) StopCoroutine(countdown);
+        countdown = null;
+        SetCountdownVisible(false);
+        Time.timeScale = 1f;
+        isRunning = true;
+        timePassed = 0f;
+        hasStartedRun = true;
+        HasFinishedRun = false;
+        UpdateTimer();
+        SetPauseControlsVisible(true);
+        SetGameState(GameState.Playing);
+    }
+
     public void Pause()
     {
         if (!isRunning) return;
@@ -74,6 +89,7 @@ public class TimeManager : MonoBehaviour
         }
 
         isRunning = false;
+        Time.timeScale = 1f;
         SetCountdownVisible(false);
         SetPauseControlsVisible(false);
         SetGameState(GameState.GameOver);

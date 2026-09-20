@@ -33,6 +33,10 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     [Header("Results")]
     [SerializeField] private Text finalTimeLabel;
+    [SerializeField] private Text resultsTitleLabel;
+    [SerializeField] private Text restartButtonLabel;
+    [SerializeField] private Text leaderboardHeadingLabel;
+    [SerializeField] private Text leaderboardEntriesLabel;
     [SerializeField] private InputField playerNameInput;
     [SerializeField] private Button saveButton;
     [SerializeField] private Text saveStatusLabel;
@@ -48,6 +52,7 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     private Vector2 startPosition;
     private bool resultSaved;
+    private bool defeatShowing;
 
     private void Awake()
     {
@@ -56,6 +61,7 @@ public sealed class ProductionRunUI : MonoBehaviour
         if (timer == null) timer = FindFirstObjectByType<TimeManager>();
         if (arena == null) arena = FindFirstObjectByType<ArenaRunManager>();
         if (player != null) startPosition = player.transform.position;
+        if (player != null) player.GetComponent<PlayerCombat>()?.SetAttackVisualEnabled(false);
         if (arena != null) arena.RunCompleted.AddListener(ShowResults);
 
         for (int i = 0; i < characterButtons.Length; i++)
@@ -90,6 +96,12 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     private void Update()
     {
+        if (!defeatShowing && player != null && player.RunInProgress && health != null && health.IsDepleted)
+        {
+            ShowDefeat();
+            return;
+        }
+
         if (selectionPanel != null && selectionPanel.activeSelf && Keyboard.current != null)
         {
             if (Keyboard.current.digit1Key.wasPressedThisFrame) SelectCharacter(0);
@@ -117,6 +129,8 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     public void ShowResults()
     {
+        if (defeatShowing) return;
+        SetResultsMode(false);
         player?.EndRun();
         if (gameplayPanel != null) gameplayPanel.SetActive(false);
         if (selectionPanel != null) selectionPanel.SetActive(false);
@@ -126,6 +140,30 @@ public sealed class ProductionRunUI : MonoBehaviour
         if (saveStatusLabel != null) saveStatusLabel.text = string.Empty;
         if (saveButton != null) saveButton.interactable = !resultSaved;
         leaderboardUI?.ShowLeaderboard();
+    }
+
+    private void ShowDefeat()
+    {
+        defeatShowing = true;
+        arena?.ResetRun();
+        player?.EndRun();
+        if (gameplayPanel != null) gameplayPanel.SetActive(false);
+        if (selectionPanel != null) selectionPanel.SetActive(false);
+        if (resultsPanel != null) resultsPanel.SetActive(true);
+        SetResultsMode(true);
+        if (saveStatusLabel != null) saveStatusLabel.text = string.Empty;
+    }
+
+    private void SetResultsMode(bool defeated)
+    {
+        if (resultsTitleLabel != null) resultsTitleLabel.text = defeated ? "Kaybettin" : "RUN COMPLETE";
+        if (restartButtonLabel != null) restartButtonLabel.text = defeated ? "Tekrar Dene" : "RESTART";
+        if (finalTimeLabel != null) finalTimeLabel.gameObject.SetActive(!defeated);
+        if (playerNameInput != null) playerNameInput.gameObject.SetActive(!defeated);
+        if (saveButton != null) saveButton.gameObject.SetActive(!defeated);
+        if (saveStatusLabel != null) saveStatusLabel.gameObject.SetActive(!defeated);
+        if (leaderboardHeadingLabel != null) leaderboardHeadingLabel.gameObject.SetActive(!defeated);
+        if (leaderboardEntriesLabel != null) leaderboardEntriesLabel.gameObject.SetActive(!defeated);
     }
 
     private void SelectCharacter(int index)
@@ -195,6 +233,7 @@ public sealed class ProductionRunUI : MonoBehaviour
         arena?.ResetRun();
         player?.ReturnToSelection(startPosition);
         resultSaved = false;
+        defeatShowing = false;
         if (playerNameInput != null) playerNameInput.text = string.Empty;
         if (saveStatusLabel != null) saveStatusLabel.text = string.Empty;
         ShowSelection();
@@ -202,6 +241,7 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     private void ShowSelection()
     {
+        SetResultsMode(false);
         if (selectionPanel != null) selectionPanel.SetActive(true);
         if (gameplayPanel != null) gameplayPanel.SetActive(false);
         if (resultsPanel != null) resultsPanel.SetActive(false);

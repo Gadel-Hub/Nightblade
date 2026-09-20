@@ -36,6 +36,7 @@ namespace Nightblade
         private int swingFacing = 1;
         private bool controlEnabled = true;
         private bool attackRequested;
+        private bool attackVisualEnabled = true;
 
         public AttackPhase Phase { get; private set; } = AttackPhase.Idle;
         public bool IsAttacking => Phase != AttackPhase.Idle;
@@ -142,6 +143,12 @@ namespace Nightblade
             if (!value) InterruptAttack();
         }
 
+        public void SetAttackVisualEnabled(bool value)
+        {
+            attackVisualEnabled = value;
+            if (!value && attackVisual != null) attackVisual.enabled = false;
+        }
+
         private void AdvanceAttack(float deltaTime)
         {
             if (Phase == AttackPhase.Idle) return;
@@ -161,7 +168,7 @@ namespace Nightblade
             Phase = nextPhase;
             bool isActive = nextPhase == AttackPhase.Active;
             attackHitbox.enabled = isActive;
-            attackVisual.enabled = isActive;
+            attackVisual.enabled = attackVisualEnabled && isActive;
         }
 
         private void PlaceHitbox()

@@ -463,6 +463,9 @@ MonoBehaviour:
   onRunCompleted:
     m_PersistentCalls:
       m_Calls: []
+  enemySpawnInterval: 0.6
+  waveTransitionDelay: 1
+  startImmediately: 1
 --- !u!1 &700110
 GameObject:
   m_ObjectHideFlags: 0
@@ -1327,7 +1330,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Yetenek
+  m_Text: K Yetenek
 --- !u!222 &136316738
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2648,7 +2651,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Kalkan
+  m_Text: L Kalkan
 --- !u!222 &822504080
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3378,7 +3381,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Saldırı
+  m_Text: J Saldırı
 --- !u!222 &1201327116
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4383,7 +4386,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ulti
+  m_Text: U Ulti
 --- !u!222 &1704152094
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5472,6 +5475,10 @@ MonoBehaviour:
   - {fileID: 856350207}
   - {fileID: 178609431}
   finalTimeLabel: {fileID: 1206902572}
+  resultsTitleLabel: {fileID: 1010292545}
+  restartButtonLabel: {fileID: 1089964039}
+  leaderboardHeadingLabel: {fileID: 2117502410}
+  leaderboardEntriesLabel: {fileID: 228467802}
   playerNameInput: {fileID: 347993052}
   saveButton: {fileID: 249089067}
   saveStatusLabel: {fileID: 348237691}

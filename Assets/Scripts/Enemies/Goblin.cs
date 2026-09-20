@@ -18,6 +18,7 @@ namespace Nightblade
         [SerializeField, Min(0f)] private float meleeForwardOffset = 0.5f;
         [SerializeField, Min(0f)] private float attackHitDelay = 0.25f;
         [SerializeField, Min(0.01f)] private float attackDuration = 1.2f;
+        [SerializeField, Min(0f)] private float personalSpaceRadius = 1f;
         [SerializeField] private LayerMask playerLayers;
 
         [Header("Presentation")]
@@ -36,6 +37,7 @@ namespace Nightblade
         [SerializeField, Min(0.01f)] private float attackFramesPerSecond = 10f;
 
         private readonly Dictionary<Texture2D, Sprite[]> frameCache = new Dictionary<Texture2D, Sprite[]>();
+        private readonly List<Collider2D> nearbyGoblins = new List<Collider2D>(4);
         private CombatTarget target;
         private Rigidbody2D body;
         private PlayerDamage player;
@@ -82,16 +84,53 @@ namespace Nightblade
 
             if (Mathf.Abs(distance) > meleeRange)
             {
-                body.linearVelocity = new Vector2(direction * moveSpeed, body.linearVelocity.y);
+                float separation = GetSeparationDirection();
+                float movement = direction;
+                if (Mathf.Abs(distance) < meleeRange + personalSpaceRadius && separation != 0f)
+                    movement += separation;
+                if (Mathf.Abs(movement) < 0.1f) movement = separation;
+                body.linearVelocity = new Vector2(Mathf.Sign(movement) * moveSpeed, body.linearVelocity.y);
                 ApplyWalkFrame();
             }
             else
             {
+                float separation = GetSeparationDirection();
+                if (separation != 0f)
+                {
+                    body.linearVelocity = new Vector2(separation * moveSpeed * 0.25f, body.linearVelocity.y);
+                    ApplyWalkFrame();
+                    return;
+                }
+
                 StopMoving();
                 ApplyIdleFrame();
                 if (Time.time >= nextAttackTime)
                     attackRoutine = StartCoroutine(AttackRoutine());
             }
+        }
+
+        private float GetSeparationDirection()
+        {
+            if (personalSpaceRadius <= 0f) return 0f;
+            nearbyGoblins.Clear();
+            ContactFilter2D filter = new ContactFilter2D { useTriggers = false };
+            filter.SetLayerMask(1 << gameObject.layer);
+            Physics2D.OverlapCircle(transform.position, personalSpaceRadius, filter, nearbyGoblins);
+
+            float separation = 0f;
+            for (int i = 0; i < nearbyGoblins.Count; i++)
+            {
+                Goblin other = nearbyGoblins[i].GetComponentInParent<Goblin>();
+                if (other == null || other == this) continue;
+
+                float difference = transform.position.x - other.transform.position.x;
+                if (Mathf.Abs(difference) >= personalSpaceRadius) continue;
+                if (Mathf.Abs(difference) < 0.01f)
+                    difference = GetInstanceID() < other.GetInstanceID() ? -0.01f : 0.01f;
+                separation += Mathf.Sign(difference) * (personalSpaceRadius - Mathf.Abs(difference));
+            }
+
+            return Mathf.Abs(separation) < 0.01f ? 0f : Mathf.Sign(separation);
         }
 
         private IEnumerator AttackRoutine()
