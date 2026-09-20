@@ -29,7 +29,7 @@ namespace Nightblade
         [SerializeField] private Texture2D movingAttackRight;
         [SerializeField] private Texture2D arrowLeft;
         [SerializeField] private Texture2D arrowRight;
-        [SerializeField, Min(1)] private int frameWidth = 64;
+        [SerializeField, Min(1)] private int frameWidth = 48;
         [SerializeField, Min(1)] private int frameHeight = 64;
         [SerializeField, Min(0.01f)] private float framesPerSecond = 10f;
         [SerializeField, Min(0.01f)] private float attackDuration = 0.9f;
