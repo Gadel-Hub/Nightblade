@@ -192,6 +192,7 @@ public sealed class ArenaRunManager : MonoBehaviour
 
     private void SpawnWave(Wave wave)
     {
+        nextSpawnPointIndex = 0;
         if (wave != null && wave.Enemies != null)
         {
             for (int entryIndex = 0; entryIndex < wave.Enemies.Length; entryIndex++)
@@ -208,13 +209,13 @@ public sealed class ArenaRunManager : MonoBehaviour
                         return;
                     }
 
-                    SpawnTarget(entry.Prefab, point, i == 1);
+                    SpawnTarget(entry.Prefab, point, i);
                 }
             }
         }
     }
 
-    private CombatTarget SpawnTarget(GameObject prefab, Transform point, bool delaySecondEnemy = false)
+    private CombatTarget SpawnTarget(GameObject prefab, Transform point, int spawnIndex = 0)
     {
         GameObject instance = Instantiate(prefab, point.position, point.rotation);
         CombatTarget target = instance.GetComponent<CombatTarget>();
@@ -225,12 +226,12 @@ public sealed class ArenaRunManager : MonoBehaviour
             return null;
         }
 
-        if (delaySecondEnemy)
-        {
-            if (instance.TryGetComponent(out Goblin goblin)) goblin.SetInitialAttackDelay(0.3f);
-            else if (instance.TryGetComponent(out Skeleton skeleton)) skeleton.SetInitialAttackDelay(0.7f);
-            else if (instance.TryGetComponent(out Werewolf werewolf)) werewolf.SetInitialAttackDelay(0.4f);
-        }
+        if (instance.TryGetComponent(out Goblin goblin) && spawnIndex > 0)
+            goblin.SetInitialAttackDelay(spawnIndex * 0.3f);
+        else if (instance.TryGetComponent(out Skeleton skeleton) && spawnIndex == 1)
+            skeleton.SetInitialAttackDelay(0.7f);
+        else if (instance.TryGetComponent(out Werewolf werewolf) && spawnIndex == 1)
+            werewolf.SetInitialAttackDelay(0.4f);
 
         currentTargets.Add(target);
         spawnedTargets.Add(target);
