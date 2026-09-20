@@ -75,6 +75,7 @@ namespace Nightblade
         {
             if (!CanAct() || dashRoutine != null) return;
             dashRoutine = StartCoroutine(DashRoutine());
+            presentation.PlayDash();
         }
 
         public void ActivateShield()
@@ -88,17 +89,21 @@ namespace Nightblade
             if (!CanAct() || activeTornado != null) return;
             int facing = combat.Facing;
             Texture2D texture = facing < 0 ? tornadoLeftTexture : tornadoRightTexture;
-            activeTornado = new GameObject("AirTornado");
-            activeTornado.transform.position = transform.position + Vector3.right * facing * gustForwardOffset;
-            activeTornado.transform.localScale = Vector3.one * tornadoVisualScale;
-            SpriteRenderer renderer = activeTornado.AddComponent<SpriteRenderer>();
-            renderer.sprite = CreateVisual(texture, facing);
+            Sprite visual = CreateVisual(texture, facing);
+            if (visual == null) return;
+
+            GameObject tornadoObject = new GameObject("AirTornado");
+            tornadoObject.transform.position = transform.position + Vector3.right * facing * gustForwardOffset;
+            tornadoObject.transform.localScale = Vector3.one * tornadoVisualScale;
+            SpriteRenderer renderer = tornadoObject.AddComponent<SpriteRenderer>();
+            renderer.sprite = visual;
             renderer.sortingOrder = 2;
-            activeTornado.transform.position += tornadoVisualOffset;
-            AirTornado tornado = activeTornado.AddComponent<AirTornado>();
+            tornadoObject.transform.position += tornadoVisualOffset;
+            AirTornado tornado = tornadoObject.AddComponent<AirTornado>();
             tornado.Configure(Vector2.right * facing, tornadoSpeed, tornadoLifetime, tornadoRange,
                 tornadoGameplaySize, tornadoDamage, tornadoTargetLayers);
-            StartCoroutine(ClearTornadoWhenFinished(activeTornado, tornadoLifetime));
+            activeTornado = tornadoObject;
+            StartCoroutine(ClearTornadoWhenFinished(tornadoObject, tornadoLifetime));
             presentation.PlayTornado();
         }
 
@@ -169,6 +174,8 @@ namespace Nightblade
             int cropX = facing < 0 ? tornadoLeftCropX : tornadoRightCropX;
             Rect rect = new Rect(frame * tornadoFrameWidth + cropX, tornadoCropY,
                 tornadoVisualCropWidth, tornadoVisualCropHeight);
+            if (rect.xMin < 0f || rect.yMin < 0f || rect.xMax > texture.width || rect.yMax > texture.height)
+                return null;
             return Sprite.Create(texture, rect,
                 new Vector2(0.5f, 0.5f), 32f);
         }

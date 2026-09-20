@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d67517694cd40b2988c750b110d18b5, type: 3}
   m_Name:
   m_EditorClassIdentifier: Nightblade::CombatTarget
-  maxHealth: 5
+  maxHealth: 6
   placeholderVisual: {fileID: 300012}
 --- !u!114 &300005
 MonoBehaviour:
@@ -107,10 +107,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f5e6a7b9c0d4e1f8a2b3c4d5e6f7081, type: 3}
   m_Name:
   m_EditorClassIdentifier: Nightblade::Goblin
-  health: 5
+  health: 6
   moveSpeed: 2.5
   meleeRange: 0.85
-  attackCooldown: 1
+  attackCooldown: 1.2
   meleeDamage: 2
   meleeHitboxSize: {x: 0.9, y: 0.8}
   meleeForwardOffset: 0.5

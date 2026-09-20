@@ -52,9 +52,32 @@ namespace Nightblade
         private bool facingLeft;
         private bool shieldPresentation;
 
-        public void PlayGust() => BeginAction(PlayerPresentationState.NormalAttack);
-        public void PlayShield() => BeginAction(PlayerPresentationState.DefensiveSkill);
-        public void PlayTornado() => BeginAction(PlayerPresentationState.Ultimate);
+        public void PlayGust()
+        {
+            presentation.PlayNormalAttack();
+            BeginAction(PlayerPresentationState.NormalAttack);
+        }
+
+        public void PlayDash()
+        {
+            presentation.PlaySkill2();
+            lastRequestedAction = PlayerPresentationState.Skill2;
+            lastActionRequestVersion = presentation.ActionRequestVersion;
+            actionPlaying = false;
+            ApplyMovement();
+        }
+
+        public void PlayShield()
+        {
+            presentation.PlayDefensiveSkill();
+            BeginAction(PlayerPresentationState.DefensiveSkill);
+        }
+
+        public void PlayTornado()
+        {
+            presentation.PlayUltimate();
+            BeginAction(PlayerPresentationState.Ultimate);
+        }
         public void SetShieldPresentation(bool active) => shieldPresentation = active;
 
         public void ResetPresentation()
@@ -96,6 +119,12 @@ namespace Nightblade
             }
 
             ApplyMovement();
+        }
+
+        private void LateUpdate()
+        {
+            if (presentation != null && presentation.SelectedProfileIndex == airCharacterIndex && spriteRenderer != null)
+                spriteRenderer.flipX = false;
         }
 
         private void UpdateFacing()

@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67989951c58942a1b519315c6d2c4dc4, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  maxHealth: 3
+  maxHealth: 9
 --- !u!114 &100007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ MonoBehaviour:
   inputActions: {fileID: -944628639613478452, guid: f86a1bbe2734497786b9a7a07f7c0a63, type: 3}
   characters:
   - displayName: Fire
-    maxHealth: 7
+    maxHealth: 9
     normalSkill1:
       activate:
         m_PersistentCalls:
@@ -250,7 +250,7 @@ MonoBehaviour:
             m_CallState: 2
       cooldownSeconds: 12
   - displayName: Water
-    maxHealth: 8
+    maxHealth: 10
     normalSkill1:
       activate:
         m_PersistentCalls:
@@ -320,7 +320,7 @@ MonoBehaviour:
             m_CallState: 2
       cooldownSeconds: 10
   - displayName: Air
-    maxHealth: 6
+    maxHealth: 8
     normalSkill1:
       activate:
         m_PersistentCalls:
@@ -478,13 +478,13 @@ MonoBehaviour:
     frameWidth: 64
     frameHeight: 64
     frameCount: 5
-    framesPerSecond: 10
+    framesPerSecond: 14
   meleeAttackRight:
     texture: {fileID: 2800000, guid: 1036a81acac148bf800551b6755d365f, type: 3}
     frameWidth: 64
     frameHeight: 64
     frameCount: 5
-    framesPerSecond: 10
+    framesPerSecond: 14
   shieldIdleLeft:
     texture: {fileID: 2800000, guid: 8ebbfec25a204478828ca5705833caa1, type: 3}
     frameWidth: 64
@@ -829,13 +829,13 @@ MonoBehaviour:
     frameWidth: 144
     frameHeight: 176
     frameCount: 12
-    framesPerSecond: 10
+    framesPerSecond: 14
   normalAttackRight:
     texture: {fileID: 2800000, guid: 1824fabe33ec44e485b9497fce463064, type: 3}
     frameWidth: 144
     frameHeight: 176
     frameCount: 12
-    framesPerSecond: 10
+    framesPerSecond: 14
   shieldLeft:
     texture: {fileID: 2800000, guid: 829c0690068044ad8cdffe70195de799, type: 3}
     frameWidth: 144

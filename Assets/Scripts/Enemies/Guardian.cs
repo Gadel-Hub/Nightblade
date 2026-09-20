@@ -11,7 +11,7 @@ namespace Nightblade
         private enum BossState { Intro, Move, Attack, Recover, Dead }
 
         [Header("Gameplay")]
-        [SerializeField, Min(1)] private int health = 30;
+        [SerializeField, Min(1)] private int health = 36;
         [SerializeField, Min(0f)] private float moveSpeed = 2.2f;
         [SerializeField, Min(0.01f)] private float normalAttackRange = 1.2f;
         [SerializeField, Min(0.01f)] private float alternateAttackRange = 1.8f;

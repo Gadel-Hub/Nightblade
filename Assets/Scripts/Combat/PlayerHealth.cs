@@ -5,7 +5,7 @@ namespace Nightblade
     [DisallowMultipleComponent]
     public sealed class PlayerHealth : MonoBehaviour
     {
-        [SerializeField, Min(1)] private int maxHealth = 3;
+        [SerializeField, Min(1)] private int maxHealth = 9;
 
         public int MaxHealth => maxHealth;
         public int CurrentHealth { get; private set; }

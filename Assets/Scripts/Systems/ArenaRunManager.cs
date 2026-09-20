@@ -186,13 +186,13 @@ public sealed class ArenaRunManager : MonoBehaviour
                         return;
                     }
 
-                    SpawnTarget(entry.Prefab, point);
+                    SpawnTarget(entry.Prefab, point, i == 1);
                 }
             }
         }
     }
 
-    private void SpawnTarget(GameObject prefab, Transform point)
+    private void SpawnTarget(GameObject prefab, Transform point, bool delaySecondEnemy = false)
     {
         GameObject instance = Instantiate(prefab, point.position, point.rotation);
         CombatTarget target = instance.GetComponent<CombatTarget>();
@@ -201,6 +201,13 @@ public sealed class ArenaRunManager : MonoBehaviour
             Debug.LogError($"Spawned prefab '{prefab.name}' needs a CombatTarget component.", prefab);
             Destroy(instance);
             return;
+        }
+
+        if (delaySecondEnemy)
+        {
+            if (instance.TryGetComponent(out Goblin goblin)) goblin.SetInitialAttackDelay(0.3f);
+            else if (instance.TryGetComponent(out Skeleton skeleton)) skeleton.SetInitialAttackDelay(0.7f);
+            else if (instance.TryGetComponent(out Werewolf werewolf)) werewolf.SetInitialAttackDelay(0.4f);
         }
 
         currentTargets.Add(target);

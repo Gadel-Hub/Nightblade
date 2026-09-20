@@ -9,10 +9,10 @@ namespace Nightblade
     public sealed class Skeleton : MonoBehaviour
     {
         [Header("Gameplay")]
-        [SerializeField, Min(1)] private int health = 4;
+        [SerializeField, Min(1)] private int health = 5;
         [SerializeField, Min(0f)] private float moveSpeed = 2f;
         [SerializeField, Min(0.01f)] private float preferredRange = 4f;
-        [SerializeField, Min(0.01f)] private float attackCooldown = 1.25f;
+        [SerializeField, Min(0.01f)] private float attackCooldown = 1.6f;
         [SerializeField, Min(1)] private int arrowDamage = 2;
         [SerializeField, Min(0.01f)] private float arrowSpeed = 8f;
         [SerializeField, Min(0.01f)] private float arrowLifetime = 2f;
@@ -44,6 +44,14 @@ namespace Nightblade
         private float nextAttackTime;
         private bool facingLeft;
         private bool dying;
+        private float initialAttackDelay;
+        private bool initialAttackDelayPending;
+
+        public void SetInitialAttackDelay(float delay)
+        {
+            initialAttackDelay = Mathf.Max(0f, delay);
+            initialAttackDelayPending = initialAttackDelay > 0f;
+        }
 
         private void Awake()
         {
@@ -93,6 +101,11 @@ namespace Nightblade
             {
                 StopMoving();
                 ApplyFrame(facingLeft ? walkLeft : walkRight, 0);
+                if (initialAttackDelayPending)
+                {
+                    nextAttackTime = Time.time + initialAttackDelay;
+                    initialAttackDelayPending = false;
+                }
                 if (Time.time >= nextAttackTime)
                     attackRoutine = StartCoroutine(AttackRoutine());
             }

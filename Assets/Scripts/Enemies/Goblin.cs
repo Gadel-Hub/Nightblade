@@ -9,10 +9,10 @@ namespace Nightblade
     public sealed class Goblin : MonoBehaviour
     {
         [Header("Gameplay")]
-        [SerializeField, Min(1)] private int health = 5;
+        [SerializeField, Min(1)] private int health = 6;
         [SerializeField, Min(0f)] private float moveSpeed = 2.5f;
         [SerializeField, Min(0.01f)] private float meleeRange = 0.85f;
-        [SerializeField, Min(0.01f)] private float attackCooldown = 1f;
+        [SerializeField, Min(0.01f)] private float attackCooldown = 1.2f;
         [SerializeField, Min(1)] private int meleeDamage = 2;
         [SerializeField] private Vector2 meleeHitboxSize = new Vector2(0.9f, 0.8f);
         [SerializeField, Min(0f)] private float meleeForwardOffset = 0.5f;
@@ -45,6 +45,14 @@ namespace Nightblade
         private float nextAttackTime;
         private bool facingLeft;
         private bool dying;
+        private float initialAttackDelay;
+        private bool initialAttackDelayPending;
+
+        public void SetInitialAttackDelay(float delay)
+        {
+            initialAttackDelay = Mathf.Max(0f, delay);
+            initialAttackDelayPending = initialAttackDelay > 0f;
+        }
 
         private void Awake()
         {
@@ -104,6 +112,11 @@ namespace Nightblade
 
                 StopMoving();
                 ApplyIdleFrame();
+                if (initialAttackDelayPending)
+                {
+                    nextAttackTime = Time.time + initialAttackDelay;
+                    initialAttackDelayPending = false;
+                }
                 if (Time.time >= nextAttackTime)
                     attackRoutine = StartCoroutine(AttackRoutine());
             }

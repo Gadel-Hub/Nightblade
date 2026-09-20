@@ -301,9 +301,9 @@ namespace Nightblade
         {
             return new[]
             {
-                new PlayerCharacterProfile("Fire", 7),
-                new PlayerCharacterProfile("Water", 8),
-                new PlayerCharacterProfile("Air", 6)
+                new PlayerCharacterProfile("Fire", 9),
+                new PlayerCharacterProfile("Water", 10),
+                new PlayerCharacterProfile("Air", 8)
             };
         }
     }

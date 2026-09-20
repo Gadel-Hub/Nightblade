@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d67517694cd40b2988c750b110d18b5, type: 3}
   m_Name:
   m_EditorClassIdentifier: Nightblade::CombatTarget
-  maxHealth: 30
+  maxHealth: 36
   placeholderVisual: {fileID: 600012}
 --- !u!114 &600005
 MonoBehaviour:
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d5f7a9c1b2e4f6a8c0d2e4f6a8b1c3d, type: 3}
   m_Name:
   m_EditorClassIdentifier: Nightblade::Guardian
-  health: 30
+  health: 36
   moveSpeed: 2.2
   normalAttackRange: 1.2
   alternateAttackRange: 1.8

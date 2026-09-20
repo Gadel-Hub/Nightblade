@@ -9,10 +9,10 @@ namespace Nightblade
     public sealed class Werewolf : MonoBehaviour
     {
         [Header("Gameplay")]
-        [SerializeField, Min(1)] private int health = 7;
-        [SerializeField, Min(0f)] private float moveSpeed = 4f;
+        [SerializeField, Min(1)] private int health = 9;
+        [SerializeField, Min(0f)] private float moveSpeed = 3.2f;
         [SerializeField, Min(0.01f)] private float meleeRange = 0.9f;
-        [SerializeField, Min(0.01f)] private float attackCooldown = 0.8f;
+        [SerializeField, Min(0.01f)] private float attackCooldown = 1.05f;
         [SerializeField, Min(1)] private int meleeDamage = 2;
         [SerializeField] private Vector2 meleeHitboxSize = new Vector2(1f, 0.9f);
         [SerializeField, Min(0f)] private float meleeForwardOffset = 0.55f;
@@ -40,6 +40,14 @@ namespace Nightblade
         private float nextAttackTime;
         private bool facingLeft;
         private bool dying;
+        private float initialAttackDelay;
+        private bool initialAttackDelayPending;
+
+        public void SetInitialAttackDelay(float delay)
+        {
+            initialAttackDelay = Mathf.Max(0f, delay);
+            initialAttackDelayPending = initialAttackDelay > 0f;
+        }
 
         private void Awake()
         {
@@ -87,6 +95,11 @@ namespace Nightblade
             {
                 StopMoving();
                 ApplyFrame(facingLeft ? idleLeft : idleRight, 0);
+                if (initialAttackDelayPending)
+                {
+                    nextAttackTime = Time.time + initialAttackDelay;
+                    initialAttackDelayPending = false;
+                }
                 if (Time.time >= nextAttackTime)
                     attackRoutine = StartCoroutine(AttackRoutine());
             }

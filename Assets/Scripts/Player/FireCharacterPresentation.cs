@@ -48,6 +48,7 @@ namespace Nightblade
         private PlayerMovement movement;
         private PlayerCombat combat;
         private PlayerPresentationState lastRequestedAction;
+        private int lastActionRequestVersion;
         private FireSpriteSheet activeSheet;
         private float animationTime;
         private bool actionPlaying;
@@ -76,7 +77,8 @@ namespace Nightblade
                 else if (movement.Velocity.x > 0.01f) facingLeft = false;
             }
 
-            if (presentation.LastRequestedAction != lastRequestedAction)
+            if (presentation.ActionRequestVersion != lastActionRequestVersion ||
+                presentation.LastRequestedAction != lastRequestedAction)
                 BeginAction(presentation.LastRequestedAction);
 
             if (actionPlaying)
@@ -88,9 +90,38 @@ namespace Nightblade
             ApplyLocomotion();
         }
 
-        public void PlayNormalAttack() => BeginAction(PlayerPresentationState.NormalAttack, true);
-        public void PlayMeleeAttack() => BeginAction(PlayerPresentationState.Skill1, true);
-        public void PlayUltimate() => BeginAction(PlayerPresentationState.Ultimate, true);
+        private void LateUpdate()
+        {
+            if (presentation != null && presentation.SelectedProfileIndex == fireCharacterIndex && spriteRenderer != null)
+                spriteRenderer.flipX = activeSheet == movementRight && facingLeft;
+        }
+
+        public void PlayNormalAttack()
+        {
+            presentation.PlayNormalAttack();
+            BeginAction(PlayerPresentationState.NormalAttack, true);
+        }
+
+        public void PlayMeleeAttack()
+        {
+            presentation.PlaySkill1();
+            BeginAction(PlayerPresentationState.Skill1, true);
+        }
+
+        public void PlayShield()
+        {
+            presentation.PlayDefensiveSkill();
+            lastRequestedAction = PlayerPresentationState.DefensiveSkill;
+            shieldPresentation = true;
+            actionPlaying = false;
+            ApplyLocomotion();
+        }
+
+        public void PlayUltimate()
+        {
+            presentation.PlayUltimate();
+            BeginAction(PlayerPresentationState.Ultimate, true);
+        }
 
         public void ResetPresentation()
         {
@@ -113,6 +144,7 @@ namespace Nightblade
         {
             if (!force && state == PlayerPresentationState.Idle) return;
             lastRequestedAction = state;
+            lastActionRequestVersion = presentation.ActionRequestVersion;
             activeSheet = SelectSheet(state);
             animationTime = 0f;
             actionPlaying = activeSheet != null && activeSheet.FrameCount > 0;

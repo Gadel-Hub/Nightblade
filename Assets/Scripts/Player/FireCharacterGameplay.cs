@@ -84,7 +84,7 @@ namespace Nightblade
         private IEnumerator ShieldRoutine()
         {
             IsShieldActive = true;
-            presentation.SetShieldPresentation(true);
+            presentation.PlayShield();
             yield return new WaitForSeconds(shieldDuration);
             IsShieldActive = false;
             shieldRoutine = null;

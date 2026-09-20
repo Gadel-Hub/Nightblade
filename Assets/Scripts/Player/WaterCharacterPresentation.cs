@@ -23,6 +23,8 @@ namespace Nightblade
     [RequireComponent(typeof(PlayerPresentation))]
     public sealed class WaterCharacterPresentation : MonoBehaviour
     {
+        private const float PrimaryAttackPlaybackMultiplier = 1.4f;
+
         [SerializeField] private int waterCharacterIndex = 1;
         [SerializeField] private PlayerPresentation presentation;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -51,6 +53,7 @@ namespace Nightblade
         private PlayerPresentationState lastRequestedAction;
         private int lastActionRequestVersion;
         private float animationTime;
+        private float activeFramesPerSecond;
         private float shieldAnimationTime;
         private bool actionPlaying;
         private bool shieldPresentation;
@@ -90,6 +93,12 @@ namespace Nightblade
             UpdateShieldEffect();
         }
 
+        private void LateUpdate()
+        {
+            if (presentation != null && presentation.SelectedProfileIndex == waterCharacterIndex && spriteRenderer != null)
+                spriteRenderer.flipX = false;
+        }
+
         private void UpdateFacing()
         {
             if (movement == null) return;
@@ -102,8 +111,19 @@ namespace Nightblade
             if (state == PlayerPresentationState.Idle || state == PlayerPresentationState.Walk) return;
             lastRequestedAction = state;
             lastActionRequestVersion = presentation.ActionRequestVersion;
+            if (state == PlayerPresentationState.DefensiveSkill)
+            {
+                actionPlaying = false;
+                activeSheet = null;
+                shieldAnimationTime = 0f;
+                shieldEffectPlaying = true;
+                return;
+            }
             activeSheet = SelectActionSheet(state);
             animationTime = 0f;
+            activeFramesPerSecond = activeSheet != null
+                ? activeSheet.FramesPerSecond * (state == PlayerPresentationState.Skill1 ? PrimaryAttackPlaybackMultiplier : 1f)
+                : 0f;
             actionPlaying = activeSheet != null && activeSheet.FrameCount > 0;
             if (!actionPlaying) ApplyMovement();
         }
@@ -111,22 +131,37 @@ namespace Nightblade
         private void AdvanceAction()
         {
             int frameCount = activeSheet.FrameCount;
-            SetFrame(activeSheet, Mathf.Min(Mathf.FloorToInt(animationTime * activeSheet.FramesPerSecond), frameCount - 1));
+            SetFrame(activeSheet, Mathf.Min(Mathf.FloorToInt(animationTime * activeFramesPerSecond), frameCount - 1));
             animationTime += Time.deltaTime;
-            if (animationTime >= frameCount / activeSheet.FramesPerSecond)
+            if (animationTime >= frameCount / activeFramesPerSecond)
             {
                 actionPlaying = false;
                 ApplyMovement();
             }
         }
 
-        public void PlayPrimaryAttack() => BeginAction(PlayerPresentationState.NormalAttack);
+        public void PlayPrimaryAttack()
+        {
+            presentation.PlaySkill1();
+            BeginAction(PlayerPresentationState.Skill1);
+        }
+
+        public void PlaySecondaryAttack()
+        {
+            presentation.PlayNormalAttack();
+            BeginAction(PlayerPresentationState.NormalAttack);
+        }
+
+        public void PlayUltimate()
+        {
+            presentation.PlayUltimate();
+            BeginAction(PlayerPresentationState.Ultimate);
+        }
+
         public void PlayShield()
         {
-            actionPlaying = false;
-            activeSheet = null;
-            shieldAnimationTime = 0f;
-            shieldEffectPlaying = true;
+            presentation.PlayDefensiveSkill();
+            BeginAction(PlayerPresentationState.DefensiveSkill);
         }
 
         public void SetShieldPresentation(bool active)
@@ -178,12 +213,6 @@ namespace Nightblade
 
         private WaterSpriteSheet SelectActionSheet(PlayerPresentationState state)
         {
-            if (state == PlayerPresentationState.DefensiveSkill)
-            {
-                PlayShield();
-                return null;
-            }
-
             bool isMoving = movement != null && Mathf.Abs(movement.Velocity.x) > 0.01f;
             switch (state)
             {
@@ -192,7 +221,9 @@ namespace Nightblade
                         ? (facingLeft ? movingAttackLeft : movingAttackRight)
                         : (facingLeft ? normalAttackLeft : normalAttackRight);
                 case PlayerPresentationState.Skill1:
-                    return facingLeft ? movingAttackLeft : movingAttackRight;
+                    return isMoving
+                        ? (facingLeft ? movingAttackLeft : movingAttackRight)
+                        : (facingLeft ? normalAttackLeft : normalAttackRight);
                 case PlayerPresentationState.Ultimate:
                     return facingLeft ? ultimateLeft : ultimateRight;
                 default:

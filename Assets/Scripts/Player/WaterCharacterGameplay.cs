@@ -75,7 +75,7 @@ namespace Nightblade
             projectile.Configure(Vector2.right * facing, bubbleSpeed, bubbleLifetime, bubbleRange,
                 bubbleDamage, bubbleTargetLayers);
             Track(bubble);
-            presentation.PlayNormalAttack();
+            waterPresentation.PlaySecondaryAttack();
         }
 
         public void ActivateShield()
@@ -104,6 +104,7 @@ namespace Nightblade
                 waveGameplaySize, waveDamage, waveTargetLayers, texture, renderer,
                 waveFrameWidth, waveFrameHeight, 10f);
             Track(wave);
+            waterPresentation.PlayUltimate();
         }
 
         private IEnumerator ShieldRoutine()
