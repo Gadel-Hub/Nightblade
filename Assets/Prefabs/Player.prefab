@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67989951c58942a1b519315c6d2c4dc4, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  maxHealth: 20
+  maxHealth: 25
 --- !u!114 &100007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ MonoBehaviour:
   inputActions: {fileID: -944628639613478452, guid: f86a1bbe2734497786b9a7a07f7c0a63, type: 3}
   characters:
   - displayName: Fire
-    maxHealth: 20
+    maxHealth: 25
     normalSkill1:
       activate:
         m_PersistentCalls:
@@ -250,7 +250,7 @@ MonoBehaviour:
             m_CallState: 2
       cooldownSeconds: 12
   - displayName: Water
-    maxHealth: 20
+    maxHealth: 25
     normalSkill1:
       activate:
         m_PersistentCalls:
@@ -320,7 +320,7 @@ MonoBehaviour:
             m_CallState: 2
       cooldownSeconds: 10
   - displayName: Air
-    maxHealth: 20
+    maxHealth: 25
     normalSkill1:
       activate:
         m_PersistentCalls:
@@ -523,6 +523,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Nightblade::FireUltimate
   durationSeconds: 1
   damage: 5
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 1024
   coverageStart: -5
   coverageEnd: 5
   flameSpacing: 2

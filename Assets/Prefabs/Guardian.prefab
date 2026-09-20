@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Nightblade::CombatTarget
   maxHealth: 36
-  placeholderVisual: {fileID: 600012}
+  placeholderVisual: {fileID: 0}
 --- !u!114 &600005
 MonoBehaviour:
   m_ObjectHideFlags: 0

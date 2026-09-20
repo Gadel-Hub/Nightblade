@@ -47,21 +47,29 @@ namespace Nightblade
         private readonly Dictionary<Texture2D, Sprite[]> frameCache = new Dictionary<Texture2D, Sprite[]>();
         private CombatTarget target;
         private Rigidbody2D body;
+        private BoxCollider2D bodyCollider;
         private PlayerDamage player;
         private BossState state;
         private Coroutine introRoutine;
         private Coroutine attackRoutine;
+        private Coroutine deathRoutine;
         private float nextNormalAttackTime;
         private float nextAlternateAttackTime;
         private float recoverUntil;
         private bool facingLeft;
         private bool dying;
+        private bool deathPresentationComplete;
+        private Color initialSpriteColor = Color.white;
+
+        public bool DeathPresentationComplete => deathPresentationComplete;
 
         private void Awake()
         {
             target = GetComponent<CombatTarget>();
             body = GetComponent<Rigidbody2D>();
+            bodyCollider = GetComponent<BoxCollider2D>();
             if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
+            if (spriteRenderer != null) initialSpriteColor = spriteRenderer.color;
             target.SetMaxHealth(health);
         }
 
@@ -69,6 +77,8 @@ namespace Nightblade
         {
             if (target == null || body == null) return;
             target.ResetTarget();
+            body.simulated = true;
+            if (bodyCollider != null) bodyCollider.enabled = true;
             body.linearVelocity = Vector2.zero;
             state = BossState.Intro;
             nextNormalAttackTime = 0f;
@@ -76,7 +86,12 @@ namespace Nightblade
             recoverUntil = 0f;
             facingLeft = false;
             dying = false;
-            if (spriteRenderer != null) spriteRenderer.enabled = true;
+            deathPresentationComplete = false;
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = initialSpriteColor;
+                spriteRenderer.enabled = true;
+            }
             ApplyFrame(spawnAnimation, 0);
             introRoutine = StartCoroutine(IntroRoutine());
         }
@@ -85,9 +100,16 @@ namespace Nightblade
         {
             if (introRoutine != null) StopCoroutine(introRoutine);
             if (attackRoutine != null) StopCoroutine(attackRoutine);
+            if (deathRoutine != null) StopCoroutine(deathRoutine);
             introRoutine = null;
             attackRoutine = null;
+            deathRoutine = null;
             if (body != null) body.linearVelocity = Vector2.zero;
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = initialSpriteColor;
+                spriteRenderer.enabled = true;
+            }
             state = BossState.Intro;
         }
 
@@ -209,6 +231,8 @@ namespace Nightblade
 
         private void Die()
         {
+            if (dying) return;
+
             dying = true;
             state = BossState.Dead;
             if (introRoutine != null) StopCoroutine(introRoutine);
@@ -216,9 +240,42 @@ namespace Nightblade
             introRoutine = null;
             attackRoutine = null;
             body.linearVelocity = Vector2.zero;
+            if (bodyCollider != null) bodyCollider.enabled = false;
             body.simulated = false;
-            if (spriteRenderer != null) spriteRenderer.enabled = false;
-            Destroy(gameObject);
+            deathRoutine = StartCoroutine(DeathPresentationRoutine());
+        }
+
+        private IEnumerator DeathPresentationRoutine()
+        {
+            const float impactDuration = 0.4f;
+            const float fadeDuration = 0.7f;
+            Color impactTint = new Color(1f, 0.68f, 0.68f, initialSpriteColor.a);
+            float elapsed = 0f;
+
+            while (elapsed < impactDuration)
+            {
+                float pulse = Mathf.PingPong(elapsed * 12f, 1f);
+                spriteRenderer.color = Color.Lerp(initialSpriteColor, impactTint, pulse);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            spriteRenderer.color = initialSpriteColor;
+            elapsed = 0f;
+            while (elapsed < fadeDuration)
+            {
+                float progress = elapsed / fadeDuration;
+                Color fadedColor = initialSpriteColor;
+                fadedColor.a *= 1f - progress;
+                spriteRenderer.color = fadedColor;
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            spriteRenderer.enabled = false;
+            deathPresentationComplete = true;
+            deathRoutine = null;
+            gameObject.SetActive(false);
         }
 
         private void StopMoving() => body.linearVelocity = new Vector2(0f, body.linearVelocity.y);

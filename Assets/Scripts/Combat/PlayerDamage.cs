@@ -23,6 +23,7 @@ namespace Nightblade
         private PlayerMovement movement;
         private PlayerCombat combat;
         private PlayerCharacter character;
+        private FireUltimate fireUltimate;
         private float stateRemaining;
 
         public DamageState State { get; private set; } = DamageState.Normal;
@@ -39,6 +40,7 @@ namespace Nightblade
             movement = GetComponent<PlayerMovement>();
             combat = GetComponent<PlayerCombat>();
             character = GetComponent<PlayerCharacter>();
+            fireUltimate = GetComponent<FireUltimate>();
             if (combat == null || visualRoot == null)
             {
                 Debug.LogError("PlayerDamage needs player combat and a separate visual root.", this);
@@ -60,6 +62,7 @@ namespace Nightblade
 
         public bool ReceiveDamage(int amount, float sourceX)
         {
+            if (fireUltimate != null && fireUltimate.IsActive) return false;
             if (GetComponent<FireCharacterGameplay>()?.IsShieldActive == true ||
                 GetComponent<WaterCharacterGameplay>()?.IsShieldActive == true ||
                 GetComponent<AirCharacterGameplay>()?.IsShieldActive == true) return false;

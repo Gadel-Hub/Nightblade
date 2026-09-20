@@ -435,13 +435,19 @@ MonoBehaviour:
   waves:
   - enemies:
     - prefab: {fileID: 300000, guid: 6b2a1d4f0e7c4b9f8a6d5e3c2b1a0987, type: 3}
+      count: 1
+  - enemies:
+    - prefab: {fileID: 300000, guid: 6b2a1d4f0e7c4b9f8a6d5e3c2b1a0987, type: 3}
       count: 2
+  - enemies:
+    - prefab: {fileID: 400000, guid: 7d4c2b1a9f8e6d5c3b2a1908f7e6d5c4, type: 3}
+      count: 1
   - enemies:
     - prefab: {fileID: 400000, guid: 7d4c2b1a9f8e6d5c3b2a1908f7e6d5c4, type: 3}
       count: 2
   - enemies:
     - prefab: {fileID: 500000, guid: 5e3c1a9f7b6d4e2c0a8f6d5b4c3e2a1f, type: 3}
-      count: 2
+      count: 1
   finalBossPrefab: {fileID: 600000, guid: 6f4d2b1a9c8e7d5f3b2a1908e7d6c5b4, type: 3}
   finalBossSpawnPoint: {fileID: 700121}
   onFinalBossPhaseStarted:
@@ -461,7 +467,34 @@ MonoBehaviour:
         m_CallState: 2
   onRunCompleted:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 700002}
+        m_TargetAssemblyTypeName: Nightblade.SacredForestPresentation, Assembly-CSharp
+        m_MethodName: ShowNormalForest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument:
+          m_BoolArgument: 0
+        m_CallState: 2
+  onRunReset:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 700002}
+        m_TargetAssemblyTypeName: Nightblade.SacredForestPresentation, Assembly-CSharp
+        m_MethodName: ShowNormalForest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument:
+          m_BoolArgument: 0
+        m_CallState: 2
   waveTransitionDelay: 1
   startImmediately: 1
 --- !u!1 &700110
@@ -1622,7 +1655,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: No runs yet
+  m_Text: Henüz kayıt yok
 --- !u!222 &228467803
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3021,7 +3054,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RUN COMPLETE
+  m_Text: Sonuçlar
 --- !u!222 &1010292546
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3100,7 +3133,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RESTART
+  m_Text: Tekrar Oyna
 --- !u!222 &1089964040
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3300,7 +3333,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: SAVE TIME
+  m_Text: Kaydet
 --- !u!222 &1161591523
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3545,7 +3578,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Final time  00:00.000
+  m_Text: Süre  00:00.000
 --- !u!1 &1242659046
 GameObject:
   m_ObjectHideFlags: 0
@@ -5289,7 +5322,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -122, y: 82}
+  m_AnchoredPosition: {x: -122, y: 76}
   m_SizeDelta: {x: 70, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1962425355
@@ -5404,7 +5437,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player name
+  m_Text: İsim
 --- !u!222 &2055285579
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5653,7 +5686,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: FASTEST RUNS
+  m_Text: Liderlik Tablosu
 --- !u!222 &2117502411
 CanvasRenderer:
   m_ObjectHideFlags: 0

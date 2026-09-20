@@ -54,6 +54,9 @@ public sealed class ProductionRunUI : MonoBehaviour
     private bool resultSaved;
     private bool defeatShowing;
     private Image healthBarFill;
+    private GameObject bossHealthBarRoot;
+    private Image bossHealthBarFill;
+    private CombatTarget bossTarget;
     private Sprite healthBarSprite;
 
     private void Awake()
@@ -64,8 +67,13 @@ public sealed class ProductionRunUI : MonoBehaviour
         if (arena == null) arena = FindFirstObjectByType<ArenaRunManager>();
         if (player != null) startPosition = player.transform.position;
         if (player != null) player.GetComponent<PlayerCombat>()?.SetAttackVisualEnabled(false);
-        if (arena != null) arena.RunCompleted.AddListener(ShowResults);
+        if (arena != null)
+        {
+            arena.RunCompleted.AddListener(ShowResults);
+            arena.FinalBossPhaseStarted.AddListener(ShowBossHealthBar);
+        }
         CreateHealthBar();
+        CreateBossHealthBar();
 
         for (int i = 0; i < characterButtons.Length; i++)
         {
@@ -86,7 +94,11 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (arena != null) arena.RunCompleted.RemoveListener(ShowResults);
+        if (arena != null)
+        {
+            arena.RunCompleted.RemoveListener(ShowResults);
+            arena.FinalBossPhaseStarted.RemoveListener(ShowBossHealthBar);
+        }
         if (healthBarSprite != null) Destroy(healthBarSprite);
     }
 
@@ -129,6 +141,8 @@ public sealed class ProductionRunUI : MonoBehaviour
         if (timerLabel != null && timer != null)
             timerLabel.text = TimeManager.FormatTime(timer.timePassed);
 
+        UpdateBossHealthBar();
+
         for (int i = 0; i < skillCooldownLabels.Length && i < SkillSlots.Length; i++)
         {
             float remaining = player.GetCooldownRemaining(SkillSlots[i]);
@@ -140,13 +154,14 @@ public sealed class ProductionRunUI : MonoBehaviour
     public void ShowResults()
     {
         if (defeatShowing) return;
+        HideBossHealthBar();
         SetResultsMode(false);
         player?.EndRun();
         if (gameplayPanel != null) gameplayPanel.SetActive(false);
         if (selectionPanel != null) selectionPanel.SetActive(false);
         if (resultsPanel != null) resultsPanel.SetActive(true);
         if (finalTimeLabel != null && timer != null)
-            finalTimeLabel.text = "Final time  " + TimeManager.FormatTime(timer.timePassed);
+            finalTimeLabel.text = "Süre  " + TimeManager.FormatTime(timer.timePassed);
         if (saveStatusLabel != null) saveStatusLabel.text = string.Empty;
         if (saveButton != null) saveButton.interactable = !resultSaved;
         leaderboardUI?.ShowLeaderboard();
@@ -155,6 +170,7 @@ public sealed class ProductionRunUI : MonoBehaviour
     private void ShowDefeat()
     {
         defeatShowing = true;
+        HideBossHealthBar();
         arena?.ResetRun();
         player?.EndRun();
         if (gameplayPanel != null) gameplayPanel.SetActive(false);
@@ -166,8 +182,8 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     private void SetResultsMode(bool defeated)
     {
-        if (resultsTitleLabel != null) resultsTitleLabel.text = defeated ? "Kaybettin" : "RUN COMPLETE";
-        if (restartButtonLabel != null) restartButtonLabel.text = defeated ? "Tekrar Dene" : "RESTART";
+        if (resultsTitleLabel != null) resultsTitleLabel.text = defeated ? "Kaybettin" : "Sonuçlar";
+        if (restartButtonLabel != null) restartButtonLabel.text = defeated ? "Tekrar Dene" : "Tekrar Oyna";
         if (finalTimeLabel != null) finalTimeLabel.gameObject.SetActive(!defeated);
         if (playerNameInput != null) playerNameInput.gameObject.SetActive(!defeated);
         if (saveButton != null) saveButton.gameObject.SetActive(!defeated);
@@ -216,6 +232,7 @@ public sealed class ProductionRunUI : MonoBehaviour
         if (!player.HasSelection && !player.ConfirmSelection()) return;
         if (!player.BeginRun()) return;
 
+        HideBossHealthBar();
         resultSaved = false;
         if (selectionPanel != null) selectionPanel.SetActive(false);
         if (resultsPanel != null) resultsPanel.SetActive(false);
@@ -234,8 +251,11 @@ public sealed class ProductionRunUI : MonoBehaviour
 
         RectTransform backgroundRect = CreateBarImage("Health Bar Background", healthLabel.transform,
             new Color(0.12f, 0.14f, 0.12f, 0.9f));
-        backgroundRect.anchoredPosition = new Vector2(0f, -7f);
-        backgroundRect.sizeDelta = new Vector2(56f, 4f);
+        backgroundRect.anchorMin = Vector2.up;
+        backgroundRect.anchorMax = Vector2.up;
+        backgroundRect.pivot = Vector2.up;
+        backgroundRect.anchoredPosition = new Vector2(0f, -11f);
+        backgroundRect.sizeDelta = new Vector2(90f, 8f);
         healthBarSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0f, 0f, 1f, 1f),
             new Vector2(0.5f, 0.5f), 1f);
         backgroundRect.GetComponent<Image>().sprite = healthBarSprite;
@@ -253,6 +273,94 @@ public sealed class ProductionRunUI : MonoBehaviour
         healthBarFill.fillMethod = Image.FillMethod.Horizontal;
         healthBarFill.fillOrigin = (int)Image.OriginHorizontal.Left;
         healthBarFill.raycastTarget = false;
+    }
+
+    private void CreateBossHealthBar()
+    {
+        if (gameplayPanel == null) return;
+
+        bossHealthBarRoot = new GameObject("Guardian Boss Health", typeof(RectTransform));
+        bossHealthBarRoot.transform.SetParent(gameplayPanel.transform, false);
+        RectTransform rootRect = (RectTransform)bossHealthBarRoot.transform;
+        rootRect.anchorMin = new Vector2(0.5f, 0.5f);
+        rootRect.anchorMax = new Vector2(0.5f, 0.5f);
+        rootRect.pivot = new Vector2(0.5f, 0.5f);
+        rootRect.anchoredPosition = new Vector2(0f, 50f);
+        rootRect.sizeDelta = new Vector2(220f, 26f);
+
+        GameObject nameObject = new GameObject("Boss Name", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+        nameObject.transform.SetParent(bossHealthBarRoot.transform, false);
+        RectTransform nameRect = (RectTransform)nameObject.transform;
+        nameRect.anchorMin = nameRect.anchorMax = new Vector2(0.5f, 0.5f);
+        nameRect.pivot = new Vector2(0.5f, 0.5f);
+        nameRect.anchoredPosition = new Vector2(0f, 3f);
+        nameRect.sizeDelta = new Vector2(220f, 10f);
+        Text bossName = nameObject.GetComponent<Text>();
+        bossName.font = healthLabel != null ? healthLabel.font : null;
+        bossName.text = "Guardian";
+        bossName.fontSize = 8;
+        bossName.fontStyle = FontStyle.Bold;
+        bossName.alignment = TextAnchor.MiddleCenter;
+        bossName.color = new Color(0.78f, 0.74f, 0.66f, 1f);
+        bossName.raycastTarget = false;
+
+        RectTransform borderRect = CreateBossBarImage("Boss Bar Border", bossHealthBarRoot.transform,
+            new Color(0.34f, 0.31f, 0.26f, 1f), new Vector2(0f, -9f), new Vector2(204f, 8f));
+        RectTransform backgroundRect = CreateBossBarImage("Boss Bar Backing", borderRect,
+            new Color(0.035f, 0.03f, 0.03f, 1f), Vector2.zero, new Vector2(202f, 6f));
+        RectTransform fillRect = CreateBossBarImage("Boss Bar Fill", backgroundRect,
+            new Color(0.48f, 0.16f, 0.14f, 1f), Vector2.zero, new Vector2(200f, 4f));
+
+        bossHealthBarFill = fillRect.GetComponent<Image>();
+        bossHealthBarFill.type = Image.Type.Filled;
+        bossHealthBarFill.fillMethod = Image.FillMethod.Horizontal;
+        bossHealthBarFill.fillOrigin = (int)Image.OriginHorizontal.Left;
+        bossHealthBarFill.raycastTarget = false;
+        bossHealthBarRoot.SetActive(false);
+    }
+
+    private RectTransform CreateBossBarImage(string objectName, Transform parent, Color color,
+        Vector2 position, Vector2 size)
+    {
+        RectTransform rect = CreateBarImage(objectName, parent, color);
+        rect.anchoredPosition = position;
+        rect.sizeDelta = size;
+        Image image = rect.GetComponent<Image>();
+        image.sprite = healthBarSprite;
+        return rect;
+    }
+
+    private void ShowBossHealthBar()
+    {
+        bossTarget = null;
+        if (bossHealthBarFill != null) bossHealthBarFill.fillAmount = 1f;
+        if (bossHealthBarRoot != null) bossHealthBarRoot.SetActive(true);
+    }
+
+    private void UpdateBossHealthBar()
+    {
+        if (bossHealthBarRoot == null || !bossHealthBarRoot.activeSelf) return;
+        if (bossTarget == null)
+        {
+            Guardian guardian = FindFirstObjectByType<Guardian>();
+            if (guardian != null) bossTarget = guardian.GetComponent<CombatTarget>();
+        }
+
+        if (bossTarget == null)
+        {
+            HideBossHealthBar();
+            return;
+        }
+
+        bossHealthBarFill.fillAmount = bossTarget.MaxHealth > 0
+            ? bossTarget.CurrentHealth / (float)bossTarget.MaxHealth
+            : 0f;
+    }
+
+    private void HideBossHealthBar()
+    {
+        bossTarget = null;
+        if (bossHealthBarRoot != null) bossHealthBarRoot.SetActive(false);
     }
 
     private static RectTransform CreateBarImage(string objectName, Transform parent, Color color)
@@ -275,12 +383,13 @@ public sealed class ProductionRunUI : MonoBehaviour
 
         resultSaved = leaderboardUI.SaveScore(playerNameInput != null ? playerNameInput.text : string.Empty);
         if (saveStatusLabel != null)
-            saveStatusLabel.text = resultSaved ? "Saved" : "Enter a name and place in the top 10";
+            saveStatusLabel.text = resultSaved ? "Kaydedildi" : "İsim girin; ilk 10'a girin.";
         if (saveButton != null) saveButton.interactable = !resultSaved;
     }
 
     private void RestartRun()
     {
+        HideBossHealthBar();
         arena?.ResetRun();
         player?.ReturnToSelection(startPosition);
         resultSaved = false;
@@ -292,6 +401,7 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     private void ShowSelection()
     {
+        HideBossHealthBar();
         SetResultsMode(false);
         if (selectionPanel != null) selectionPanel.SetActive(true);
         if (gameplayPanel != null) gameplayPanel.SetActive(false);

@@ -11,6 +11,7 @@ namespace Nightblade
         [Header("Timing")]
         [SerializeField, Min(0f)] private float durationSeconds;
         [SerializeField, Min(1)] private int damage = 5;
+        [SerializeField] private LayerMask targetLayers;
 
         [Header("Coverage")]
         [SerializeField] private float coverageStart;
@@ -31,6 +32,8 @@ namespace Nightblade
         private PlayerDamage playerDamage;
         private Rigidbody2D body;
         private Coroutine runningUltimate;
+
+        public bool IsActive => runningUltimate != null;
 
         private void Awake()
         {
@@ -119,6 +122,8 @@ namespace Nightblade
             {
                 CombatTarget target = targets[i];
                 if (target == null || damagedTargets.Contains(target)) continue;
+                if (target.transform == transform || target.transform.IsChildOf(transform)) continue;
+                if ((targetLayers.value & (1 << target.gameObject.layer)) == 0) continue;
                 float x = target.transform.position.x;
                 if (x < coverageStart || x > coverageEnd) continue;
                 if (target.TakeDamage(damage)) damagedTargets.Add(target);

@@ -9,7 +9,7 @@ public class LeaderboardUI : MonoBehaviour
     [SerializeField] private TimeManager timeManager;
     [SerializeField] private Text leaderboardText;
     [SerializeField] private bool showTestPanel = true;
-    private string testPlayerName = "Runner";
+    private string testPlayerName = "Koşucu";
 
     private void Start()
     {
@@ -46,7 +46,7 @@ public class LeaderboardUI : MonoBehaviour
         }
 
         if (leaderboard.Players.Count == 0)
-            display.Append("No runs yet");
+            display.Append("Henüz kayıt yok");
 
         leaderboardText.text = display.ToString();
     }
@@ -57,28 +57,28 @@ public class LeaderboardUI : MonoBehaviour
         if (!showTestPanel || leaderboard == null || timeManager == null) return;
 
         GUILayout.BeginArea(new Rect(8f, 8f, 250f, 430f), GUI.skin.box);
-        GUILayout.Label("Speedrun Test Panel");
-        GUILayout.Label("Time: " + TimeManager.FormatTime(timeManager.timePassed));
+        GUILayout.Label("Süre Test Paneli");
+        GUILayout.Label("Süre: " + TimeManager.FormatTime(timeManager.timePassed));
 
         if (!timeManager.IsRunning)
         {
-            if (GUILayout.Button("Start Run")) timeManager.StartRun();
+            if (GUILayout.Button("Koşuyu Başlat")) timeManager.StartRun();
         }
         else
         {
-            if (GUILayout.Button("Pause")) timeManager.Pause();
+            if (GUILayout.Button("Duraklat")) timeManager.Pause();
         }
 
-        if (GUILayout.Button("Resume")) timeManager.Resume();
-        if (GUILayout.Button("Finish Run")) timeManager.FinishRun();
+        if (GUILayout.Button("Sürdür")) timeManager.Resume();
+        if (GUILayout.Button("Koşuyu Bitir")) timeManager.FinishRun();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Name", GUILayout.Width(45f));
+        GUILayout.Label("İsim", GUILayout.Width(45f));
         testPlayerName = GUILayout.TextField(testPlayerName);
         GUILayout.EndHorizontal();
-        if (GUILayout.Button("Save Finished Run")) SaveScore();
-        if (GUILayout.Button("Add 11 Sorting Tests")) leaderboard.AddTestScores();
-        if (GUILayout.Button("Clear Saved Times")) leaderboard.ClearLeaderboard();
+        if (GUILayout.Button("Süreyi Kaydet")) SaveScore();
+        if (GUILayout.Button("11 Sıralama Kaydı Ekle")) leaderboard.AddTestScores();
+        if (GUILayout.Button("Kayıtlı Süreleri Temizle")) leaderboard.ClearLeaderboard();
 
         GUILayout.Space(6f);
         foreach (string line in BuildLeaderboardLines()) GUILayout.Label(line);
@@ -90,7 +90,7 @@ public class LeaderboardUI : MonoBehaviour
         string[] lines = new string[leaderboard.Players.Count == 0 ? 1 : leaderboard.Players.Count];
         if (leaderboard.Players.Count == 0)
         {
-            lines[0] = "No runs yet";
+            lines[0] = "Henüz kayıt yok";
             return lines;
         }
 

@@ -39,10 +39,12 @@ public sealed class ArenaRunManager : MonoBehaviour
     [SerializeField] private Transform finalBossSpawnPoint;
     [SerializeField] private UnityEvent onFinalBossPhaseStarted;
     [SerializeField] private UnityEvent onRunCompleted;
+    [SerializeField] private UnityEvent onRunReset;
     [SerializeField, Min(0f)] private float waveTransitionDelay = 1f;
     [SerializeField] private bool startImmediately;
 
     public UnityEvent RunCompleted => onRunCompleted;
+    public UnityEvent FinalBossPhaseStarted => onFinalBossPhaseStarted;
 
     private readonly List<CombatTarget> currentTargets = new List<CombatTarget>();
     private readonly List<CombatTarget> spawnedTargets = new List<CombatTarget>();
@@ -50,8 +52,10 @@ public sealed class ArenaRunManager : MonoBehaviour
     private int nextWaveIndex;
     private int nextSpawnPointIndex;
     private bool bossPrefabSpawned;
+    private bool bossDefeatPending;
     private Coroutine transitionRoutine;
     private PlayerCharacter player;
+    private Guardian finalBoss;
 
     private void Awake()
     {
@@ -73,7 +77,17 @@ public sealed class ArenaRunManager : MonoBehaviour
         if (state == RunState.Waves && transitionRoutine == null && CurrentWaveIsDefeated())
             transitionRoutine = StartCoroutine(AdvanceAfterTransition());
         else if (state == RunState.BossPhase && bossPrefabSpawned && CurrentWaveIsDefeated())
-            CompleteRun();
+        {
+            if (!bossDefeatPending)
+            {
+                bossDefeatPending = true;
+                if (runTimer != null) runTimer.StopTimer();
+                player?.EndRun();
+            }
+
+            if (finalBoss == null || finalBoss.DeathPresentationComplete)
+                CompleteRun();
+        }
     }
 
     [ContextMenu("Start Run")]
@@ -114,7 +128,10 @@ public sealed class ArenaRunManager : MonoBehaviour
         nextWaveIndex = 0;
         nextSpawnPointIndex = 0;
         bossPrefabSpawned = false;
+        bossDefeatPending = false;
+        finalBoss = null;
         state = RunState.Idle;
+        onRunReset?.Invoke();
     }
 
     [ContextMenu("Complete Run")]
@@ -145,6 +162,8 @@ public sealed class ArenaRunManager : MonoBehaviour
         state = RunState.BossPhase;
         currentTargets.Clear();
         bossPrefabSpawned = finalBossPrefab != null;
+        bossDefeatPending = false;
+        finalBoss = null;
         onFinalBossPhaseStarted?.Invoke();
 
         if (finalBossPrefab == null) return;
@@ -157,8 +176,11 @@ public sealed class ArenaRunManager : MonoBehaviour
             return;
         }
 
-        SpawnTarget(finalBossPrefab, point);
-        if (currentTargets.Count == 0) bossPrefabSpawned = false;
+        CombatTarget bossTarget = SpawnTarget(finalBossPrefab, point);
+        if (bossTarget == null)
+            bossPrefabSpawned = false;
+        else
+            finalBoss = bossTarget.GetComponent<Guardian>();
     }
 
     private System.Collections.IEnumerator AdvanceAfterTransition()
@@ -192,7 +214,7 @@ public sealed class ArenaRunManager : MonoBehaviour
         }
     }
 
-    private void SpawnTarget(GameObject prefab, Transform point, bool delaySecondEnemy = false)
+    private CombatTarget SpawnTarget(GameObject prefab, Transform point, bool delaySecondEnemy = false)
     {
         GameObject instance = Instantiate(prefab, point.position, point.rotation);
         CombatTarget target = instance.GetComponent<CombatTarget>();
@@ -200,7 +222,7 @@ public sealed class ArenaRunManager : MonoBehaviour
         {
             Debug.LogError($"Spawned prefab '{prefab.name}' needs a CombatTarget component.", prefab);
             Destroy(instance);
-            return;
+            return null;
         }
 
         if (delaySecondEnemy)
@@ -212,6 +234,7 @@ public sealed class ArenaRunManager : MonoBehaviour
 
         currentTargets.Add(target);
         spawnedTargets.Add(target);
+        return target;
     }
 
     private Transform GetNextSpawnPoint()

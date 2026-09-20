@@ -28,7 +28,7 @@ namespace Nightblade
     public sealed class PlayerCharacterProfile
     {
         [SerializeField] private string displayName;
-        [SerializeField, Min(1)] private int maxHealth = 20;
+        [SerializeField, Min(1)] private int maxHealth = 25;
         [SerializeField] private PlayerSkillHook normalSkill1 = new PlayerSkillHook();
         [SerializeField] private PlayerSkillHook normalSkill2 = new PlayerSkillHook();
         [SerializeField] private PlayerSkillHook defensiveSkill = new PlayerSkillHook();
@@ -301,9 +301,9 @@ namespace Nightblade
         {
             return new[]
             {
-                new PlayerCharacterProfile("Fire", 20),
-                new PlayerCharacterProfile("Water", 20),
-                new PlayerCharacterProfile("Air", 20)
+                new PlayerCharacterProfile("Fire", 25),
+                new PlayerCharacterProfile("Water", 25),
+                new PlayerCharacterProfile("Air", 25)
             };
         }
     }
