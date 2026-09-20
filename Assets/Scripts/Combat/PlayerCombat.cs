@@ -48,15 +48,15 @@ namespace Nightblade
 
         private void Awake()
         {
-            if (inputActions == null || attackHitbox == null || attackVisual == null || targetLayers.value == 0)
+            if (inputActions == null || attackHitbox == null || targetLayers.value == 0)
             {
-                Debug.LogError("PlayerCombat needs input actions, an attack hitbox, an attack visual, and target layers.", this);
+                Debug.LogError("PlayerCombat needs input actions, an attack hitbox, and target layers.", this);
                 enabled = false;
                 return;
             }
 
             attackHitbox.enabled = false;
-            attackVisual.enabled = false;
+            if (attackVisual != null) attackVisual.enabled = false;
             targetFilter = new ContactFilter2D { useTriggers = true };
             targetFilter.SetLayerMask(targetLayers);
             runtimeActions = Instantiate(inputActions);
@@ -168,7 +168,7 @@ namespace Nightblade
             Phase = nextPhase;
             bool isActive = nextPhase == AttackPhase.Active;
             attackHitbox.enabled = isActive;
-            attackVisual.enabled = attackVisualEnabled && isActive;
+            if (attackVisual != null) attackVisual.enabled = attackVisualEnabled && isActive;
         }
 
         private void PlaceHitbox()

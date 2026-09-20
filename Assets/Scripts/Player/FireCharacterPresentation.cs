@@ -111,6 +111,7 @@ namespace Nightblade
         public void PlayShield()
         {
             presentation.PlayDefensiveSkill();
+            lastActionRequestVersion = presentation.ActionRequestVersion;
             lastRequestedAction = PlayerPresentationState.DefensiveSkill;
             shieldPresentation = true;
             actionPlaying = false;
@@ -128,6 +129,7 @@ namespace Nightblade
             actionPlaying = false;
             shieldPresentation = false;
             activeSheet = null;
+            lastActionRequestVersion = presentation != null ? presentation.ActionRequestVersion : 0;
             lastRequestedAction = presentation != null
                 ? presentation.LastRequestedAction
                 : PlayerPresentationState.Idle;

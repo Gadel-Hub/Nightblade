@@ -53,6 +53,8 @@ public sealed class ProductionRunUI : MonoBehaviour
     private Vector2 startPosition;
     private bool resultSaved;
     private bool defeatShowing;
+    private Image healthBarFill;
+    private Sprite healthBarSprite;
 
     private void Awake()
     {
@@ -63,6 +65,7 @@ public sealed class ProductionRunUI : MonoBehaviour
         if (player != null) startPosition = player.transform.position;
         if (player != null) player.GetComponent<PlayerCombat>()?.SetAttackVisualEnabled(false);
         if (arena != null) arena.RunCompleted.AddListener(ShowResults);
+        CreateHealthBar();
 
         for (int i = 0; i < characterButtons.Length; i++)
         {
@@ -84,6 +87,7 @@ public sealed class ProductionRunUI : MonoBehaviour
     private void OnDestroy()
     {
         if (arena != null) arena.RunCompleted.RemoveListener(ShowResults);
+        if (healthBarSprite != null) Destroy(healthBarSprite);
     }
 
     private void Start()
@@ -115,7 +119,13 @@ public sealed class ProductionRunUI : MonoBehaviour
         if (gameplayPanel == null || !gameplayPanel.activeSelf || player == null) return;
 
         if (healthLabel != null && health != null)
+        {
             healthLabel.text = "Can " + health.CurrentHealth + "/" + health.MaxHealth;
+            if (healthBarFill != null)
+                healthBarFill.fillAmount = health.MaxHealth > 0
+                    ? health.CurrentHealth / (float)health.MaxHealth
+                    : 0f;
+        }
         if (timerLabel != null && timer != null)
             timerLabel.text = TimeManager.FormatTime(timer.timePassed);
 
@@ -216,6 +226,47 @@ public sealed class ProductionRunUI : MonoBehaviour
     private void UseSkill(PlayerSkillSlot slot)
     {
         player?.TryUseSkill(slot);
+    }
+
+    private void CreateHealthBar()
+    {
+        if (healthLabel == null) return;
+
+        RectTransform backgroundRect = CreateBarImage("Health Bar Background", healthLabel.transform,
+            new Color(0.12f, 0.14f, 0.12f, 0.9f));
+        backgroundRect.anchoredPosition = new Vector2(0f, -7f);
+        backgroundRect.sizeDelta = new Vector2(56f, 4f);
+        healthBarSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0f, 0f, 1f, 1f),
+            new Vector2(0.5f, 0.5f), 1f);
+        backgroundRect.GetComponent<Image>().sprite = healthBarSprite;
+
+        RectTransform fillRect = CreateBarImage("Health Bar Fill", backgroundRect,
+            new Color(0.55f, 0.78f, 0.45f, 1f));
+        fillRect.anchorMin = Vector2.zero;
+        fillRect.anchorMax = Vector2.one;
+        fillRect.offsetMin = Vector2.one;
+        fillRect.offsetMax = -Vector2.one;
+
+        healthBarFill = fillRect.GetComponent<Image>();
+        healthBarFill.sprite = healthBarSprite;
+        healthBarFill.type = Image.Type.Filled;
+        healthBarFill.fillMethod = Image.FillMethod.Horizontal;
+        healthBarFill.fillOrigin = (int)Image.OriginHorizontal.Left;
+        healthBarFill.raycastTarget = false;
+    }
+
+    private static RectTransform CreateBarImage(string objectName, Transform parent, Color color)
+    {
+        GameObject barObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        barObject.transform.SetParent(parent, false);
+        RectTransform rectTransform = (RectTransform)barObject.transform;
+        rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+        rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        Image image = barObject.GetComponent<Image>();
+        image.color = color;
+        image.raycastTarget = false;
+        return rectTransform;
     }
 
     private void SaveResult()

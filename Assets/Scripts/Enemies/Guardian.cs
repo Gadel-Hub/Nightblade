@@ -63,8 +63,32 @@ namespace Nightblade
             body = GetComponent<Rigidbody2D>();
             if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
             target.SetMaxHealth(health);
+        }
+
+        private void OnEnable()
+        {
+            if (target == null || body == null) return;
+            target.ResetTarget();
+            body.linearVelocity = Vector2.zero;
             state = BossState.Intro;
+            nextNormalAttackTime = 0f;
+            nextAlternateAttackTime = 0f;
+            recoverUntil = 0f;
+            facingLeft = false;
+            dying = false;
+            if (spriteRenderer != null) spriteRenderer.enabled = true;
+            ApplyFrame(spawnAnimation, 0);
             introRoutine = StartCoroutine(IntroRoutine());
+        }
+
+        private void OnDisable()
+        {
+            if (introRoutine != null) StopCoroutine(introRoutine);
+            if (attackRoutine != null) StopCoroutine(attackRoutine);
+            introRoutine = null;
+            attackRoutine = null;
+            if (body != null) body.linearVelocity = Vector2.zero;
+            state = BossState.Intro;
         }
 
         private void Update()
@@ -129,6 +153,7 @@ namespace Nightblade
             }
             introRoutine = null;
             state = BossState.Move;
+            ApplyFrame(facingLeft ? idleLeft : idleRight, 0);
         }
 
         private IEnumerator AttackRoutine(bool alternate)
