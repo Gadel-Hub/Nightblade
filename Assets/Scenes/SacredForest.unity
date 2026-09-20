@@ -167,6 +167,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Nightblade::SacredForestPresentation
   normalBackground: {fileID: 700012}
   bossBackground: {fileID: 700022}
+  productionUIRoot: {fileID: 2093799925}
+  productionCamera: {fileID: 700303}
 --- !u!1 &700010
 GameObject:
   m_ObjectHideFlags: 0

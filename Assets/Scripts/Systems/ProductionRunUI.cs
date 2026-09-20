@@ -58,6 +58,7 @@ public sealed class ProductionRunUI : MonoBehaviour
     private Image bossHealthBarFill;
     private CombatTarget bossTarget;
     private Sprite healthBarSprite;
+    private bool startupInitialized;
 
     private void Awake()
     {
@@ -104,10 +105,23 @@ public sealed class ProductionRunUI : MonoBehaviour
 
     private void Start()
     {
+        if (!startupInitialized) InitializeForSceneStartup();
+    }
+
+    public void InitializeForSceneStartup()
+    {
+        arena?.ResetRun();
+        player?.ReturnToSelection(startPosition);
+        resultSaved = false;
+        defeatShowing = false;
+        if (playerNameInput != null) playerNameInput.text = string.Empty;
+        if (saveStatusLabel != null) saveStatusLabel.text = string.Empty;
+
         if (player != null && player.SelectedIndex < 0)
             player.SelectCharacter(0);
 
         ShowSelection();
+        startupInitialized = true;
     }
 
     private void Update()

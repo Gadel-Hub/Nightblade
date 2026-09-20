@@ -16,8 +16,14 @@ namespace Nightblade
         private PixelPerfectCamera pixelPerfectCamera;
         private float worldMinX;
         private float worldMaxX;
+        private bool initialized;
 
         private void Awake()
+        {
+            CacheReferences();
+        }
+
+        private void CacheReferences()
         {
             cameraComponent = GetComponent<Camera>();
             pixelPerfectCamera = GetComponent<PixelPerfectCamera>();
@@ -27,6 +33,15 @@ namespace Nightblade
 
         private void Start()
         {
+            if (!initialized) InitializeForSceneStartup();
+        }
+
+        public void InitializeForSceneStartup()
+        {
+            if (cameraComponent == null) CacheReferences();
+            if (cameraComponent != null) cameraComponent.enabled = true;
+            enabled = true;
+
             if (backgroundBoundsSource == null)
             {
                 Debug.LogError("SacredForestCamera needs the production background SpriteRenderer.", this);
@@ -41,11 +56,18 @@ namespace Nightblade
             SetBoundaryPosition(leftBoundary, worldMinX);
             SetBoundaryPosition(rightBoundary, worldMaxX);
             Physics2D.SyncTransforms();
+            initialized = true;
+            FrameCamera();
         }
 
         private void LateUpdate()
         {
-            if (target == null) return;
+            FrameCamera();
+        }
+
+        private void FrameCamera()
+        {
+            if (!initialized || target == null || cameraComponent == null) return;
             float halfWidth = pixelPerfectCamera != null
                 ? pixelPerfectCamera.refResolutionX * 0.5f / pixelPerfectCamera.assetsPPU
                 : cameraComponent.orthographicSize * cameraComponent.aspect;
