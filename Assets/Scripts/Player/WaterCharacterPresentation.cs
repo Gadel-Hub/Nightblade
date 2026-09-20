@@ -26,6 +26,8 @@ namespace Nightblade
         [SerializeField] private int waterCharacterIndex = 1;
         [SerializeField] private PlayerPresentation presentation;
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer shieldEffectRenderer;
+        [SerializeField] private Vector2 shieldEffectOffset = new Vector2(0f, 0.125f);
 
         [Header("Movement")]
         [SerializeField] private WaterSpriteSheet movementLeft;
@@ -49,14 +51,18 @@ namespace Nightblade
         private PlayerPresentationState lastRequestedAction;
         private int lastActionRequestVersion;
         private float animationTime;
+        private float shieldAnimationTime;
         private bool actionPlaying;
         private bool shieldPresentation;
+        private bool shieldEffectPlaying;
         private bool facingLeft;
 
         private void Awake()
         {
             if (presentation == null) presentation = GetComponent<PlayerPresentation>();
             if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
+            if (shieldEffectRenderer == null)
+                shieldEffectRenderer = transform.Find("WaterShieldEffect")?.GetComponent<SpriteRenderer>();
             movement = GetComponent<PlayerMovement>();
             combat = GetComponent<PlayerCombat>();
         }
@@ -76,10 +82,12 @@ namespace Nightblade
             if (actionPlaying)
             {
                 AdvanceAction();
+                UpdateShieldEffect();
                 return;
             }
 
             ApplyMovement();
+            UpdateShieldEffect();
         }
 
         private void UpdateFacing()
@@ -113,35 +121,69 @@ namespace Nightblade
         }
 
         public void PlayPrimaryAttack() => BeginAction(PlayerPresentationState.NormalAttack);
-        public void PlayShield() => BeginAction(PlayerPresentationState.DefensiveSkill);
+        public void PlayShield()
+        {
+            actionPlaying = false;
+            activeSheet = null;
+            shieldAnimationTime = 0f;
+            shieldEffectPlaying = true;
+        }
+
         public void SetShieldPresentation(bool active)
         {
             shieldPresentation = active;
-            if (!active) ApplyMovement();
+            if (active)
+            {
+                shieldAnimationTime = 0f;
+                shieldEffectPlaying = true;
+            }
+            else
+            {
+                shieldEffectPlaying = false;
+                if (shieldEffectRenderer != null)
+                {
+                    shieldEffectRenderer.enabled = false;
+                    shieldEffectRenderer.sprite = null;
+                }
+                ApplyMovement();
+            }
         }
 
         public void ResetPresentation()
         {
             actionPlaying = false;
             shieldPresentation = false;
+            shieldEffectPlaying = false;
+            shieldAnimationTime = 0f;
             activeSheet = null;
             lastRequestedAction = presentation != null
                 ? presentation.LastRequestedAction
                 : PlayerPresentationState.Idle;
             lastActionRequestVersion = presentation != null ? presentation.ActionRequestVersion : 0;
             ApplyMovement();
+            if (shieldEffectRenderer != null)
+            {
+                shieldEffectRenderer.enabled = false;
+                shieldEffectRenderer.sprite = null;
+            }
         }
 
         private void ApplyMovement()
         {
             bool isMoving = movement != null && Mathf.Abs(movement.Velocity.x) > 0.01f;
-            activeSheet = shieldPresentation ? shield : (facingLeft ? movementLeft : movementRight);
+            activeSheet = facingLeft ? movementLeft : movementRight;
             if (activeSheet == null || activeSheet.FrameCount == 0) return;
             SetFrame(activeSheet, isMoving ? Mathf.FloorToInt(Time.time * activeSheet.FramesPerSecond) % activeSheet.FrameCount : 0);
         }
 
         private WaterSpriteSheet SelectActionSheet(PlayerPresentationState state)
         {
+            if (state == PlayerPresentationState.DefensiveSkill)
+            {
+                PlayShield();
+                return null;
+            }
+
             bool isMoving = movement != null && Mathf.Abs(movement.Velocity.x) > 0.01f;
             switch (state)
             {
@@ -151,8 +193,6 @@ namespace Nightblade
                         : (facingLeft ? normalAttackLeft : normalAttackRight);
                 case PlayerPresentationState.Skill1:
                     return facingLeft ? movingAttackLeft : movingAttackRight;
-                case PlayerPresentationState.DefensiveSkill:
-                    return shield;
                 case PlayerPresentationState.Ultimate:
                     return facingLeft ? ultimateLeft : ultimateRight;
                 default:
@@ -164,8 +204,34 @@ namespace Nightblade
         {
             Sprite[] sheetFrames = GetFrames(sheet);
             if (sheetFrames == null || index < 0 || index >= sheetFrames.Length) return;
-            spriteRenderer.flipX = sheet == shield && facingLeft;
+            spriteRenderer.flipX = false;
             spriteRenderer.sprite = sheetFrames[index];
+        }
+
+        private void UpdateShieldEffect()
+        {
+            if (shieldEffectRenderer == null) return;
+            if ((!shieldPresentation && !shieldEffectPlaying) || shield == null || shield.FrameCount == 0)
+            {
+                shieldEffectRenderer.enabled = false;
+                return;
+            }
+
+            shieldEffectRenderer.transform.localPosition = spriteRenderer.transform.localPosition + (Vector3)shieldEffectOffset;
+            Sprite[] shieldFrames = GetFrames(shield);
+            int frame = Mathf.FloorToInt(shieldAnimationTime * shield.FramesPerSecond);
+            if (shieldPresentation)
+                frame %= shieldFrames.Length;
+            else if (frame >= shieldFrames.Length)
+            {
+                shieldEffectPlaying = false;
+                shieldEffectRenderer.enabled = false;
+                return;
+            }
+
+            shieldEffectRenderer.sprite = shieldFrames[frame];
+            shieldEffectRenderer.enabled = true;
+            shieldAnimationTime += Time.deltaTime;
         }
 
         private Sprite[] GetFrames(WaterSpriteSheet sheet)

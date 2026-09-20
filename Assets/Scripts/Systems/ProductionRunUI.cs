@@ -103,14 +103,14 @@ public sealed class ProductionRunUI : MonoBehaviour
         if (gameplayPanel == null || !gameplayPanel.activeSelf || player == null) return;
 
         if (healthLabel != null && health != null)
-            healthLabel.text = "Health " + health.CurrentHealth + "/" + health.MaxHealth;
+            healthLabel.text = "Can " + health.CurrentHealth + "/" + health.MaxHealth;
         if (timerLabel != null && timer != null)
             timerLabel.text = TimeManager.FormatTime(timer.timePassed);
 
         for (int i = 0; i < skillCooldownLabels.Length && i < SkillSlots.Length; i++)
         {
             float remaining = player.GetCooldownRemaining(SkillSlots[i]);
-            skillCooldownLabels[i].text = remaining > 0f ? remaining.ToString("F1") + "s" : "READY";
+            skillCooldownLabels[i].text = remaining > 0f ? remaining.ToString("F1") + " sn" : "HAZIR";
             if (i < skillButtons.Length) skillButtons[i].interactable = player.RunInProgress && remaining <= 0f;
         }
     }
