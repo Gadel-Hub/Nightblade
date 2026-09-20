@@ -9,11 +9,11 @@ namespace Nightblade
     public sealed class Skeleton : MonoBehaviour
     {
         [Header("Gameplay")]
-        [SerializeField, Min(1)] private int health = 2;
+        [SerializeField, Min(1)] private int health = 4;
         [SerializeField, Min(0f)] private float moveSpeed = 2f;
         [SerializeField, Min(0.01f)] private float preferredRange = 4f;
         [SerializeField, Min(0.01f)] private float attackCooldown = 1.25f;
-        [SerializeField, Min(1)] private int arrowDamage = 1;
+        [SerializeField, Min(1)] private int arrowDamage = 2;
         [SerializeField, Min(0.01f)] private float arrowSpeed = 8f;
         [SerializeField, Min(0.01f)] private float arrowLifetime = 2f;
         [SerializeField, Min(0.01f)] private float arrowRange = 10f;

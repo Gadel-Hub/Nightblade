@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Nightblade
@@ -6,8 +5,7 @@ namespace Nightblade
     [DisallowMultipleComponent]
     public sealed class FireProjectile : MonoBehaviour
     {
-        private readonly List<Collider2D> overlaps = new List<Collider2D>(4);
-        private ContactFilter2D targetFilter;
+        private LayerMask targetLayers;
         private Vector2 direction;
         private float speed;
         private float lifetime;
@@ -24,34 +22,45 @@ namespace Nightblade
             lifetime = Mathf.Max(0.01f, maxLifetime);
             range = Mathf.Max(0.01f, maxRange);
             damage = Mathf.Max(1, damageAmount);
-            targetFilter = new ContactFilter2D { useTriggers = true };
-            targetFilter.SetLayerMask(targetLayers);
+            this.targetLayers = targetLayers;
         }
 
         private void Update()
         {
-            if (hit) return;
+            if (hit || Time.deltaTime <= 0f) return;
 
-            float distance = speed * Time.deltaTime;
-            transform.position += (Vector3)(direction * distance);
+            Vector2 start = transform.position;
+            float activeDelta = Mathf.Min(Time.deltaTime, lifetime);
+            float distance = Mathf.Min(speed * activeDelta, range - travelled);
+            Vector2 end = start + direction * distance;
+
+            CombatTarget[] targets = FindObjectsByType<CombatTarget>(FindObjectsSortMode.None);
+            int samples = Mathf.Max(1, Mathf.CeilToInt(distance / 0.1f));
+            for (int sample = 1; sample <= samples; sample++)
+            {
+                Vector2 samplePosition = Vector2.Lerp(start, end, sample / (float)samples);
+                for (int i = 0; i < targets.Length; i++)
+                {
+                    CombatTarget target = targets[i];
+                    if (target == null || (targetLayers.value & (1 << target.gameObject.layer)) == 0) continue;
+
+                    Collider2D targetCollider = target.GetComponent<Collider2D>();
+                    if (targetCollider == null ||
+                        (targetCollider.ClosestPoint(samplePosition) - samplePosition).sqrMagnitude > 0.04f)
+                        continue;
+                    if (!target.TakeDamage(damage)) continue;
+
+                    hit = true;
+                    Destroy(gameObject);
+                    return;
+                }
+            }
+
+            transform.position = end;
             travelled += distance;
             lifetime -= Time.deltaTime;
             if (travelled >= range || lifetime <= 0f)
-            {
                 Destroy(gameObject);
-                return;
-            }
-
-            overlaps.Clear();
-            Physics2D.OverlapCircle(transform.position, 0.2f, targetFilter, overlaps);
-            for (int i = 0; i < overlaps.Count; i++)
-            {
-                CombatTarget target = overlaps[i].GetComponentInParent<CombatTarget>();
-                if (target == null || !target.TakeDamage(damage)) continue;
-                hit = true;
-                Destroy(gameObject);
-                return;
-            }
         }
 
         private void OnDestroy()

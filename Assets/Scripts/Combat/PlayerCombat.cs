@@ -22,7 +22,7 @@ namespace Nightblade
         [SerializeField] private SpriteRenderer attackVisual;
         [SerializeField] private Vector2 hitboxOffset = new Vector2(0.5625f, 0f);
         [SerializeField] private LayerMask targetLayers;
-        [SerializeField, Min(1)] private int attackDamage = 1;
+        [SerializeField, Min(1)] private int attackDamage = 2;
 
         private readonly HashSet<CombatTarget> hitTargets = new HashSet<CombatTarget>();
         private readonly List<Collider2D> overlaps = new List<Collider2D>(8);

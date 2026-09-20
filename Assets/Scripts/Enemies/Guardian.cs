@@ -11,14 +11,14 @@ namespace Nightblade
         private enum BossState { Intro, Move, Attack, Recover, Dead }
 
         [Header("Gameplay")]
-        [SerializeField, Min(1)] private int health = 15;
+        [SerializeField, Min(1)] private int health = 30;
         [SerializeField, Min(0f)] private float moveSpeed = 2.2f;
         [SerializeField, Min(0.01f)] private float normalAttackRange = 1.2f;
         [SerializeField, Min(0.01f)] private float alternateAttackRange = 1.8f;
         [SerializeField, Min(0.01f)] private float normalAttackCooldown = 0.9f;
         [SerializeField, Min(0.01f)] private float alternateAttackCooldown = 1.6f;
-        [SerializeField, Min(1)] private int normalAttackDamage = 1;
-        [SerializeField, Min(1)] private int alternateAttackDamage = 1;
+        [SerializeField, Min(1)] private int normalAttackDamage = 3;
+        [SerializeField, Min(1)] private int alternateAttackDamage = 4;
         [SerializeField] private Vector2 normalHitboxSize = new Vector2(1.1f, 1f);
         [SerializeField] private Vector2 alternateHitboxSize = new Vector2(1.8f, 1.5f);
         [SerializeField, Min(0f)] private float normalHitboxOffset = 0.65f;

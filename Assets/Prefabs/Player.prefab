@@ -133,7 +133,7 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 1024
-  attackDamage: 1
+  attackDamage: 2
 --- !u!114 &100006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +180,25 @@ MonoBehaviour:
   inputActions: {fileID: -944628639613478452, guid: f86a1bbe2734497786b9a7a07f7c0a63, type: 3}
   characters:
   - displayName: Fire
+    maxHealth: 7
     normalSkill1:
+      activate:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 100044}
+            m_TargetAssemblyTypeName: Nightblade.FireCharacterGameplay, Assembly-CSharp
+            m_MethodName: TryMelee
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument:
+              m_BoolArgument: 0
+            m_CallState: 2
+      cooldownSeconds: 0.45
+    normalSkill2:
       activate:
         m_PersistentCalls:
           m_Calls:
@@ -196,12 +214,7 @@ MonoBehaviour:
               m_StringArgument:
               m_BoolArgument: 0
             m_CallState: 2
-      cooldownSeconds: 0
-    normalSkill2:
-      activate:
-        m_PersistentCalls:
-          m_Calls: []
-      cooldownSeconds: 0
+      cooldownSeconds: 1.75
     defensiveSkill:
       activate:
         m_PersistentCalls:
@@ -235,9 +248,27 @@ MonoBehaviour:
               m_StringArgument:
               m_BoolArgument: 0
             m_CallState: 2
-      cooldownSeconds: 0
+      cooldownSeconds: 12
   - displayName: Water
+    maxHealth: 8
     normalSkill1:
+      activate:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 100045}
+            m_TargetAssemblyTypeName: Nightblade.WaterCharacterGameplay, Assembly-CSharp
+            m_MethodName: TryStrike
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument:
+              m_BoolArgument: 0
+            m_CallState: 2
+      cooldownSeconds: 0.5
+    normalSkill2:
       activate:
         m_PersistentCalls:
           m_Calls:
@@ -253,12 +284,7 @@ MonoBehaviour:
               m_StringArgument:
               m_BoolArgument: 0
             m_CallState: 2
-      cooldownSeconds: 0
-    normalSkill2:
-      activate:
-        m_PersistentCalls:
-          m_Calls: []
-      cooldownSeconds: 0
+      cooldownSeconds: 1.75
     defensiveSkill:
       activate:
         m_PersistentCalls:
@@ -292,9 +318,27 @@ MonoBehaviour:
               m_StringArgument:
               m_BoolArgument: 0
             m_CallState: 2
-      cooldownSeconds: 0
+      cooldownSeconds: 10
   - displayName: Air
+    maxHealth: 6
     normalSkill1:
+      activate:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 100046}
+            m_TargetAssemblyTypeName: Nightblade.AirCharacterGameplay, Assembly-CSharp
+            m_MethodName: TryGust
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument:
+              m_BoolArgument: 0
+            m_CallState: 2
+      cooldownSeconds: 0.5
+    normalSkill2:
       activate:
         m_PersistentCalls:
           m_Calls:
@@ -311,11 +355,6 @@ MonoBehaviour:
               m_BoolArgument: 0
             m_CallState: 2
       cooldownSeconds: 1.5
-    normalSkill2:
-      activate:
-        m_PersistentCalls:
-          m_Calls: []
-      cooldownSeconds: 0
     defensiveSkill:
       activate:
         m_PersistentCalls:
@@ -349,7 +388,7 @@ MonoBehaviour:
               m_StringArgument:
               m_BoolArgument: 0
             m_CallState: 2
-      cooldownSeconds: 0
+      cooldownSeconds: 10
   runStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -483,11 +522,11 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Nightblade::FireUltimate
   durationSeconds: 1
-  damage: 2
+  damage: 5
   coverageStart: -5
   coverageEnd: 5
   flameSpacing: 2
-  flameY: -0.25
+  flameY: -2.125
   flameSheet: {fileID: 2800000, guid: 4463cb61cb9b4c3c8065db2c810bd78c, type: 3}
   flameContainer: {fileID: 100001}
   flameFramesPerSecond: 12
@@ -846,7 +885,7 @@ MonoBehaviour:
   projectileSpeed: 8
   projectileLifetime: 2
   projectileRange: 8
-  projectileDamage: 1
+  projectileDamage: 3
   projectileTargetLayers:
     serializedVersion: 2
     m_Bits: 1024
@@ -870,7 +909,7 @@ MonoBehaviour:
   bubbleSpeed: 8
   bubbleLifetime: 2
   bubbleRange: 8
-  bubbleDamage: 1
+  bubbleDamage: 2
   bubbleTargetLayers:
     serializedVersion: 2
     m_Bits: 1024
@@ -884,7 +923,7 @@ MonoBehaviour:
   waveLifetime: 2
   waveRange: 12
   waveGameplaySize: {x: 1.5, y: 1}
-  waveDamage: 2
+  waveDamage: 4
   waveTargetLayers:
     serializedVersion: 2
     m_Bits: 1024
@@ -905,7 +944,7 @@ MonoBehaviour:
   gustDuration: 0.12
   gustForwardOffset: 0.75
   gustSize: {x: 1.25, y: 0.9}
-  gustDamage: 1
+  gustDamage: 2
   gustTargetLayers:
     serializedVersion: 2
     m_Bits: 1024
@@ -925,7 +964,7 @@ MonoBehaviour:
   tornadoLifetime: 2
   tornadoRange: 12
   tornadoGameplaySize: {x: 1.5, y: 2}
-  tornadoDamage: 2
+  tornadoDamage: 4
   tornadoTargetLayers:
     serializedVersion: 2
     m_Bits: 1024

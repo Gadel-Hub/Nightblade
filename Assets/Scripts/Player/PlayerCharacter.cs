@@ -28,14 +28,16 @@ namespace Nightblade
     public sealed class PlayerCharacterProfile
     {
         [SerializeField] private string displayName;
+        [SerializeField, Min(1)] private int maxHealth = 3;
         [SerializeField] private PlayerSkillHook normalSkill1 = new PlayerSkillHook();
         [SerializeField] private PlayerSkillHook normalSkill2 = new PlayerSkillHook();
         [SerializeField] private PlayerSkillHook defensiveSkill = new PlayerSkillHook();
         [SerializeField] private PlayerSkillHook ultimate = new PlayerSkillHook();
 
         public string DisplayName => displayName;
+        public int MaxHealth => maxHealth;
 
-        public PlayerCharacterProfile() : this("Character") { }
+        public PlayerCharacterProfile() : this("Character", 3) { }
 
         public PlayerSkillHook GetSkill(PlayerSkillSlot slot)
         {
@@ -49,9 +51,10 @@ namespace Nightblade
             }
         }
 
-        public PlayerCharacterProfile(string displayName)
+        public PlayerCharacterProfile(string displayName, int maxHealth)
         {
             this.displayName = displayName;
+            this.maxHealth = Mathf.Max(1, maxHealth);
         }
     }
 
@@ -67,6 +70,7 @@ namespace Nightblade
         [SerializeField] private bool showSelectionUI = true;
 
         private readonly float[] cooldownRemaining = new float[4];
+        private readonly bool[] skillKeyHeld = new bool[4];
         private readonly InputAction[] skillActions = new InputAction[4];
         private readonly Action<InputAction.CallbackContext>[] skillCallbacks = new Action<InputAction.CallbackContext>[4];
 
@@ -75,6 +79,7 @@ namespace Nightblade
         private Rigidbody2D body;
         private PlayerMovement movement;
         private PlayerCombat combat;
+        private PlayerHealth health;
         private PlayerDamage damage;
         private PlayerPresentation presentation;
         private int selectedIndex = -1;
@@ -108,6 +113,7 @@ namespace Nightblade
             body = GetComponent<Rigidbody2D>();
             movement = GetComponent<PlayerMovement>();
             combat = GetComponent<PlayerCombat>();
+            health = GetComponent<PlayerHealth>();
             damage = GetComponent<PlayerDamage>();
             presentation = GetComponent<PlayerPresentation>();
             skillActions[0] = playerActions.FindAction("NormalSkill1", true);
@@ -130,7 +136,6 @@ namespace Nightblade
         {
             for (int i = 0; i < skillActions.Length; i++)
                 if (skillActions[i] != null) skillActions[i].performed += skillCallbacks[i];
-            playerActions?.Enable();
         }
 
         private void OnDisable()
@@ -150,6 +155,31 @@ namespace Nightblade
         {
             for (int i = 0; i < cooldownRemaining.Length; i++)
                 cooldownRemaining[i] = Mathf.Max(0f, cooldownRemaining[i] - Time.deltaTime);
+            PollSkillKeys();
+        }
+
+        private void FixedUpdate() => PollSkillKeys();
+
+        private void PollSkillKeys()
+        {
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null)
+            {
+                Array.Clear(skillKeyHeld, 0, skillKeyHeld.Length);
+                return;
+            }
+
+            PollSkillKey(0, keyboard.jKey.isPressed);
+            PollSkillKey(1, keyboard.kKey.isPressed);
+            PollSkillKey(2, keyboard.lKey.isPressed);
+            PollSkillKey(3, keyboard.uKey.isPressed);
+        }
+
+        private void PollSkillKey(int index, bool pressed)
+        {
+            if (pressed && !skillKeyHeld[index] && runInProgress)
+                TryUseSkill((PlayerSkillSlot)index);
+            skillKeyHeld[index] = pressed;
         }
 
         public bool SelectCharacter(int index)
@@ -159,6 +189,7 @@ namespace Nightblade
             if (!presentation.SelectCharacter(index)) return false;
 
             selectedIndex = index;
+            health?.SetMaxHealth(characters[index].MaxHealth);
 
             Array.Clear(cooldownRemaining, 0, cooldownRemaining.Length);
             return true;
@@ -176,6 +207,7 @@ namespace Nightblade
             if (!HasSelection || runInProgress) return false;
 
             runInProgress = true;
+            playerActions?.Enable();
             body.simulated = true;
             movement.SetControlEnabled(true);
             combat.SetControlEnabled(true);
@@ -188,6 +220,7 @@ namespace Nightblade
         {
             if (!runInProgress) return;
 
+            playerActions?.Disable();
             ResetActiveActions();
             body.linearVelocity = Vector2.zero;
             body.simulated = false;
@@ -200,6 +233,7 @@ namespace Nightblade
         {
             if (body == null || movement == null || combat == null || damage == null) return;
 
+            playerActions?.Disable();
             ResetActiveActions();
             body.simulated = true;
             damage.RespawnAt(startPosition);
@@ -222,7 +256,7 @@ namespace Nightblade
 
         public bool TryUseSkill(PlayerSkillSlot slot)
         {
-            if (!runInProgress || selectedIndex < 0) return false;
+            if (!runInProgress || selectedIndex < 0 || Time.timeScale <= 0f) return false;
 
             int index = (int)slot;
             if (index < 0 || index >= cooldownRemaining.Length || cooldownRemaining[index] > 0f)
@@ -267,9 +301,9 @@ namespace Nightblade
         {
             return new[]
             {
-                new PlayerCharacterProfile("Character 1"),
-                new PlayerCharacterProfile("Character 2"),
-                new PlayerCharacterProfile("Character 3")
+                new PlayerCharacterProfile("Fire", 7),
+                new PlayerCharacterProfile("Water", 8),
+                new PlayerCharacterProfile("Air", 6)
             };
         }
     }

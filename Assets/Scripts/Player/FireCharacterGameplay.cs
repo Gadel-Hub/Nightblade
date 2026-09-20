@@ -21,7 +21,7 @@ namespace Nightblade
         [SerializeField, Min(0.01f)] private float projectileSpeed = 8f;
         [SerializeField, Min(0.01f)] private float projectileLifetime = 2f;
         [SerializeField, Min(0.01f)] private float projectileRange = 8f;
-        [SerializeField, Min(1)] private int projectileDamage = 1;
+        [SerializeField, Min(1)] private int projectileDamage = 3;
         [SerializeField] private LayerMask projectileTargetLayers;
         [SerializeField] private float projectileSpawnOffset = 0.75f;
 

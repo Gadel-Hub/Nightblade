@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Nightblade;
 using UnityEngine;
@@ -40,7 +39,6 @@ public sealed class ArenaRunManager : MonoBehaviour
     [SerializeField] private Transform finalBossSpawnPoint;
     [SerializeField] private UnityEvent onFinalBossPhaseStarted;
     [SerializeField] private UnityEvent onRunCompleted;
-    [SerializeField, Min(0f)] private float enemySpawnInterval = 0.6f;
     [SerializeField, Min(0f)] private float waveTransitionDelay = 1f;
     [SerializeField] private bool startImmediately;
 
@@ -52,8 +50,6 @@ public sealed class ArenaRunManager : MonoBehaviour
     private int nextWaveIndex;
     private int nextSpawnPointIndex;
     private bool bossPrefabSpawned;
-    private bool spawningWave;
-    private Coroutine spawnRoutine;
     private Coroutine transitionRoutine;
     private PlayerCharacter player;
 
@@ -74,7 +70,7 @@ public sealed class ArenaRunManager : MonoBehaviour
     {
         if (Time.timeScale == 0) return;
 
-        if (state == RunState.Waves && !spawningWave && transitionRoutine == null && CurrentWaveIsDefeated())
+        if (state == RunState.Waves && transitionRoutine == null && CurrentWaveIsDefeated())
             transitionRoutine = StartCoroutine(AdvanceAfterTransition());
         else if (state == RunState.BossPhase && bossPrefabSpawned && CurrentWaveIsDefeated())
             CompleteRun();
@@ -96,11 +92,8 @@ public sealed class ArenaRunManager : MonoBehaviour
     [ContextMenu("Reset Run")]
     public void ResetRun()
     {
-        if (spawnRoutine != null) StopCoroutine(spawnRoutine);
         if (transitionRoutine != null) StopCoroutine(transitionRoutine);
-        spawnRoutine = null;
         transitionRoutine = null;
-        spawningWave = false;
         if (runTimer != null) runTimer.StopTimer();
 
         foreach (SkeletonArrow arrow in FindObjectsByType<SkeletonArrow>(FindObjectsSortMode.None))
@@ -140,8 +133,7 @@ public sealed class ArenaRunManager : MonoBehaviour
         {
             currentTargets.Clear();
             Wave wave = waves[nextWaveIndex++];
-            spawningWave = true;
-            spawnRoutine = StartCoroutine(SpawnWave(wave));
+            SpawnWave(wave);
             return;
         }
 
@@ -169,16 +161,15 @@ public sealed class ArenaRunManager : MonoBehaviour
         if (currentTargets.Count == 0) bossPrefabSpawned = false;
     }
 
-    private IEnumerator AdvanceAfterTransition()
+    private System.Collections.IEnumerator AdvanceAfterTransition()
     {
         yield return new WaitForSeconds(waveTransitionDelay);
         transitionRoutine = null;
         if (state == RunState.Waves) StartNextWaveOrBossPhase();
     }
 
-    private IEnumerator SpawnWave(Wave wave)
+    private void SpawnWave(Wave wave)
     {
-        bool spawnedAny = false;
         if (wave != null && wave.Enemies != null)
         {
             for (int entryIndex = 0; entryIndex < wave.Enemies.Length; entryIndex++)
@@ -188,27 +179,17 @@ public sealed class ArenaRunManager : MonoBehaviour
 
                 for (int i = 0; i < entry.Count; i++)
                 {
-                    if (spawnedAny && enemySpawnInterval > 0f)
-                        yield return new WaitForSeconds(enemySpawnInterval);
-
                     Transform point = GetNextSpawnPoint();
                     if (point == null)
                     {
                         Debug.LogError("ArenaRunManager needs at least one spawn point.", this);
-                        spawningWave = false;
-                        spawnRoutine = null;
-                        yield break;
+                        return;
                     }
 
-                    int previousCount = currentTargets.Count;
                     SpawnTarget(entry.Prefab, point);
-                    spawnedAny |= currentTargets.Count > previousCount;
                 }
             }
         }
-
-        spawningWave = false;
-        spawnRoutine = null;
     }
 
     private void SpawnTarget(GameObject prefab, Transform point)

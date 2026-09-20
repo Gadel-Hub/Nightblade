@@ -138,12 +138,45 @@
         },
         {
           "name": "",
-          "id": "70cff495-a0f1-4e9a-b003-98fb9590662b",
+          "id": "5c31e2a4-1357-4aaf-9d04-78f6e2e08c12",
           "path": "<Keyboard>/j",
           "interactions": "",
           "processors": "",
           "groups": "",
-          "action": "Attack",
+          "action": "NormalSkill1",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "",
+          "id": "bc3db2d8-f3b4-4ef9-9978-3b87827efc62",
+          "path": "<Keyboard>/k",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "NormalSkill2",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "",
+          "id": "fb84f2ba-1e64-42c1-b739-0033d864603f",
+          "path": "<Keyboard>/l",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "DefensiveSkill",
+          "isComposite": false,
+          "isPartOfComposite": false
+        },
+        {
+          "name": "",
+          "id": "72657902-a0e1-46bc-a1b0-7fa971fb91d2",
+          "path": "<Keyboard>/u",
+          "interactions": "",
+          "processors": "",
+          "groups": "",
+          "action": "Ultimate",
           "isComposite": false,
           "isPartOfComposite": false
         }

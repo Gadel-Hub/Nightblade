@@ -9,11 +9,11 @@ namespace Nightblade
     public sealed class Werewolf : MonoBehaviour
     {
         [Header("Gameplay")]
-        [SerializeField, Min(1)] private int health = 4;
+        [SerializeField, Min(1)] private int health = 7;
         [SerializeField, Min(0f)] private float moveSpeed = 4f;
         [SerializeField, Min(0.01f)] private float meleeRange = 0.9f;
         [SerializeField, Min(0.01f)] private float attackCooldown = 0.8f;
-        [SerializeField, Min(1)] private int meleeDamage = 1;
+        [SerializeField, Min(1)] private int meleeDamage = 2;
         [SerializeField] private Vector2 meleeHitboxSize = new Vector2(1f, 0.9f);
         [SerializeField, Min(0f)] private float meleeForwardOffset = 0.55f;
         [SerializeField, Min(0f)] private float attackHitDelay = 0.2f;

@@ -13,7 +13,7 @@ namespace Nightblade
         [SerializeField, Min(0.01f)] private float gustDuration = 0.12f;
         [SerializeField, Min(0.01f)] private float gustForwardOffset = 0.75f;
         [SerializeField] private Vector2 gustSize = new Vector2(1.25f, 0.9f);
-        [SerializeField, Min(1)] private int gustDamage = 1;
+        [SerializeField, Min(1)] private int gustDamage = 2;
         [SerializeField] private LayerMask gustTargetLayers;
 
         [Header("Dash")]
@@ -37,7 +37,7 @@ namespace Nightblade
         [SerializeField, Min(0.01f)] private float tornadoLifetime = 2f;
         [SerializeField, Min(0.01f)] private float tornadoRange = 12f;
         [SerializeField] private Vector2 tornadoGameplaySize = new Vector2(1.5f, 2f);
-        [SerializeField, Min(1)] private int tornadoDamage = 2;
+        [SerializeField, Min(1)] private int tornadoDamage = 4;
         [SerializeField] private LayerMask tornadoTargetLayers;
         [SerializeField] private Vector3 tornadoVisualOffset;
         [SerializeField, Min(0.01f)] private float tornadoVisualScale = 1f;

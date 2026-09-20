@@ -14,7 +14,7 @@ namespace Nightblade
         [SerializeField, Min(0.01f)] private float bubbleSpeed = 8f;
         [SerializeField, Min(0.01f)] private float bubbleLifetime = 2f;
         [SerializeField, Min(0.01f)] private float bubbleRange = 8f;
-        [SerializeField, Min(1)] private int bubbleDamage = 1;
+        [SerializeField, Min(1)] private int bubbleDamage = 2;
         [SerializeField] private LayerMask bubbleTargetLayers;
         [SerializeField] private float bubbleSpawnOffset = 0.75f;
 
@@ -30,7 +30,7 @@ namespace Nightblade
         [SerializeField, Min(0.01f)] private float waveLifetime = 2f;
         [SerializeField, Min(0.01f)] private float waveRange = 12f;
         [SerializeField] private Vector2 waveGameplaySize = new Vector2(1.5f, 1f);
-        [SerializeField, Min(1)] private int waveDamage = 2;
+        [SerializeField, Min(1)] private int waveDamage = 4;
         [SerializeField] private LayerMask waveTargetLayers;
         [SerializeField] private float waveSpawnOffset = 0.75f;
 

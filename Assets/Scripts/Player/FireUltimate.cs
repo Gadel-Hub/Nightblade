@@ -10,7 +10,7 @@ namespace Nightblade
     {
         [Header("Timing")]
         [SerializeField, Min(0f)] private float durationSeconds;
-        [SerializeField, Min(1)] private int damage = 2;
+        [SerializeField, Min(1)] private int damage = 5;
 
         [Header("Coverage")]
         [SerializeField] private float coverageStart;
@@ -87,12 +87,15 @@ namespace Nightblade
         {
             ClearFlames();
             if (flameContainer == null) flameContainer = transform;
-            int count = Mathf.Max(1, Mathf.CeilToInt((coverageEnd - coverageStart) / flameSpacing));
-            for (int i = 0; i <= count; i++)
+            float inset = Mathf.Min(flameSpacing * 0.5f, (coverageEnd - coverageStart) * 0.5f);
+            float firstCenter = coverageStart + inset;
+            float lastCenter = coverageEnd - inset;
+            int intervals = Mathf.Max(0, Mathf.RoundToInt((lastCenter - firstCenter) / flameSpacing));
+            for (int i = 0; i <= intervals; i++)
             {
                 GameObject flame = new GameObject("FireUltimateFlame");
                 flame.transform.SetParent(flameContainer, false);
-                flame.transform.position = new Vector3(coverageStart + i * flameSpacing, flameY, 0f);
+                flame.transform.position = new Vector3(firstCenter + i * flameSpacing, flameY, 0f);
                 SpriteRenderer renderer = flame.AddComponent<SpriteRenderer>();
                 renderer.sortingOrder = 2;
                 FireFlameAnimation animation = flame.AddComponent<FireFlameAnimation>();

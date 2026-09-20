@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d67517694cd40b2988c750b110d18b5, type: 3}
   m_Name:
   m_EditorClassIdentifier: Nightblade::CombatTarget
-  maxHealth: 4
+  maxHealth: 7
   placeholderVisual: {fileID: 500012}
 --- !u!114 &500005
 MonoBehaviour:
@@ -107,11 +107,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c8e4a6b1d3f5e7a9b0c2d4f6a8e1b3c, type: 3}
   m_Name:
   m_EditorClassIdentifier: Nightblade::Werewolf
-  health: 4
+  health: 7
   moveSpeed: 4
   meleeRange: 0.9
   attackCooldown: 0.8
-  meleeDamage: 1
+  meleeDamage: 2
   meleeHitboxSize: {x: 1, y: 0.9}
   meleeForwardOffset: 0.55
   attackHitDelay: 0.2

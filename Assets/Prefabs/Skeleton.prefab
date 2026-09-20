@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d67517694cd40b2988c750b110d18b5, type: 3}
   m_Name:
   m_EditorClassIdentifier: Nightblade::CombatTarget
-  maxHealth: 2
+  maxHealth: 4
   placeholderVisual: {fileID: 400012}
 --- !u!114 &400005
 MonoBehaviour:
@@ -107,11 +107,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6c5e3d1f2b4a7c8d0e5f6a7b8c9d01, type: 3}
   m_Name:
   m_EditorClassIdentifier: Nightblade::Skeleton
-  health: 2
+  health: 4
   moveSpeed: 2
   preferredRange: 4
   attackCooldown: 1.25
-  arrowDamage: 1
+  arrowDamage: 2
   arrowSpeed: 8
   arrowLifetime: 2
   arrowRange: 10

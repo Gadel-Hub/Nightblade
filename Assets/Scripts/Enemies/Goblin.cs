@@ -9,11 +9,11 @@ namespace Nightblade
     public sealed class Goblin : MonoBehaviour
     {
         [Header("Gameplay")]
-        [SerializeField, Min(1)] private int health = 3;
+        [SerializeField, Min(1)] private int health = 5;
         [SerializeField, Min(0f)] private float moveSpeed = 2.5f;
         [SerializeField, Min(0.01f)] private float meleeRange = 0.85f;
         [SerializeField, Min(0.01f)] private float attackCooldown = 1f;
-        [SerializeField, Min(1)] private int meleeDamage = 1;
+        [SerializeField, Min(1)] private int meleeDamage = 2;
         [SerializeField] private Vector2 meleeHitboxSize = new Vector2(0.9f, 0.8f);
         [SerializeField, Min(0f)] private float meleeForwardOffset = 0.5f;
         [SerializeField, Min(0f)] private float attackHitDelay = 0.25f;
