@@ -27,7 +27,12 @@ namespace Nightblade
         [SerializeField] private Texture2D tornadoLeftTexture;
         [SerializeField] private Texture2D tornadoRightTexture;
         [SerializeField, Min(1)] private int tornadoFrameWidth = 144;
-        [SerializeField, Min(1)] private int tornadoFrameHeight = 176;
+        [SerializeField, Min(0)] private int tornadoVisualFrameIndex = 9;
+        [SerializeField, Min(1)] private int tornadoVisualCropWidth = 40;
+        [SerializeField, Min(1)] private int tornadoVisualCropHeight = 64;
+        [SerializeField, Min(0)] private int tornadoLeftCropX = 16;
+        [SerializeField, Min(0)] private int tornadoRightCropX = 88;
+        [SerializeField, Min(0)] private int tornadoCropY = 64;
         [SerializeField, Min(0f)] private float tornadoSpeed = 7f;
         [SerializeField, Min(0.01f)] private float tornadoLifetime = 2f;
         [SerializeField, Min(0.01f)] private float tornadoRange = 12f;
@@ -42,6 +47,7 @@ namespace Nightblade
         private PlayerMovement movement;
         private AirCharacterPresentation presentation;
         private Rigidbody2D body;
+        private PlayerDamage damage;
         private Coroutine gustRoutine;
         private Coroutine dashRoutine;
         private Coroutine shieldRoutine;
@@ -56,6 +62,7 @@ namespace Nightblade
             movement = GetComponent<PlayerMovement>();
             presentation = GetComponent<AirCharacterPresentation>();
             body = GetComponent<Rigidbody2D>();
+            damage = GetComponent<PlayerDamage>();
         }
 
         public void TryGust()
@@ -85,7 +92,7 @@ namespace Nightblade
             activeTornado.transform.position = transform.position + Vector3.right * facing * gustForwardOffset;
             activeTornado.transform.localScale = Vector3.one * tornadoVisualScale;
             SpriteRenderer renderer = activeTornado.AddComponent<SpriteRenderer>();
-            renderer.sprite = CreateVisual(texture);
+            renderer.sprite = CreateVisual(texture, facing);
             renderer.sortingOrder = 2;
             activeTornado.transform.position += tornadoVisualOffset;
             AirTornado tornado = activeTornado.AddComponent<AirTornado>();
@@ -131,7 +138,8 @@ namespace Nightblade
                 yield return new WaitForFixedUpdate();
             }
             body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
-            movement.SetControlEnabled(true);
+            movement.SetControlEnabled(character.RunInProgress &&
+                (damage == null || damage.State == PlayerDamage.DamageState.Normal));
             dashRoutine = null;
         }
 
@@ -153,28 +161,38 @@ namespace Nightblade
             if (tornado != null) Destroy(tornado);
         }
 
-        private Sprite CreateVisual(Texture2D texture)
+        private Sprite CreateVisual(Texture2D texture, int facing)
         {
             if (texture == null) return null;
-            return Sprite.Create(texture, new Rect(0f, 0f, tornadoFrameWidth, tornadoFrameHeight),
+            int frameCount = Mathf.Max(1, texture.width / tornadoFrameWidth);
+            int frame = Mathf.Clamp(tornadoVisualFrameIndex, 0, frameCount - 1);
+            int cropX = facing < 0 ? tornadoLeftCropX : tornadoRightCropX;
+            Rect rect = new Rect(frame * tornadoFrameWidth + cropX, tornadoCropY,
+                tornadoVisualCropWidth, tornadoVisualCropHeight);
+            return Sprite.Create(texture, rect,
                 new Vector2(0.5f, 0.5f), 32f);
         }
 
         private bool CanAct() => character != null && character.RunInProgress && character.SelectedIndex == 2;
 
-        private void OnDisable()
+        public void ResetActions()
         {
             if (dashRoutine != null)
             {
                 StopCoroutine(dashRoutine);
                 dashRoutine = null;
-                movement.SetControlEnabled(true);
             }
             if (shieldRoutine != null) StopCoroutine(shieldRoutine);
+            shieldRoutine = null;
+            if (gustRoutine != null) StopCoroutine(gustRoutine);
+            gustRoutine = null;
             IsShieldActive = false;
             presentation?.SetShieldPresentation(false);
             if (activeTornado != null) Destroy(activeTornado);
             activeTornado = null;
+            presentation?.ResetPresentation();
         }
+
+        private void OnDisable() => ResetActions();
     }
 }

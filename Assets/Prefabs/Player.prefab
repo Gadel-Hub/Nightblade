@@ -371,12 +371,15 @@ MonoBehaviour:
   - sprite: {fileID: 0}
     visualRoot: {fileID: 0}
     animatorController: {fileID: 0}
+    visualOffset: {x: 0, y: 0.21875, z: 0}
   - sprite: {fileID: 0}
     visualRoot: {fileID: 0}
     animatorController: {fileID: 0}
+    visualOffset: {x: 0, y: 0.4375, z: 0}
   - sprite: {fileID: 0}
     visualRoot: {fileID: 0}
     animatorController: {fileID: 0}
+    visualOffset: {x: 0, y: -0.6875, z: 0}
   locomotionParameter: Locomotion
   normalAttackTrigger: NormalAttack
   skill1Trigger: Skill1
@@ -502,7 +505,6 @@ MonoBehaviour:
   waterCharacterIndex: 1
   presentation: {fileID: 100009}
   spriteRenderer: {fileID: 100012}
-  visualOffset: {x: 0, y: 0, z: 0}
   movementLeft:
     texture: {fileID: 2800000, guid: de9a6fa6c2274d14b0ded6e5f3111cbb, type: 3}
     frameWidth: 48
@@ -756,7 +758,6 @@ MonoBehaviour:
   airCharacterIndex: 2
   presentation: {fileID: 100009}
   spriteRenderer: {fileID: 100012}
-  visualOffset: {x: 0, y: 0, z: 0}
   idleLeft:
     texture: {fileID: 2800000, guid: fef3f2be1be04b91b23c237da8950892, type: 3}
     frameWidth: 144
@@ -911,7 +912,12 @@ MonoBehaviour:
   tornadoLeftTexture: {fileID: 2800000, guid: e5f2dee0536f4c32bc8136635e957cad, type: 3}
   tornadoRightTexture: {fileID: 2800000, guid: e0140aa1a8c34ee883578c9176c85ad5, type: 3}
   tornadoFrameWidth: 144
-  tornadoFrameHeight: 176
+  tornadoVisualFrameIndex: 9
+  tornadoVisualCropWidth: 40
+  tornadoVisualCropHeight: 64
+  tornadoLeftCropX: 16
+  tornadoRightCropX: 88
+  tornadoCropY: 64
   tornadoSpeed: 7
   tornadoLifetime: 2
   tornadoRange: 12

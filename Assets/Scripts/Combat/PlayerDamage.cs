@@ -22,6 +22,7 @@ namespace Nightblade
         private PlayerHealth health;
         private PlayerMovement movement;
         private PlayerCombat combat;
+        private PlayerCharacter character;
         private float stateRemaining;
 
         public DamageState State { get; private set; } = DamageState.Normal;
@@ -37,6 +38,7 @@ namespace Nightblade
             health = GetComponent<PlayerHealth>();
             movement = GetComponent<PlayerMovement>();
             combat = GetComponent<PlayerCombat>();
+            character = GetComponent<PlayerCharacter>();
             if (combat == null || visualRoot == null)
             {
                 Debug.LogError("PlayerDamage needs player combat and a separate visual root.", this);
@@ -51,8 +53,9 @@ namespace Nightblade
             if (State != DamageState.Hit || stateRemaining > 0f) return;
 
             State = DamageState.Normal;
-            movement.SetControlEnabled(true);
-            combat.SetControlEnabled(true);
+            bool runActive = character == null || character.RunInProgress;
+            movement.SetControlEnabled(runActive);
+            combat.SetControlEnabled(runActive);
         }
 
         public bool ReceiveDamage(int amount, float sourceX)

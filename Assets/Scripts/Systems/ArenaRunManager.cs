@@ -40,6 +40,8 @@ public sealed class ArenaRunManager : MonoBehaviour
     [SerializeField] private UnityEvent onFinalBossPhaseStarted;
     [SerializeField] private UnityEvent onRunCompleted;
 
+    public UnityEvent RunCompleted => onRunCompleted;
+
     private readonly List<CombatTarget> currentTargets = new List<CombatTarget>();
     private readonly List<CombatTarget> spawnedTargets = new List<CombatTarget>();
     private RunState state;

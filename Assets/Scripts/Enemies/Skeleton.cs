@@ -101,8 +101,9 @@ namespace Nightblade
         private void Move(int direction, Texture2D left, Texture2D right)
         {
             body.linearVelocity = new Vector2(direction * moveSpeed, body.linearVelocity.y);
-            ApplyFrame(facingLeft ? left : right,
-                Mathf.FloorToInt(Time.time * framesPerSecond));
+            Texture2D texture = facingLeft ? left : right;
+            int frameCount = texture == null ? 1 : Mathf.Max(1, texture.width / frameWidth);
+            ApplyFrame(texture, Mathf.FloorToInt(Time.time * framesPerSecond) % frameCount);
         }
 
         private IEnumerator AttackRoutine()

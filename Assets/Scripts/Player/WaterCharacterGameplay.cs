@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Nightblade
@@ -38,6 +39,7 @@ namespace Nightblade
         private PlayerPresentation presentation;
         private WaterCharacterPresentation waterPresentation;
         private Coroutine shieldRoutine;
+        private readonly List<GameObject> activeObjects = new List<GameObject>();
 
         public bool IsShieldActive { get; private set; }
 
@@ -72,6 +74,7 @@ namespace Nightblade
             FireProjectile projectile = bubble.AddComponent<FireProjectile>();
             projectile.Configure(Vector2.right * facing, bubbleSpeed, bubbleLifetime, bubbleRange,
                 bubbleDamage, bubbleTargetLayers);
+            Track(bubble);
             presentation.PlayNormalAttack();
         }
 
@@ -98,8 +101,9 @@ namespace Nightblade
 
             WaterWave waveBehaviour = wave.AddComponent<WaterWave>();
             waveBehaviour.Configure(Vector2.right * facing, waveSpeed, waveLifetime, waveRange,
-                waveGameplaySize, waveDamage, waveTargetLayers);
-            presentation.PlayUltimate();
+                waveGameplaySize, waveDamage, waveTargetLayers, texture, renderer,
+                waveFrameWidth, waveFrameHeight, 10f);
+            Track(wave);
         }
 
         private IEnumerator ShieldRoutine()
@@ -113,12 +117,24 @@ namespace Nightblade
             waterPresentation.SetShieldPresentation(false);
         }
 
-        private void OnDisable()
+        public void ResetActions()
         {
             if (shieldRoutine != null) StopCoroutine(shieldRoutine);
             shieldRoutine = null;
             IsShieldActive = false;
             if (waterPresentation != null) waterPresentation.SetShieldPresentation(false);
+            for (int i = 0; i < activeObjects.Count; i++)
+                if (activeObjects[i] != null) Destroy(activeObjects[i]);
+            activeObjects.Clear();
+            waterPresentation?.ResetPresentation();
         }
+
+        private void Track(GameObject instance)
+        {
+            activeObjects.RemoveAll(item => item == null);
+            activeObjects.Add(instance);
+        }
+
+        private void OnDisable() => ResetActions();
     }
 }

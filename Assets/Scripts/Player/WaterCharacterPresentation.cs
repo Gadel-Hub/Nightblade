@@ -26,7 +26,6 @@ namespace Nightblade
         [SerializeField] private int waterCharacterIndex = 1;
         [SerializeField] private PlayerPresentation presentation;
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private Vector3 visualOffset;
 
         [Header("Movement")]
         [SerializeField] private WaterSpriteSheet movementLeft;
@@ -60,7 +59,6 @@ namespace Nightblade
             if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
             movement = GetComponent<PlayerMovement>();
             combat = GetComponent<PlayerCombat>();
-            if (spriteRenderer != null) spriteRenderer.transform.localPosition += visualOffset;
         }
 
         private void Update()
@@ -120,6 +118,18 @@ namespace Nightblade
         {
             shieldPresentation = active;
             if (!active) ApplyMovement();
+        }
+
+        public void ResetPresentation()
+        {
+            actionPlaying = false;
+            shieldPresentation = false;
+            activeSheet = null;
+            lastRequestedAction = presentation != null
+                ? presentation.LastRequestedAction
+                : PlayerPresentationState.Idle;
+            lastActionRequestVersion = presentation != null ? presentation.ActionRequestVersion : 0;
+            ApplyMovement();
         }
 
         private void ApplyMovement()

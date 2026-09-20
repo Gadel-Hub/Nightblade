@@ -53,5 +53,11 @@ namespace Nightblade
                 return;
             }
         }
+
+        private void OnDestroy()
+        {
+            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+            if (renderer != null && renderer.sprite != null) Destroy(renderer.sprite);
+        }
     }
 }

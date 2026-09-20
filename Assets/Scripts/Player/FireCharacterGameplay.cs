@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Nightblade
@@ -32,6 +33,7 @@ namespace Nightblade
         private FireCharacterPresentation presentation;
         private PlayerMovement movement;
         private Coroutine shieldRoutine;
+        private readonly List<GameObject> activeProjectiles = new List<GameObject>();
 
         public bool IsShieldActive { get; private set; }
 
@@ -62,11 +64,13 @@ namespace Nightblade
             SpriteRenderer renderer = projectile.AddComponent<SpriteRenderer>();
             renderer.sortingOrder = 2;
             renderer.sprite = CreateProjectileSprite(texture);
-            renderer.flipX = facing < 0;
+            renderer.flipX = false;
 
             FireProjectile projectileBehaviour = projectile.AddComponent<FireProjectile>();
             projectileBehaviour.Configure(Vector2.right * facing, projectileSpeed, projectileLifetime,
                 projectileRange, projectileDamage, projectileTargetLayers);
+            activeProjectiles.RemoveAll(item => item == null);
+            activeProjectiles.Add(projectile);
             presentation.PlayNormalAttack();
         }
 
@@ -96,12 +100,18 @@ namespace Nightblade
             return Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f), 32f);
         }
 
-        private void OnDisable()
+        public void ResetActions()
         {
             if (shieldRoutine != null) StopCoroutine(shieldRoutine);
             shieldRoutine = null;
             IsShieldActive = false;
             if (presentation != null) presentation.SetShieldPresentation(false);
+            for (int i = 0; i < activeProjectiles.Count; i++)
+                if (activeProjectiles[i] != null) Destroy(activeProjectiles[i]);
+            activeProjectiles.Clear();
+            presentation?.ResetPresentation();
         }
+
+        private void OnDisable() => ResetActions();
     }
 }

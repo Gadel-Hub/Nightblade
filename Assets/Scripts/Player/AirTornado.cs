@@ -49,5 +49,11 @@ namespace Nightblade
             if (travelled >= range || lifetime <= 0f)
                 Destroy(gameObject);
         }
+
+        private void OnDestroy()
+        {
+            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+            if (renderer != null && renderer.sprite != null) Destroy(renderer.sprite);
+        }
     }
 }

@@ -80,7 +80,8 @@ namespace Nightblade
             {
                 body.linearVelocity = new Vector2(direction * moveSpeed, body.linearVelocity.y);
                 Texture2D running = facingLeft ? runningLeft : runningRight;
-                ApplyFrame(running, Mathf.FloorToInt(Time.time * framesPerSecond));
+                int frameCount = running == null ? 1 : Mathf.Max(1, running.width / frameWidth);
+                ApplyFrame(running, Mathf.FloorToInt(Time.time * framesPerSecond) % frameCount);
             }
             else
             {

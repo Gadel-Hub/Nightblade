@@ -92,6 +92,17 @@ namespace Nightblade
         public void PlayMeleeAttack() => BeginAction(PlayerPresentationState.Skill1, true);
         public void PlayUltimate() => BeginAction(PlayerPresentationState.Ultimate, true);
 
+        public void ResetPresentation()
+        {
+            actionPlaying = false;
+            shieldPresentation = false;
+            activeSheet = null;
+            lastRequestedAction = presentation != null
+                ? presentation.LastRequestedAction
+                : PlayerPresentationState.Idle;
+            ApplyLocomotion();
+        }
+
         public void SetShieldPresentation(bool active)
         {
             shieldPresentation = active;

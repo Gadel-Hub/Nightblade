@@ -48,5 +48,12 @@ namespace Nightblade
             elapsed += Time.deltaTime;
             spriteRenderer.sprite = frames[Mathf.FloorToInt(elapsed * framesPerSecond) % frames.Length];
         }
+
+        private void OnDestroy()
+        {
+            if (frames == null) return;
+            for (int i = 0; i < frames.Length; i++)
+                if (frames[i] != null) Destroy(frames[i]);
+        }
     }
 }

@@ -1,13 +1,14 @@
 using System.Text;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LeaderboardUI : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField inputName;
+    [SerializeField] private InputField inputName;
     [SerializeField] private Leaderboard leaderboard;
     [SerializeField] private TimeManager timeManager;
-    [SerializeField] private TMP_Text leaderboardText;
+    [SerializeField] private Text leaderboardText;
+    [SerializeField] private bool showTestPanel = true;
     private string testPlayerName = "Runner";
 
     private void Start()
@@ -17,19 +18,25 @@ public class LeaderboardUI : MonoBehaviour
 
     public void SaveScore()
     {
-        if (leaderboard == null || timeManager == null || !timeManager.HasFinishedRun)
-            return;
-
         string playerName = inputName != null ? inputName.text : testPlayerName;
-        if (leaderboard.AddPlayer(playerName, timeManager.timePassed))
-            ShowLeaderboard();
+        SaveScore(playerName);
+    }
+
+    public bool SaveScore(string playerName)
+    {
+        if (leaderboard == null || timeManager == null || !timeManager.HasFinishedRun)
+            return false;
+
+        if (!leaderboard.AddPlayer(playerName, timeManager.timePassed)) return false;
+        ShowLeaderboard();
+        return true;
     }
 
     public void ShowLeaderboard()
     {
         if (leaderboard == null || leaderboardText == null) return;
 
-        StringBuilder display = new StringBuilder("Leaderboard\n");
+        StringBuilder display = new StringBuilder();
         for (int i = 0; i < leaderboard.Players.Count; i++)
         {
             PlayerScore score = leaderboard.Players[i];
@@ -47,7 +54,7 @@ public class LeaderboardUI : MonoBehaviour
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
     private void OnGUI()
     {
-        if (leaderboard == null || timeManager == null) return;
+        if (!showTestPanel || leaderboard == null || timeManager == null) return;
 
         GUILayout.BeginArea(new Rect(8f, 8f, 250f, 430f), GUI.skin.box);
         GUILayout.Label("Speedrun Test Panel");

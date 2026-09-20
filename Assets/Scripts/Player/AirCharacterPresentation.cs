@@ -26,7 +26,6 @@ namespace Nightblade
         [SerializeField] private int airCharacterIndex = 2;
         [SerializeField] private PlayerPresentation presentation;
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private Vector3 visualOffset;
 
         [Header("Locomotion")]
         [SerializeField] private AirSpriteSheet idleLeft;
@@ -58,13 +57,24 @@ namespace Nightblade
         public void PlayTornado() => BeginAction(PlayerPresentationState.Ultimate);
         public void SetShieldPresentation(bool active) => shieldPresentation = active;
 
+        public void ResetPresentation()
+        {
+            actionPlaying = false;
+            shieldPresentation = false;
+            activeSheet = null;
+            lastRequestedAction = presentation != null
+                ? presentation.LastRequestedAction
+                : PlayerPresentationState.Idle;
+            lastActionRequestVersion = presentation != null ? presentation.ActionRequestVersion : 0;
+            ApplyMovement();
+        }
+
         private void Awake()
         {
             if (presentation == null) presentation = GetComponent<PlayerPresentation>();
             if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
             movement = GetComponent<PlayerMovement>();
             combat = GetComponent<PlayerCombat>();
-            if (spriteRenderer != null) spriteRenderer.transform.localPosition += visualOffset;
         }
 
         private void Update()

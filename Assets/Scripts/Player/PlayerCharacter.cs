@@ -64,6 +64,7 @@ namespace Nightblade
         [SerializeField] private InputActionAsset inputActions;
         [SerializeField] private PlayerCharacterProfile[] characters = CreateDefaultCharacters();
         [SerializeField] private UnityEvent runStarted = new UnityEvent();
+        [SerializeField] private bool showSelectionUI = true;
 
         private readonly float[] cooldownRemaining = new float[4];
         private readonly InputAction[] skillActions = new InputAction[4];
@@ -74,6 +75,7 @@ namespace Nightblade
         private Rigidbody2D body;
         private PlayerMovement movement;
         private PlayerCombat combat;
+        private PlayerDamage damage;
         private PlayerPresentation presentation;
         private int selectedIndex = -1;
         private bool selectionConfirmed;
@@ -106,6 +108,7 @@ namespace Nightblade
             body = GetComponent<Rigidbody2D>();
             movement = GetComponent<PlayerMovement>();
             combat = GetComponent<PlayerCombat>();
+            damage = GetComponent<PlayerDamage>();
             presentation = GetComponent<PlayerPresentation>();
             skillActions[0] = playerActions.FindAction("NormalSkill1", true);
             skillActions[1] = playerActions.FindAction("NormalSkill2", true);
@@ -181,6 +184,42 @@ namespace Nightblade
             return true;
         }
 
+        public void EndRun()
+        {
+            if (!runInProgress) return;
+
+            ResetActiveActions();
+            body.linearVelocity = Vector2.zero;
+            body.simulated = false;
+            movement.SetControlEnabled(false);
+            combat.SetControlEnabled(false);
+            runInProgress = false;
+        }
+
+        public void ReturnToSelection(Vector2 startPosition)
+        {
+            if (body == null || movement == null || combat == null || damage == null) return;
+
+            ResetActiveActions();
+            body.simulated = true;
+            damage.RespawnAt(startPosition);
+            body.linearVelocity = Vector2.zero;
+            body.simulated = false;
+            movement.SetControlEnabled(false);
+            combat.SetControlEnabled(false);
+            runInProgress = false;
+            selectionConfirmed = false;
+            Array.Clear(cooldownRemaining, 0, cooldownRemaining.Length);
+        }
+
+        private void ResetActiveActions()
+        {
+            GetComponent<FireCharacterGameplay>()?.ResetActions();
+            GetComponent<WaterCharacterGameplay>()?.ResetActions();
+            GetComponent<AirCharacterGameplay>()?.ResetActions();
+            GetComponent<FireUltimate>()?.FinishUltimate();
+        }
+
         public bool TryUseSkill(PlayerSkillSlot slot)
         {
             if (!runInProgress || selectedIndex < 0) return false;
@@ -205,7 +244,7 @@ namespace Nightblade
 
         private void OnGUI()
         {
-            if (runInProgress) return;
+            if (!showSelectionUI || runInProgress) return;
 
             GUILayout.BeginArea(new Rect(8f, 8f, 230f, 190f), GUI.skin.box);
             GUILayout.Label("Choose Character");

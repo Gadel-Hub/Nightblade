@@ -27,6 +27,8 @@ namespace Nightblade
         private readonly HashSet<CombatTarget> damagedTargets = new HashSet<CombatTarget>();
         private PlayerMovement movement;
         private FireCharacterPresentation presentation;
+        private PlayerCharacter character;
+        private PlayerDamage playerDamage;
         private Rigidbody2D body;
         private Coroutine runningUltimate;
 
@@ -35,6 +37,8 @@ namespace Nightblade
             movement = GetComponent<PlayerMovement>();
             presentation = GetComponent<FireCharacterPresentation>();
             body = GetComponent<Rigidbody2D>();
+            character = GetComponent<PlayerCharacter>();
+            playerDamage = GetComponent<PlayerDamage>();
         }
 
         private void FixedUpdate()
@@ -57,7 +61,9 @@ namespace Nightblade
             runningUltimate = null;
             ClearFlames();
             if (body != null) body.linearVelocity = new Vector2(0f, body.linearVelocity.y);
-            if (movement != null) movement.SetControlEnabled(true);
+            if (movement != null)
+                movement.SetControlEnabled(character != null && character.RunInProgress &&
+                    playerDamage != null && playerDamage.State == PlayerDamage.DamageState.Normal);
         }
 
         private IEnumerator RunUltimate()

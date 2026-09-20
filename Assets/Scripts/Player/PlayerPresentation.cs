@@ -23,10 +23,12 @@ namespace Nightblade
         [SerializeField] private Sprite sprite;
         [SerializeField] private GameObject visualRoot;
         [SerializeField] private RuntimeAnimatorController animatorController;
+        [SerializeField] private Vector3 visualOffset;
 
         public Sprite Sprite => sprite;
         public GameObject VisualRoot => visualRoot;
         public RuntimeAnimatorController AnimatorController => animatorController;
+        public Vector3 VisualOffset => visualOffset;
     }
 
     [DisallowMultipleComponent]
@@ -57,6 +59,7 @@ namespace Nightblade
         private SpriteRenderer sharedSpriteRenderer;
         private Animator sharedAnimator;
         private GameObject activeCharacterRoot;
+        private Vector3 sharedVisualPosition;
         private PlayerDamage.DamageState previousDamageState;
         private bool facingLeft;
 
@@ -78,6 +81,7 @@ namespace Nightblade
                 animator = sharedVisualRoot.GetComponentInChildren<Animator>(true);
             sharedSpriteRenderer = spriteRenderer;
             sharedAnimator = animator;
+            if (sharedVisualRoot != null) sharedVisualPosition = sharedVisualRoot.transform.localPosition;
 
             if (characters == null || characters.Length != CharacterCount)
             {
@@ -122,6 +126,8 @@ namespace Nightblade
                 activeCharacterRoot.SetActive(false);
             if (targetRoot != null) targetRoot.SetActive(true);
             activeCharacterRoot = targetRoot;
+            if (targetRoot == sharedVisualRoot)
+                targetRoot.transform.localPosition = sharedVisualPosition + profile.VisualOffset;
 
             SpriteRenderer selectedRenderer = targetRoot != null
                 ? targetRoot.GetComponentInChildren<SpriteRenderer>(true)

@@ -111,8 +111,9 @@ namespace Nightblade
 
             state = BossState.Move;
             body.linearVelocity = new Vector2(direction * moveSpeed, body.linearVelocity.y);
-            ApplyFrame(facingLeft ? walkingLeft : walkingRight,
-                Mathf.FloorToInt(Time.time * framesPerSecond));
+            Texture2D walking = facingLeft ? walkingLeft : walkingRight;
+            int frameCount = Mathf.Max(1, GetFrameCount(walking));
+            ApplyFrame(walking, Mathf.FloorToInt(Time.time * framesPerSecond) % frameCount);
         }
 
         private IEnumerator IntroRoutine()
