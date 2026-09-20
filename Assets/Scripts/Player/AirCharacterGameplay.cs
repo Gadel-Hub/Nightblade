@@ -37,7 +37,7 @@ namespace Nightblade
         [SerializeField, Min(0.01f)] private float tornadoLifetime = 2f;
         [SerializeField, Min(0.01f)] private float tornadoRange = 12f;
         [SerializeField] private Vector2 tornadoGameplaySize = new Vector2(1.5f, 2f);
-        [SerializeField, Min(1)] private int tornadoDamage = 4;
+        [SerializeField, Min(1)] private int tornadoDamage = 7;
         [SerializeField] private LayerMask tornadoTargetLayers;
         [SerializeField] private Vector3 tornadoVisualOffset;
         [SerializeField, Min(0.01f)] private float tornadoVisualScale = 1f;

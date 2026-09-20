@@ -10,7 +10,7 @@ namespace Nightblade
     {
         [Header("Timing")]
         [SerializeField, Min(0f)] private float durationSeconds;
-        [SerializeField, Min(1)] private int damage = 5;
+        [SerializeField, Min(1)] private int damage = 8;
         [SerializeField] private LayerMask targetLayers;
 
         [Header("Coverage")]

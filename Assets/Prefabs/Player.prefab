@@ -248,7 +248,7 @@ MonoBehaviour:
               m_StringArgument:
               m_BoolArgument: 0
             m_CallState: 2
-      cooldownSeconds: 12
+      cooldownSeconds: 15
   - displayName: Water
     maxHealth: 25
     normalSkill1:
@@ -318,7 +318,7 @@ MonoBehaviour:
               m_StringArgument:
               m_BoolArgument: 0
             m_CallState: 2
-      cooldownSeconds: 10
+      cooldownSeconds: 14
   - displayName: Air
     maxHealth: 25
     normalSkill1:
@@ -388,7 +388,7 @@ MonoBehaviour:
               m_StringArgument:
               m_BoolArgument: 0
             m_CallState: 2
-      cooldownSeconds: 10
+      cooldownSeconds: 14
   runStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -522,7 +522,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Nightblade::FireUltimate
   durationSeconds: 1
-  damage: 5
+  damage: 8
   targetLayers:
     serializedVersion: 2
     m_Bits: 1024
@@ -858,7 +858,7 @@ MonoBehaviour:
   waveLifetime: 2
   waveRange: 12
   waveGameplaySize: {x: 1.5, y: 1}
-  waveDamage: 4
+  waveDamage: 7
   waveTargetLayers:
     serializedVersion: 2
     m_Bits: 1024
@@ -899,7 +899,7 @@ MonoBehaviour:
   tornadoLifetime: 2
   tornadoRange: 12
   tornadoGameplaySize: {x: 1.5, y: 2}
-  tornadoDamage: 4
+  tornadoDamage: 7
   tornadoTargetLayers:
     serializedVersion: 2
     m_Bits: 1024
